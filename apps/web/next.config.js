@@ -42,6 +42,8 @@ const securityHeaders = [
   { key: 'X-Frame-Options', value: 'DENY' }
 ]
 
+const MCP_HOST = 'mcp.frontendchecklist.io'
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
@@ -105,6 +107,23 @@ const nextConfig = {
         headers: securityHeaders
       }
     ]
+  },
+
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: MCP_HOST
+            }
+          ],
+          destination: '/api/mcp'
+        }
+      ]
+    }
   },
 
   async redirects() {
