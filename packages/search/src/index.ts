@@ -24,7 +24,9 @@ function getSearchIds(results: unknown): SearchId[] {
 }
 
 /** Normalize Fuse match ranges into mutable tuple ranges. */
-function getMatchIndices(indices: readonly (readonly [number, number])[] | undefined) {
+function getMatchIndices(
+  indices: readonly (readonly [number, number])[] | undefined
+): [number, number][] {
   return indices?.map(([start, end]) => [start, end]) ?? []
 }
 

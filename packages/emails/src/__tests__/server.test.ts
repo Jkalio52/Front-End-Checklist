@@ -13,6 +13,7 @@ describe('@repo/emails/server', () => {
     } else {
       process.env.RESEND_TOPIC_ID = originalTopicId
     }
+    jest.dontMock('resend')
     jest.resetModules()
   })
 
@@ -75,6 +76,62 @@ describe('@repo/emails/server', () => {
       },
       segments: [{ id: 'seg_waitlist' }],
       topics: [{ id: 'cdb0d440-4825-412a-8152-29681e8155b7', subscription: 'opt_in' }]
+    })
+  })
+
+  it('adds subscriber contacts through Resend', async () => {
+    process.env.RESEND_API_KEY = 're_test_key'
+    const mockCreate = jest.fn().mockResolvedValue({ data: { id: 'contact-1' }, error: null })
+    jest.doMock('resend', () => ({
+      Resend: jest.fn().mockImplementation(() => ({
+        contacts: {
+          create: mockCreate
+        }
+      }))
+    }))
+
+    const { addSubscriberContact } = await import('../server')
+
+    await expect(addSubscriberContact(' test@example.com ', ' segment-1 ')).resolves.toEqual({
+      id: 'contact-1',
+      status: 'created',
+      success: true
+    })
+    expect(mockCreate).toHaveBeenCalledWith({
+      email: 'test@example.com',
+      properties: {
+        product: 'newsletter',
+        user_type: 'subscriber',
+        language: 'en',
+        source_domain: 'frontendchecklist.io',
+        brand: 'frontendchecklist'
+      },
+      segments: [{ id: 'segment-1' }],
+      topics: [{ id: 'cdb0d440-4825-412a-8152-29681e8155b7', subscription: 'opt_in' }]
+    })
+  })
+
+  it('treats existing Resend contacts as a successful sync', async () => {
+    process.env.RESEND_API_KEY = 're_test_key'
+    jest.doMock('resend', () => ({
+      Resend: jest.fn().mockImplementation(() => ({
+        contacts: {
+          create: jest.fn().mockResolvedValue({
+            data: null,
+            error: {
+              message: 'Contact already exists',
+              name: 'validation_error'
+            }
+          })
+        }
+      }))
+    }))
+
+    const { addSubscriberContact } = await import('../server')
+
+    await expect(addSubscriberContact('test@example.com')).resolves.toEqual({
+      status: 'already_exists',
+      success: true
     })
   })
 })

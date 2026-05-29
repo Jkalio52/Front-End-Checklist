@@ -1,4 +1,4 @@
-import { createResendContactPayload, getResendClient } from '@repo/emails/server'
+import { addSubscriberContact } from '@repo/emails/server'
 import { NextResponse } from 'next/server'
 import { captureServerException } from '@/lib/telemetry-server'
 
@@ -32,23 +32,12 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing email' }, { status: 400 })
     }
 
-    const resend = getResendClient()
-    if (!resend) {
-      return NextResponse.json({ error: 'Resend not configured' }, { status: 503 })
+    const result = await addSubscriberContact(email)
+    if (!result.success) {
+      return NextResponse.json({ error: result.error }, { status: result.statusCode })
     }
 
-    const { error } = await resend.contacts.create(
-      createResendContactPayload(email, 'subscriber', process.env.RESEND_AUDIENCE_ID)
-    )
-
-    if (error) {
-      const message = error.message ?? 'Failed to add contact'
-      const statusCode =
-        error.name === 'validation_error' || message.toLowerCase().includes('already') ? 400 : 500
-      return NextResponse.json({ error: message }, { status: statusCode })
-    }
-
-    return NextResponse.json({ success: true }, { status: 201 })
+    return NextResponse.json(result, { status: result.status === 'created' ? 201 : 200 })
   } catch (error) {
     captureServerException(error, { route: '/api/subscribe' })
     return NextResponse.json({ error: 'Failed to add contact' }, { status: 500 })

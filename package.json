@@ -25,7 +25,7 @@
     "test:guide-structure": "node --import tsx --test scripts/guide-structure/__tests__/*.test.ts scripts/validate/__tests__/validate-guides.test.ts",
     "typecheck": "turbo typecheck",
     "clean": "turbo clean && rm -rf node_modules",
-    "prepare": "lefthook install",
+    "prepare": "node scripts/setup/install-lefthook.mjs",
     "lefthook:run": "lefthook run pre-commit",
     "qmd:setup": "./scripts/setup-qmd.sh",
     "qmd:embed": "./scripts/setup-qmd.sh --embed",

@@ -23,6 +23,7 @@ const customJestConfig = {
     '^@repo/design-system/custom/(.*)$': '<rootDir>/../../packages/design-system/src/custom/$1.tsx',
     '^@repo/design-system/ui/(.*)$': '<rootDir>/../../packages/design-system/src/ui/$1.tsx',
     '^@repo/design-system/icons$': '<rootDir>/../../packages/design-system/src/icons.ts',
+    '^@repo/emails/server$': '<rootDir>/../../packages/emails/src/server.ts',
     '^.*custom/(.*)/src$': '<rootDir>/../../packages/design-system/src/custom/$1.tsx',
     '^.*packages/design-system/custom/(.*)/src$':
       '<rootDir>/../../packages/design-system/src/custom/$1.tsx',

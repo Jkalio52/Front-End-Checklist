@@ -13,7 +13,9 @@
       "content-collections": ["./.content-collections/generated"],
       "@repo/*": ["../../packages/*/src"],
       "@repo/auth": ["../../packages/auth/src/auth.ts"],
-      "@repo/auth/*": ["../../packages/auth/src/*"]
+      "@repo/auth/*": ["../../packages/auth/src/*"],
+      "@repo/emails": ["../../packages/emails/src/index.ts"],
+      "@repo/emails/server": ["../../packages/emails/src/server.ts"]
     }
   },
   "include": [
