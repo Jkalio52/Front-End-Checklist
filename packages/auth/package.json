@@ -6,6 +6,7 @@
     ".": "./src/auth.ts",
     "./auth": "./src/auth.ts",
     "./auth-client": "./src/auth-client.ts",
+    "./profile": "./src/profile.ts",
     "./prisma": "./src/prisma.ts"
   },
   "main": "./src/auth.ts",

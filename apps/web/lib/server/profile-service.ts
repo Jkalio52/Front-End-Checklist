@@ -1,10 +1,7 @@
 import 'server-only'
 
 import { prisma } from '@repo/auth/prisma'
-
-const USERNAME_MIN = 3
-const USERNAME_MAX = 30
-const USERNAME_REGEX = /^[a-z0-9][a-z0-9-]*[a-z0-9]$|^[a-z0-9]{1,2}$/
+import { normalizeGithubUsername } from '@repo/auth/profile'
 
 export interface ProfileRecord {
   username?: string
@@ -28,20 +25,6 @@ export interface ProfileUpdateInput {
   isProfilePublic?: boolean
   showProgress?: boolean
   showChecklists?: boolean
-}
-
-/**
- * Validate the public username format accepted by profile features.
- *
- * @param value - Username candidate.
- * @returns True when the username matches project rules.
- */
-function isValidUsername(value: string): boolean {
-  if (value.length < USERNAME_MIN || value.length > USERNAME_MAX) {
-    return false
-  }
-
-  return USERNAME_REGEX.test(value)
 }
 
 /**
@@ -107,26 +90,62 @@ export async function getProfileForUser(userId: string): Promise<ProfileRecord |
     return null
   }
 
+  const updates: { username?: string; isProfilePublic?: true } = {}
+
   if (!user.username && user.githubUsername) {
-    const candidate = user.githubUsername.toLowerCase()
-    if (isValidUsername(candidate)) {
+    const candidate = normalizeGithubUsername(user.githubUsername)
+    if (candidate) {
       const taken = await prisma.user.findUnique({
         where: { username: candidate },
         select: { id: true }
       })
 
       if (!taken) {
+        updates.username = candidate
+        if (!user.isProfilePublic) {
+          updates.isProfilePublic = true
+        }
+      }
+    }
+  }
+
+  if (Object.keys(updates).length > 0) {
+    try {
+      await prisma.user.update({
+        where: { id: userId },
+        data: updates
+      })
+
+      if (updates.username) {
+        user.username = updates.username
+      }
+      if (updates.isProfilePublic) {
+        user.isProfilePublic = true
+      }
+    } catch (error) {
+      if (updates.username && isUniqueConstraintError(error)) {
         await prisma.user.update({
           where: { id: userId },
-          data: { username: candidate }
+          data: { isProfilePublic: true }
         })
-
-        user.username = candidate
+        user.isProfilePublic = true
+      } else {
+        throw error
       }
     }
   }
 
   return serializeProfile(user)
+}
+
+/**
+ * Detect Prisma unique-constraint failures without importing generated error classes.
+ *
+ * @param error - Unknown database error.
+ * @returns True for Prisma P2002 errors.
+ */
+function isUniqueConstraintError(error: unknown): boolean {
+  return Boolean(error && typeof error === 'object' && 'code' in error && error.code === 'P2002')
 }
 
 /**

@@ -2,6 +2,7 @@ import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { nextCookies } from 'better-auth/next-js'
 import { prisma } from './prisma'
+import { getGithubLogin, getStringProperty, normalizeGithubUsername } from './profile'
 
 const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
 const baseUrl = process.env.BETTER_AUTH_URL ?? publicSiteUrl ?? 'http://localhost:3000'
@@ -33,6 +34,25 @@ export const auth = betterAuth({
   databaseHooks: {
     user: {
       create: {
+        before: async user => {
+          const username = normalizeGithubUsername(getStringProperty(user, 'githubUsername'))
+          if (!username) {
+            return { data: { ...user, isProfilePublic: true } }
+          }
+
+          const taken = await prisma.user.findUnique({
+            where: { username },
+            select: { id: true }
+          })
+
+          return {
+            data: {
+              ...user,
+              ...(taken ? {} : { username }),
+              isProfilePublic: true
+            }
+          }
+        },
         after: async user => {
           if (!subscribeSecret || !user.email) return
           const url = `${baseUrl}/api/subscribe`
@@ -58,6 +78,16 @@ export const auth = betterAuth({
         type: 'string',
         required: false,
         input: false
+      },
+      username: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      isProfilePublic: {
+        type: 'boolean',
+        required: false,
+        input: false
       }
     }
   },
@@ -80,9 +110,13 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID ?? '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
-      mapProfileToUser: profile => ({
-        githubUsername: (profile as { login?: string }).login ?? undefined
-      })
+      mapProfileToUser: profile => {
+        const githubUsername = getGithubLogin(profile)
+        return {
+          githubUsername,
+          isProfilePublic: true
+        }
+      }
     }
   },
   trustedOrigins: Array.from(
