@@ -8,14 +8,23 @@ let ratelimit: Ratelimit | null = null
 let waitlistRatelimit: Ratelimit | null = null
 
 /**
+ * Read Redis REST credentials from either direct Upstash env names or Vercel KV integration names.
+ */
+function getRedisRestCredentials(): { url?: string; token?: string } {
+  return {
+    url: process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL,
+    token: process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN
+  }
+}
+
+/**
  * Get or create the rate limiter instance
  * Returns null if Upstash credentials are not configured
  */
 function getRatelimiter(): Ratelimit | null {
   if (ratelimit) return ratelimit
 
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  const { url, token } = getRedisRestCredentials()
 
   if (!url || !token) {
     console.warn('[rate-limit] Upstash credentials not configured, rate limiting disabled')
@@ -48,8 +57,7 @@ function getRatelimiter(): Ratelimit | null {
 function getWaitlistRatelimiter(): Ratelimit | null {
   if (waitlistRatelimit) return waitlistRatelimit
 
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
+  const { url, token } = getRedisRestCredentials()
 
   if (!url || !token) return null
 

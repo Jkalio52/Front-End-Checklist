@@ -2,9 +2,6 @@ import { prisma } from '@repo/auth/prisma'
 import { NextResponse } from 'next/server'
 import { captureServerException } from '@/lib/telemetry-server'
 
-export const dynamic = 'force-dynamic'
-export const runtime = 'nodejs'
-
 /**
  * Run a harmless database read so Supabase Free projects stay active.
  */
