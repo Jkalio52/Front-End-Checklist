@@ -1,0 +1,81 @@
+name: frontendchecklist
+displayName: Frontend Checklist
+description: >
+  374 frontend best practice rules for HTML, CSS, JavaScript, Accessibility,
+  SEO, Security, Performance, Images, and Testing. Review code, audit live
+  sites, browse reusable resources, and use MCP prompts/workflows via the
+  Frontend Checklist MCP server.
+homepage: https://frontendchecklist.io
+documentationUrl: https://frontendchecklist.io/en/mcp
+license: MIT
+
+runtime: container
+
+startCommand:
+  type: http
+  url: https://mcp.frontendchecklist.io
+  configSchema:
+    type: object
+    properties: {}
+  exampleConfig: {}
+
+tools:
+  - name: review_code
+    description: Audit HTML/CSS/JS code against all rules at once
+  - name: audit_url
+    description: Fetch a public URL and audit its HTML automatically
+  - name: get_workflow
+    description: Get an ordered checklist for a specific workflow
+  - name: get_checklist_rules
+    description: Get full rule details for all rules in a checklist
+  - name: get_rule
+    description: Get complete details and guidance for a specific rule
+  - name: search_rules
+    description: Search rules by keyword, category, or priority
+  - name: check_rule
+    description: Get the verification prompt for a specific rule
+  - name: fix_rule
+    description: Get remediation guidance for a specific rule
+  - name: explain_rule
+    description: Get an explanation of why a rule matters
+  - name: list_categories
+    description: List available rule categories with counts
+  - name: get_quick_reference
+    description: Get a compact priority-filtered checklist view
+
+prompts:
+  - name: review_code_prompt
+    description: Compose a guided code review workflow around the review_code tool
+  - name: explain_rule_prompt
+    description: Compose an educational explanation workflow for a rule
+  - name: fix_rule_prompt
+    description: Compose a remediation workflow for a rule
+  - name: audit_url_prompt
+    description: Compose a live-site audit workflow for a URL
+  - name: workflow_prompt
+    description: Compose a curated checklist workflow
+
+resources:
+  - uriTemplate: frontendchecklist://rules/{slug}
+    description: Read a single frontend rule as normalized markdown
+  - uriTemplate: frontendchecklist://checklists/{slug}
+    description: Read a curated checklist as ordered markdown
+
+categories:
+  - developer-tools
+  - code-quality
+  - accessibility
+  - frontend
+  - testing
+
+tags:
+  - html
+  - css
+  - javascript
+  - accessibility
+  - seo
+  - security
+  - performance
+  - web-development
+  - best-practices
+  - code-review

@@ -1,0 +1,31 @@
+{
+  "name": "@repo/auth",
+  "version": "0.0.0",
+  "private": true,
+  "exports": {
+    ".": "./src/auth.ts",
+    "./auth": "./src/auth.ts",
+    "./auth-client": "./src/auth-client.ts",
+    "./prisma": "./src/prisma.ts"
+  },
+  "main": "./src/auth.ts",
+  "types": "./src/auth.ts",
+  "scripts": {
+    "build": "prisma generate",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:push": "prisma db push",
+    "postinstall": "prisma generate",
+    "lint": "biome check ."
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.8.0",
+    "@prisma/client": "catalog:",
+    "better-auth": "^1.6.11"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "prisma": "catalog:",
+    "typescript": "catalog:"
+  }
+}
