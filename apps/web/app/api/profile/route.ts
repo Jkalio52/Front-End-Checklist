@@ -2,6 +2,7 @@ import { auth } from '@repo/auth/auth'
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
 import { getProfileForUser, updateProfileForUser } from '@/lib/server/profile-service'
+import { InvalidSocialLinkError, normalizeOptionalSocialProfileUrl } from '@/lib/social-links'
 import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 import { captureServerException, trackServerEvent } from '@/lib/telemetry-server'
 
@@ -61,15 +62,18 @@ export async function PATCH(request: Request) {
     }
     if (body.githubUrl !== undefined) {
       updates.githubUrl =
-        typeof body.githubUrl === 'string' && body.githubUrl.trim() ? body.githubUrl.trim() : null
+        typeof body.githubUrl === 'string'
+          ? normalizeOptionalSocialProfileUrl('github', body.githubUrl)
+          : null
     }
     if (body.xUrl !== undefined) {
-      updates.xUrl = typeof body.xUrl === 'string' && body.xUrl.trim() ? body.xUrl.trim() : null
+      updates.xUrl =
+        typeof body.xUrl === 'string' ? normalizeOptionalSocialProfileUrl('x', body.xUrl) : null
     }
     if (body.linkedinUrl !== undefined) {
       updates.linkedinUrl =
-        typeof body.linkedinUrl === 'string' && body.linkedinUrl.trim()
-          ? body.linkedinUrl.trim()
+        typeof body.linkedinUrl === 'string'
+          ? normalizeOptionalSocialProfileUrl('linkedin', body.linkedinUrl)
           : null
     }
     if (typeof body.isProfilePublic === 'boolean') updates.isProfilePublic = body.isProfilePublic
@@ -89,6 +93,10 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json(user)
   } catch (e) {
+    if (e instanceof InvalidSocialLinkError) {
+      return NextResponse.json({ error: e.message }, { status: 400 })
+    }
+
     const prismaError = e as { code?: string }
     if (prismaError.code === 'P2002') {
       return NextResponse.json({ error: 'Username is already taken' }, { status: 409 })

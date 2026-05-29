@@ -3,15 +3,36 @@
 import { z } from 'zod'
 import { authActionClient } from '@/lib/safe-action'
 import { updateProfileForUser } from '@/lib/server/profile-service'
+import {
+  isValidSocialProfileInput,
+  normalizeOptionalSocialProfileUrl,
+  type SocialLinkPlatform
+} from '@/lib/social-links'
 import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 import { trackServerEvent } from '@/lib/telemetry-server'
+
+/**
+ * Build a social profile schema that accepts either shorthand usernames or canonical URLs.
+ *
+ * @param platform - Social platform being validated.
+ * @returns Optional social profile input schema.
+ */
+function socialProfileSchema(platform: SocialLinkPlatform) {
+  return z
+    .string()
+    .trim()
+    .refine(value => !value || isValidSocialProfileInput(platform, value), {
+      message: `Enter a valid ${platform} profile`
+    })
+    .optional()
+}
 
 const updateProfileSchema = z.object({
   headline: z.string().trim().max(160).optional(),
   bio: z.string().trim().max(500).optional(),
-  githubUrl: z.string().trim().url().optional(),
-  xUrl: z.string().trim().url().optional(),
-  linkedinUrl: z.string().trim().url().optional(),
+  githubUrl: socialProfileSchema('github'),
+  xUrl: socialProfileSchema('x'),
+  linkedinUrl: socialProfileSchema('linkedin'),
   isProfilePublic: z.boolean().optional(),
   showProgress: z.boolean().optional(),
   showChecklists: z.boolean().optional()
@@ -27,9 +48,9 @@ export const updateProfileAction = authActionClient
     const profile = await updateProfileForUser(ctx.userId, {
       headline: parsedInput.headline?.trim() || null,
       bio: parsedInput.bio?.trim() || null,
-      githubUrl: parsedInput.githubUrl?.trim() || null,
-      xUrl: parsedInput.xUrl?.trim() || null,
-      linkedinUrl: parsedInput.linkedinUrl?.trim() || null,
+      githubUrl: normalizeOptionalSocialProfileUrl('github', parsedInput.githubUrl),
+      xUrl: normalizeOptionalSocialProfileUrl('x', parsedInput.xUrl),
+      linkedinUrl: normalizeOptionalSocialProfileUrl('linkedin', parsedInput.linkedinUrl),
       isProfilePublic: parsedInput.isProfilePublic,
       showProgress: parsedInput.showProgress,
       showChecklists: parsedInput.showChecklists

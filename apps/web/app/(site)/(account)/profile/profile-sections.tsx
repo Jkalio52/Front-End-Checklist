@@ -31,14 +31,14 @@ export function SocialLinksSection({
       <div className="space-y-3">
         <div>
           <label className="mb-1 block text-foreground-muted text-xs" htmlFor="profile-github">
-            GitHub
+            GitHub username
           </label>
           <Input
             id="profile-github"
             value={githubUrl}
             onChange={e => onGithubUrlChange(e.target.value)}
-            placeholder="https://github.com/username"
-            type="url"
+            placeholder="username"
+            type="text"
             readOnly={Boolean(githubUsername)}
             className={githubUsername ? 'cursor-default opacity-70' : ''}
           />
@@ -48,27 +48,30 @@ export function SocialLinksSection({
         </div>
         <div>
           <label className="mb-1 block text-foreground-muted text-xs" htmlFor="profile-x">
-            X
+            X handle
           </label>
           <Input
             id="profile-x"
             value={xUrl}
             onChange={e => onXUrlChange(e.target.value)}
-            placeholder="https://x.com/username"
-            type="url"
+            placeholder="@username"
+            type="text"
           />
         </div>
         <div>
           <label className="mb-1 block text-foreground-muted text-xs" htmlFor="profile-linkedin">
-            LinkedIn
+            LinkedIn profile
           </label>
           <Input
             id="profile-linkedin"
             value={linkedinUrl}
             onChange={e => onLinkedinUrlChange(e.target.value)}
-            placeholder="https://linkedin.com/in/username"
-            type="url"
+            placeholder="username"
+            type="text"
           />
+          <p className="mt-1 text-foreground-muted text-xs">
+            Use your profile slug, or paste the full LinkedIn URL.
+          </p>
         </div>
       </div>
     </section>
