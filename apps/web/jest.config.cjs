@@ -18,6 +18,7 @@ const customJestConfig = {
     '^@frontendchecklist/rules/(.*)$': '<rootDir>/../../packages/rules/src/$1.ts',
     '^@repo/mcp$': '<rootDir>/../../packages/mcp/src/index.ts',
     '^@repo/mcp/load-rules$': '<rootDir>/../../packages/mcp/src/load-rules.ts',
+    '^@repo/utils$': '<rootDir>/../../packages/utils/src/public-api.ts',
     '^@repo/auth/auth-client$': '<rootDir>/test/mocks/auth-client.ts',
     '^.*packages/auth/src/auth-client$': '<rootDir>/test/mocks/auth-client.ts',
     '^@repo/design-system/custom/(.*)$': '<rootDir>/../../packages/design-system/src/custom/$1.tsx',
@@ -33,7 +34,9 @@ const customJestConfig = {
     '^.*packages/design-system/ui/(.*)/src$':
       '<rootDir>/../../packages/design-system/src/ui/$1.tsx',
     '^.*packages/design-system/icons/src$': '<rootDir>/../../packages/design-system/src/icons.ts',
-    '^.*icons/src$': '<rootDir>/../../packages/design-system/src/icons.ts'
+    '^.*icons/src$': '<rootDir>/../../packages/design-system/src/icons.ts',
+    '^.*packages/utils/src$': '<rootDir>/../../packages/utils/src/public-api.ts',
+    '^.*utils/src$': '<rootDir>/../../packages/utils/src/public-api.ts'
   },
   moduleDirectories: ['node_modules', '<rootDir>/'],
   testPathIgnorePatterns: ['<rootDir>/.next/', '<rootDir>/node_modules/', '<rootDir>/e2e/'],
