@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { nextCookies } from 'better-auth/next-js'
 import { prisma } from './prisma'
-import { getGithubLogin, getStringProperty, normalizeGithubUsername } from './profile'
+import { buildGithubProfileImport, getStringProperty, normalizeGithubUsername } from './profile'
 
 const publicSiteUrl = process.env.NEXT_PUBLIC_SITE_URL
 const baseUrl = process.env.BETTER_AUTH_URL ?? publicSiteUrl ?? 'http://localhost:3000'
@@ -88,6 +88,71 @@ export const auth = betterAuth({
         type: 'boolean',
         required: false,
         input: false
+      },
+      bio: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      githubUrl: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      xUrl: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      githubCompany: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      githubBlog: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      githubLocation: {
+        type: 'string',
+        required: false,
+        input: false
+      },
+      githubPublicRepos: {
+        type: 'number',
+        required: false,
+        input: false
+      },
+      githubPublicGists: {
+        type: 'number',
+        required: false,
+        input: false
+      },
+      githubFollowers: {
+        type: 'number',
+        required: false,
+        input: false
+      },
+      githubFollowing: {
+        type: 'number',
+        required: false,
+        input: false
+      },
+      githubCreatedAt: {
+        type: 'date',
+        required: false,
+        input: false
+      },
+      githubUpdatedAt: {
+        type: 'date',
+        required: false,
+        input: false
+      },
+      githubProfileImportedAt: {
+        type: 'date',
+        required: false,
+        input: false
       }
     }
   },
@@ -111,9 +176,8 @@ export const auth = betterAuth({
       clientId: process.env.GITHUB_CLIENT_ID ?? '',
       clientSecret: process.env.GITHUB_CLIENT_SECRET ?? '',
       mapProfileToUser: profile => {
-        const githubUsername = getGithubLogin(profile)
         return {
-          githubUsername,
+          ...buildGithubProfileImport(profile),
           isProfilePublic: true
         }
       }

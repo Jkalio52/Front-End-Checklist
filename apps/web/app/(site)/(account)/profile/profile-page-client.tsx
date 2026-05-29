@@ -27,6 +27,7 @@ async function fetchProfile(): Promise<ProfileData> {
     githubUrl: data.githubUrl,
     xUrl: data.xUrl,
     linkedinUrl: data.linkedinUrl,
+    githubProfileImportedAt: data.githubProfileImportedAt,
     isProfilePublic: data.isProfilePublic ?? true,
     showProgress: data.showProgress ?? true,
     showChecklists: data.showChecklists ?? true

@@ -17,7 +17,9 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "postinstall": "prisma generate",
-    "lint": "biome check ."
+    "lint": "biome check .",
+    "test": "jest --passWithNoTests",
+    "test:ci": "jest --ci --passWithNoTests"
   },
   "dependencies": {
     "@prisma/adapter-pg": "^7.8.0",
@@ -25,8 +27,11 @@
     "better-auth": "^1.6.11"
   },
   "devDependencies": {
+    "@types/jest": "catalog:",
     "@types/node": "catalog:",
+    "jest": "catalog:",
     "prisma": "catalog:",
+    "ts-jest": "catalog:",
     "typescript": "catalog:"
   }
 }

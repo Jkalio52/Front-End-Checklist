@@ -20,6 +20,7 @@ export interface ProfileData {
   githubUrl?: string
   xUrl?: string
   linkedinUrl?: string
+  githubProfileImportedAt?: string
   isProfilePublic: boolean
   showProgress: boolean
   showChecklists: boolean
@@ -196,6 +197,9 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
               <p className="font-medium text-foreground">{user.name ?? 'Anonymous'}</p>
               <p className="text-foreground-muted text-sm">{user.email}</p>
               <p className="mt-1 text-foreground-muted text-xs">Managed via GitHub</p>
+              {profile.githubProfileImportedAt && (
+                <p className="mt-1 text-foreground-muted text-xs">Imported from GitHub</p>
+              )}
             </div>
           </div>
         </section>

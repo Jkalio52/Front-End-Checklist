@@ -18,21 +18,31 @@ model User {
   role          String   @default("user")
   plan          String   @default("free")
 
-  username        String?  @unique
-  githubUsername  String?
-  headline        String?
-  bio             String?
-  githubUrl       String?
-  xUrl            String?
-  linkedinUrl     String?
-  isProfilePublic Boolean  @default(true)
-  showProgress    Boolean  @default(true)
-  showChecklists  Boolean  @default(true)
+  username                String?   @unique
+  githubUsername          String?
+  headline                String?
+  bio                     String?
+  githubUrl               String?
+  xUrl                    String?
+  linkedinUrl             String?
+  githubCompany           String?
+  githubBlog              String?
+  githubLocation          String?
+  githubPublicRepos       Int?
+  githubPublicGists       Int?
+  githubFollowers         Int?
+  githubFollowing         Int?
+  githubCreatedAt         DateTime?
+  githubUpdatedAt         DateTime?
+  githubProfileImportedAt DateTime?
+  isProfilePublic         Boolean   @default(true)
+  showProgress            Boolean   @default(true)
+  showChecklists          Boolean   @default(true)
 
-  sessions   Session[]
-  accounts   Account[]
-  checklists UserChecklist[]
-  audits     Audit[]
+  sessions     Session[]
+  accounts     Account[]
+  checklists   UserChecklist[]
+  audits       Audit[]
   ruleFeedback RuleFeedback[]
   ruleProgress RuleProgress[]
 }
