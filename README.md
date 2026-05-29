@@ -25,7 +25,7 @@ Companion project: [UX Patterns for Devs](https://uxpatterns.dev/) helps develop
 1. Start with the category navigator below and jump straight to the part of the checklist you need.
 2. Work through the checkbox items that apply to your project, audit, or pull request.
 3. Open the linked rule pages when you need the full guidance, examples, verification steps, and AI prompts.
-4. Use [frontendchecklist.io](https://frontendchecklist.io) for interactive browsing, and [frontendchecklist.io/mcp](https://frontendchecklist.io/mcp) when you want agents to use the same rule corpus directly.
+4. Use [frontendchecklist.io](https://frontendchecklist.io) for interactive browsing, and [mcp.frontendchecklist.io](https://mcp.frontendchecklist.io) when you want agents to use the same rule corpus directly.
 
 ## Priority legend
 
@@ -62,7 +62,7 @@ Connect an MCP-capable agent to Frontend Checklist for structured rule lookup, a
 > Best first use: point an MCP-capable agent at a real component, page, or public URL and ask for the highest-confidence Frontend Checklist findings first.
 
 - Public endpoint: [mcp.frontendchecklist.io](https://mcp.frontendchecklist.io)
-- Public docs: [frontendchecklist.io/en/mcp](https://frontendchecklist.io/en/mcp)
+- Public docs: [frontendchecklist.io/mcp](https://frontendchecklist.io/mcp)
 - Local/editor integration: stdio server at [`packages/mcp/src/cli.ts`](packages/mcp/src/cli.ts)
 
 What you can do:
