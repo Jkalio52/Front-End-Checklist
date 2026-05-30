@@ -36,6 +36,7 @@ jobs:
 
       - name: Run tests
         run: |
+          pnpm --filter web build:content
           pnpm run lint
           pnpm validate:rule-structure
           pnpm run typecheck --filter=web

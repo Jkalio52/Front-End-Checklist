@@ -109,6 +109,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Build content collections
+        run: pnpm --filter web build:content
+
       - name: Run TypeScript type checking
         run: pnpm run typecheck --filter=web
 
@@ -132,6 +135,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Build content collections
+        run: pnpm --filter web build:content
 
       - name: Run unit tests with coverage
         run: pnpm run test:ci --filter=web
