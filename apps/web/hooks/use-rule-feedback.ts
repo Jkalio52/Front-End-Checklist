@@ -9,8 +9,6 @@ import type {
 } from '@repo/types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useCallback } from 'react'
-import { trackClientEvent } from '@/lib/telemetry-client'
-import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 
 /**
  * Type guard for plain objects.
@@ -158,12 +156,8 @@ export function useRuleFeedback(ruleId: string) {
         queryClient.setQueryData(queryKey, context.previous)
       }
     },
-    onSuccess: (data, value) => {
+    onSuccess: data => {
       queryClient.setQueryData(queryKey, data)
-      trackClientEvent(TELEMETRY_EVENTS.ruleFeedbackSubmitted, {
-        ruleId,
-        value
-      })
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey })

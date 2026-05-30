@@ -1,7 +1,8 @@
 import { routeChecklists, routeRules } from '@repo/config'
 import { ChevronRight } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
-import Link from 'next/link'
+import { TrackedLink } from '@/components/analytics/tracked-link'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 import { HeroBadges } from './hero-badges'
 
 interface HeroSectionProps {
@@ -32,15 +33,31 @@ export function HeroSection({ ruleCountLabel, githubStars }: HeroSectionProps) {
 
           <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
             <Button asChild size="lg">
-              <Link href={routeChecklists()} className="px-6 py-2">
+              <TrackedLink
+                href={routeChecklists()}
+                telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                telemetryProperties={{
+                  label: 'start_curated_checklist',
+                  location: 'homepage_hero'
+                }}
+                className="px-6 py-2"
+              >
                 Start a Curated Checklist
                 <ChevronRight className="ml-1 size-4" />
-              </Link>
+              </TrackedLink>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <Link href={routeRules()} className="px-6 py-2">
+              <TrackedLink
+                href={routeRules()}
+                telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                telemetryProperties={{
+                  label: 'browse_all_rules',
+                  location: 'homepage_hero'
+                }}
+                className="px-6 py-2"
+              >
                 Browse All Rules
-              </Link>
+              </TrackedLink>
             </Button>
           </div>
 

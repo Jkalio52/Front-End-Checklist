@@ -13,6 +13,8 @@ import {
 } from '@repo/design-system/ui/dropdown-menu'
 import { cn } from '@repo/utils'
 import { useState } from 'react'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 /**
  * Cleans MDX content by removing/converting React components to plain markdown
@@ -102,6 +104,11 @@ export function CopyMarkdownDropdown({
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(cleanedContent)
+      trackInteraction(TELEMETRY_EVENTS.copyActionCompleted, {
+        label: 'copy_markdown',
+        location: 'rule_detail',
+        target: filePath
+      })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -164,7 +171,18 @@ export function CopyMarkdownDropdown({
 
         <DropdownMenuContent>
           <DropdownMenuItem asChild className="rounded-t-lg">
-            <a href={githubUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackInteraction(TELEMETRY_EVENTS.externalCtaClicked, {
+                  label: 'open_rule_in_github',
+                  location: 'rule_detail',
+                  target: githubUrl
+                })
+              }
+            >
               <GitHubBrandIcon className="size-4" aria-hidden="true" />
               <span>Open in GitHub</span>
             </a>
@@ -173,14 +191,36 @@ export function CopyMarkdownDropdown({
           <DropdownMenuSeparator />
 
           <DropdownMenuItem asChild>
-            <a href={chatgptUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={chatgptUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackInteraction(TELEMETRY_EVENTS.externalCtaClicked, {
+                  label: 'open_rule_in_chatgpt',
+                  location: 'rule_detail',
+                  target: 'chatgpt'
+                })
+              }
+            >
               <ChatGPTIcon className="size-4" />
               <span>Open in ChatGPT</span>
             </a>
           </DropdownMenuItem>
 
           <DropdownMenuItem asChild className="rounded-b-lg">
-            <a href={claudeUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={claudeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() =>
+                trackInteraction(TELEMETRY_EVENTS.externalCtaClicked, {
+                  label: 'open_rule_in_claude',
+                  location: 'rule_detail',
+                  target: 'claude'
+                })
+              }
+            >
               <ClaudeBrandIcon className="size-4" />
               <span>Open in Claude</span>
             </a>

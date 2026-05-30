@@ -17,12 +17,13 @@ import {
 } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
 import { cn } from '@repo/utils'
-import Link from 'next/link'
+import { TrackedLink } from '@/components/analytics/tracked-link'
 import {
   CHECKLIST_AUDIENCE_LABELS,
   getChecklistCuration
 } from '@/components/checklists/checklist-curation'
 import { ChecklistDifficultyBadge } from '@/components/checklists/checklist-difficulty-badge'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 
 // Map icon names from MDX to Lucide components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -108,15 +109,22 @@ function ChecklistCard({
                 'transition-colors duration-200 group-hover:text-accent'
               )}
             >
-              <Link
+              <TrackedLink
                 href={routeChecklist(slug)}
+                telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                telemetryProperties={{
+                  label: 'featured_checklist_card',
+                  location: 'homepage_checklists_preview',
+                  target: routeChecklist(slug),
+                  checklistId: slug
+                }}
                 className={cn(
                   'after:absolute after:inset-0 after:content-[""]',
                   'focus-visible:outline-none focus-visible:after:rounded-xl focus-visible:after:ring-2 focus-visible:after:ring-ring'
                 )}
               >
                 {title}
-              </Link>
+              </TrackedLink>
             </h3>
             <div className="shrink-0">
               <span className="inline-flex items-center justify-center rounded-full bg-accent/10 px-3 py-1 font-medium text-accent text-xs ring-1 ring-accent/20 ring-inset transition-all duration-200 group-hover:bg-accent group-hover:text-primary-foreground">
@@ -207,10 +215,17 @@ export function ChecklistsPreview({ checklists }: ChecklistsPreviewProps) {
             </p>
           </div>
           <Button variant="outline" size="sm" asChild className="hidden gap-1.5 sm:flex">
-            <Link href={routeChecklists()}>
+            <TrackedLink
+              href={routeChecklists()}
+              telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+              telemetryProperties={{
+                label: 'view_all_checklists',
+                location: 'homepage_checklists_preview'
+              }}
+            >
               View all checklists
               <ChevronRight className="h-4 w-4" />
-            </Link>
+            </TrackedLink>
           </Button>
         </div>
 
@@ -233,10 +248,17 @@ export function ChecklistsPreview({ checklists }: ChecklistsPreviewProps) {
         {/* Mobile CTA */}
         <div className="mt-8 text-center sm:hidden">
           <Button variant="outline" asChild className="gap-1.5">
-            <Link href={routeChecklists()}>
+            <TrackedLink
+              href={routeChecklists()}
+              telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+              telemetryProperties={{
+                label: 'view_all_checklists_mobile',
+                location: 'homepage_checklists_preview'
+              }}
+            >
               View all checklists
               <ChevronRight className="h-4 w-4" />
-            </Link>
+            </TrackedLink>
           </Button>
         </div>
       </div>

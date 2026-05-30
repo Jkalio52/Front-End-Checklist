@@ -9,6 +9,7 @@ module.exports = createPackageJestConfig({
     '^@repo/design-system/motion/(.*)$': '<rootDir>/src/motion/$1.tsx',
     '^@repo/design-system/icons$': '<rootDir>/src/icons.ts',
     '^@repo/design-system/typography$': '<rootDir>/src/typography.ts',
+    '^@repo/(utils|validators)$': '<rootDir>/../$1/src/public-api.ts',
     '^@repo/(.*)$': '<rootDir>/../$1/src'
   },
   collectCoverageFrom: [

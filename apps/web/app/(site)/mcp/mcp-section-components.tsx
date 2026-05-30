@@ -1,6 +1,8 @@
 /** Shared section-level presentational components for the MCP landing page. */
 import { ExternalLink, type Terminal } from '@repo/design-system/icons'
 import type { ReactNode } from 'react'
+import { TrackedLink } from '@/components/analytics/tracked-link'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 
 interface SectionHeadingProps {
   icon: typeof Terminal
@@ -45,16 +47,28 @@ export function SecurityListItem({ title, children }: { title: string; children:
 }
 
 /** Render an external CTA link used in the MCP footer section. */
-export function ExternalLinkCard({ href, children }: { href: string; children: ReactNode }) {
+export function ExternalLinkCard({
+  href,
+  label,
+  children
+}: {
+  href: string
+  label: string
+  children: ReactNode
+}) {
   return (
-    <a
+    <TrackedLink
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
+      telemetryEvent={TELEMETRY_EVENTS.externalCtaClicked}
+      telemetryProperties={{
+        label,
+        location: 'mcp_footer',
+        target: href
+      }}
       className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 font-medium text-foreground text-sm transition-colors hover:bg-background-subtle"
     >
       {children}
       <ExternalLink className="h-4 w-4" />
-    </a>
+    </TrackedLink>
   )
 }

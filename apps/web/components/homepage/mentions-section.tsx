@@ -5,9 +5,10 @@ import { ChevronRight, MessageCircle } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
 import type { Mention } from '@repo/types'
 import { m, useInView } from 'framer-motion'
-import Link from 'next/link'
 import { useRef, useState } from 'react'
+import { TrackedLink } from '@/components/analytics/tracked-link'
 import { useReducedMotionPreference } from '@/hooks/use-reduced-motion-preference'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 import { MentionsMarquee, StaticMentionsGrid } from './mentions-marquee'
 import { shuffleArray, splitIntoColumns } from './mentions-marquee-utils'
 
@@ -64,10 +65,17 @@ export function MentionsSection({ mentions }: MentionsSectionProps) {
             </p>
           </div>
           <Button variant="outline" size="sm" asChild className="hidden gap-1.5 sm:flex">
-            <Link href={routeMentions()}>
+            <TrackedLink
+              href={routeMentions()}
+              telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+              telemetryProperties={{
+                label: 'view_all_mentions',
+                location: 'homepage_mentions_section'
+              }}
+            >
               View all mentions
               <ChevronRight className="h-4 w-4" />
-            </Link>
+            </TrackedLink>
           </Button>
         </div>
 
@@ -114,10 +122,17 @@ export function MentionsSection({ mentions }: MentionsSectionProps) {
         {/* Mobile CTA */}
         <div className="mt-8 text-center sm:hidden">
           <Button variant="outline" asChild className="gap-1.5">
-            <Link href={routeMentions()}>
+            <TrackedLink
+              href={routeMentions()}
+              telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+              telemetryProperties={{
+                label: 'view_all_mentions_mobile',
+                location: 'homepage_mentions_section'
+              }}
+            >
               View all mentions
               <ChevronRight className="h-4 w-4" />
-            </Link>
+            </TrackedLink>
           </Button>
         </div>
       </div>

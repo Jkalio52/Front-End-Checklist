@@ -105,10 +105,6 @@ export function useProgress() {
           if (res.ok) {
             storage.saveProgress([])
             sessionStorage.setItem(migratedKey, '1')
-            trackClientEvent(TELEMETRY_EVENTS.progressBulkSynced, {
-              count: body.length,
-              source: 'local_storage_migration'
-            })
             queryClient.invalidateQueries({ queryKey })
           }
         })
@@ -156,6 +152,7 @@ export function useProgress() {
       completed: boolean
       completedAt?: Date
       notes?: string
+      eventType?: 'completion' | 'notes'
     }) => {
       const res = await fetch('/api/progress', {
         method: 'PUT',
@@ -164,7 +161,8 @@ export function useProgress() {
           ruleId: payload.ruleId,
           completed: payload.completed,
           completedAt: payload.completedAt?.toISOString(),
-          notes: payload.notes
+          notes: payload.notes,
+          eventType: payload.eventType
         })
       })
       if (!res.ok) throw new Error('Failed to update progress')
@@ -195,11 +193,12 @@ export function useProgress() {
       const completedAt = nextCompleted ? new Date() : undefined
 
       if (isSignedIn) {
-        putProgressMutation.mutate({ ruleId, completed: nextCompleted, completedAt })
-        trackClientEvent(
-          nextCompleted ? TELEMETRY_EVENTS.ruleCompleted : TELEMETRY_EVENTS.ruleUncompleted,
-          { ruleId }
-        )
+        putProgressMutation.mutate({
+          ruleId,
+          completed: nextCompleted,
+          completedAt,
+          eventType: 'completion'
+        })
       } else {
         let newProgress: UserProgress[]
         if (existingProgress) {
@@ -230,8 +229,7 @@ export function useProgress() {
       const completedAt = existingProgress?.completedAt
 
       if (isSignedIn) {
-        putProgressMutation.mutate({ ruleId, completed, completedAt, notes })
-        trackClientEvent(TELEMETRY_EVENTS.ruleNotesUpdated, { ruleId })
+        putProgressMutation.mutate({ ruleId, completed, completedAt, notes, eventType: 'notes' })
       } else {
         let newProgress: UserProgress[]
         if (existingProgress) {

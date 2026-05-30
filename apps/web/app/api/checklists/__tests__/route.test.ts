@@ -31,8 +31,14 @@ jest.mock('@/lib/bot-protection', () => ({
   rejectIfBot: jest.fn()
 }))
 
+jest.mock('@/lib/telemetry-server', () => ({
+  captureServerException: jest.fn(),
+  trackServerEvent: jest.fn()
+}))
+
 const { headers } = require('next/headers')
 const { rejectIfBot } = require('@/lib/bot-protection')
+const { trackServerEvent } = require('@/lib/telemetry-server')
 const { GET, POST } = require('../route')
 
 describe('checklists route', () => {
@@ -111,5 +117,11 @@ describe('checklists route', () => {
       }
     })
     expect(response.status).toBe(200)
+    expect(trackServerEvent).toHaveBeenCalledTimes(1)
+    expect(trackServerEvent).toHaveBeenCalledWith('checklist_created', {
+      checklistId: 'checklist-1',
+      ruleCount: 1,
+      userId: 'user-1'
+    })
   })
 })

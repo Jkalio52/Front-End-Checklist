@@ -3,6 +3,8 @@
 import { ExternalLink, Heart } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
 import type { Sponsor } from '@repo/types'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 import { SponsorsBubbles } from './sponsors-bubbles'
 
 const EMPTY_SPONSORS: Sponsor[] = []
@@ -11,6 +13,15 @@ interface SponsorsSectionProps {
   sponsors?: Sponsor[]
   githubSponsorsUrl: string
   openCollectiveUrl?: string
+}
+
+/** Track a click on one of the sponsor support CTAs. */
+function trackSponsorCta(label: string, target: string) {
+  trackInteraction(TELEMETRY_EVENTS.externalCtaClicked, {
+    label,
+    location: 'homepage_sponsors_section',
+    target
+  })
 }
 
 /**
@@ -40,7 +51,12 @@ function EmptyState({
 
       <div className="flex flex-wrap justify-center gap-3">
         <Button asChild>
-          <a href={githubSponsorsUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={githubSponsorsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackSponsorCta('become_a_sponsor', githubSponsorsUrl)}
+          >
             <Heart className="mr-2 h-4 w-4" aria-hidden="true" />
             Become a Sponsor
             <ExternalLink className="ml-2 h-3.5 w-3.5 opacity-50" aria-hidden="true" />
@@ -48,7 +64,12 @@ function EmptyState({
         </Button>
         {openCollectiveUrl && (
           <Button variant="outline" asChild>
-            <a href={openCollectiveUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={openCollectiveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackSponsorCta('open_collective', openCollectiveUrl)}
+            >
               Open Collective
               <ExternalLink className="ml-2 h-3.5 w-3.5 opacity-50" aria-hidden="true" />
             </a>
@@ -79,7 +100,12 @@ function SponsorsDisplay({
       {/* Sponsor buttons */}
       <div className="flex flex-wrap justify-center gap-3">
         <Button asChild>
-          <a href={githubSponsorsUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={githubSponsorsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackSponsorCta('become_a_sponsor', githubSponsorsUrl)}
+          >
             <Heart className="mr-2 h-4 w-4" aria-hidden="true" />
             Become a Sponsor
             <ExternalLink className="ml-2 h-3.5 w-3.5 opacity-50" aria-hidden="true" />
@@ -87,7 +113,12 @@ function SponsorsDisplay({
         </Button>
         {openCollectiveUrl && (
           <Button variant="outline" asChild>
-            <a href={openCollectiveUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={openCollectiveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackSponsorCta('open_collective', openCollectiveUrl)}
+            >
               Open Collective
               <ExternalLink className="ml-2 h-3.5 w-3.5 opacity-50" aria-hidden="true" />
             </a>

@@ -12,6 +12,8 @@ import {
 } from '@repo/design-system/ui/dropdown-menu'
 import { cn } from '@repo/utils'
 import { useCallback, useEffect, useState } from 'react'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 /** LinkedIn brand icon for share menu. */
 function LinkedInIcon({ className }: { className?: string }) {
@@ -38,12 +40,14 @@ interface ShareButtonProps {
   url?: string
   /** Optional class name for the trigger wrapper. */
   className?: string
+  /** Analytics location for the share control. */
+  location?: string
 }
 
 /**
  * native Web Share API when available. Matches CopyMarkdownDropdown styling.
  */
-export function ShareButton({ title, url, className }: ShareButtonProps) {
+export function ShareButton({ title, url, className, location = 'page_header' }: ShareButtonProps) {
   const [copied, setCopied] = useState(false)
   const [canNativeShare, setCanNativeShare] = useState(false)
 
@@ -61,13 +65,18 @@ export function ShareButton({ title, url, className }: ShareButtonProps) {
       e.preventDefault()
       try {
         await navigator.clipboard.writeText(shareUrl)
+        trackInteraction(TELEMETRY_EVENTS.copyActionCompleted, {
+          label: 'copy_share_link',
+          location,
+          target: shareUrl
+        })
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       } catch {
         setCopied(false)
       }
     },
-    [shareUrl]
+    [location, shareUrl]
   )
 
   const handleNativeShare = useCallback(
@@ -75,6 +84,11 @@ export function ShareButton({ title, url, className }: ShareButtonProps) {
       e.preventDefault()
       if (!navigator.share) return
       try {
+        trackInteraction(TELEMETRY_EVENTS.shareActionClicked, {
+          label: 'native_share',
+          location,
+          target: shareUrl
+        })
         await navigator.share({
           title,
           url: shareUrl
@@ -83,8 +97,26 @@ export function ShareButton({ title, url, className }: ShareButtonProps) {
         if (!(err instanceof Error) || err.name === 'AbortError') return
       }
     },
-    [title, shareUrl]
+    [location, title, shareUrl]
   )
+
+  /** Record that the share menu trigger was opened. */
+  const handleShareTriggerClick = () => {
+    trackInteraction(TELEMETRY_EVENTS.shareActionClicked, {
+      label: 'open_share_menu',
+      location,
+      target: shareUrl
+    })
+  }
+
+  /** Record a click on one of the external share destinations. */
+  const trackShareDestination = (label: string, target: string) => {
+    trackInteraction(TELEMETRY_EVENTS.shareActionClicked, {
+      label,
+      location,
+      target
+    })
+  }
 
   const xIntentUrl = `https://x.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`
   const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`
@@ -101,6 +133,7 @@ export function ShareButton({ title, url, className }: ShareButtonProps) {
             className
           )}
           aria-label="Share"
+          onClick={handleShareTriggerClick}
         >
           {copied ? (
             <Check className="h-3.5 w-3.5 text-success" aria-hidden="true" />
@@ -121,21 +154,36 @@ export function ShareButton({ title, url, className }: ShareButtonProps) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem asChild>
-          <a href={xIntentUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={xIntentUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackShareDestination('share_on_x', xIntentUrl)}
+          >
             <XBrandIcon className="h-4 w-4 shrink-0" />
             <span>Share on X</span>
           </a>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild>
-          <a href={linkedInUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={linkedInUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackShareDestination('share_on_linkedin', linkedInUrl)}
+          >
             <LinkedInIcon className="h-4 w-4 shrink-0" />
             <span>Share on LinkedIn</span>
           </a>
         </DropdownMenuItem>
 
         <DropdownMenuItem asChild className={cn(!canNativeShare && 'rounded-b-lg')}>
-          <a href={redditUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={redditUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => trackShareDestination('share_on_reddit', redditUrl)}
+          >
             <RedditIcon className="h-4 w-4 shrink-0" />
             <span>Share on Reddit</span>
           </a>

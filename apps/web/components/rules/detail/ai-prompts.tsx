@@ -4,6 +4,8 @@ import { Check, Copy } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
 import { cn } from '@repo/utils'
 import { useState } from 'react'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 interface Prompt {
   check?: string
@@ -32,6 +34,11 @@ function PromptCard({ type, text }: { type: keyof Prompt; text: string }) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(text)
+      trackInteraction(TELEMETRY_EVENTS.aiPromptCopied, {
+        label: config.label,
+        location: 'rule_detail',
+        target: type
+      })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {

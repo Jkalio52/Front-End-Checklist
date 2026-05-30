@@ -11,7 +11,7 @@ import { getSocialProfileInputValue } from '@/lib/social-links'
 import { ProfileAccountCard } from './profile-account-card'
 import { ProfileEditorHeader } from './profile-editor-header'
 import { GithubMetadataSection } from './profile-github-metadata-section'
-import { PublicProfileLinkSection, SocialLinksSection, VisibilitySection } from './profile-sections'
+import { SocialLinksSection, VisibilitySection } from './profile-sections'
 import { getSyncedProfile } from './profile-sync-response'
 import type { ProfileData, ProfileUser } from './profile-types'
 import { ProfileUrlSection } from './profile-url-section'
@@ -198,7 +198,10 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
           followers={currentProfile.githubFollowers}
         />
 
-        <ProfileUrlSection resolvedUsername={resolvedUsername} />
+        <ProfileUrlSection
+          resolvedUsername={resolvedUsername}
+          isProfilePublic={form.isProfilePublic}
+        />
 
         <section>
           <label
@@ -260,11 +263,6 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
           onShowChecklistsChange={value =>
             dispatch({ type: 'setBoolean', field: 'showChecklists', value })
           }
-        />
-
-        <PublicProfileLinkSection
-          resolvedUsername={resolvedUsername}
-          isProfilePublic={form.isProfilePublic}
         />
       </div>
     </>

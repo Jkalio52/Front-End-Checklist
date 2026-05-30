@@ -13,14 +13,16 @@ import { PageBreadcrumbs } from '@repo/design-system/custom/navigation/page-brea
 import { Check, Copy, ListChecks } from '@repo/design-system/icons'
 import type { ChecklistFramework } from '@repo/types'
 import { cn } from '@repo/utils'
-import Link from 'next/link'
 import { useCallback, useState } from 'react'
+import { TrackedLink } from '@/components/analytics/tracked-link'
 import { RuleRow } from '@/components/rules/listing/rule-row'
 import { useUserChecklists } from '@/hooks/use-user-checklists'
 import {
   buildRuleHrefWithFrameworkContext,
   getChecklistFrameworkLabel
 } from '@/lib/framework-preferences'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 interface RuleItem {
   id: string
@@ -61,6 +63,11 @@ export function SharedChecklistView({
   const handleCopyLink = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(shareUrl)
+      trackInteraction(TELEMETRY_EVENTS.copyActionCompleted, {
+        label: 'copy_shared_checklist_link',
+        location: 'shared_checklist',
+        target: shareUrl
+      })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -71,9 +78,14 @@ export function SharedChecklistView({
   const handleClone = useCallback(async () => {
     if (!session?.user?.id) return
     const ruleIds = rules.map(r => r.id)
+    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+      label: 'clone_shared_checklist',
+      location: 'shared_checklist',
+      target: publicId
+    })
     await createChecklist(name, description, ruleIds, framework)
     setCloneDone(true)
-  }, [session?.user?.id, name, description, rules, createChecklist, framework])
+  }, [session?.user?.id, name, description, rules, createChecklist, framework, publicId])
 
   const frameworkLabel = getChecklistFrameworkLabel(framework)
 
@@ -141,8 +153,14 @@ export function SharedChecklistView({
                 {cloneDone ? 'Added to Lists' : 'Clone to My Lists'}
               </button>
             ) : (
-              <Link
+              <TrackedLink
                 href={routeLists()}
+                telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                telemetryProperties={{
+                  label: 'sign_in_to_clone',
+                  location: 'shared_checklist',
+                  target: routeLists()
+                }}
                 className={cn(
                   'inline-flex items-center gap-2 rounded-lg px-3 py-2',
                   'bg-accent text-accent-foreground',
@@ -152,7 +170,7 @@ export function SharedChecklistView({
                 )}
               >
                 Sign in to clone
-              </Link>
+              </TrackedLink>
             )}
           </div>
         </div>
@@ -163,8 +181,13 @@ export function SharedChecklistView({
       {rules.length === 0 ? (
         <div className="border-border border-t py-16 text-center">
           <p className="mb-4 text-foreground-muted">This checklist has no rules yet.</p>
-          <Link
+          <TrackedLink
             href={routeRules()}
+            telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+            telemetryProperties={{
+              label: 'browse_rules_empty_shared_checklist',
+              location: 'shared_checklist'
+            }}
             className={cn(
               'inline-flex items-center gap-2 rounded-lg px-4 py-2',
               'bg-accent text-accent-foreground',
@@ -172,7 +195,7 @@ export function SharedChecklistView({
             )}
           >
             Browse Rules
-          </Link>
+          </TrackedLink>
         </div>
       ) : (
         <ul className="list-none border-border-subtle border-t">

@@ -9,6 +9,8 @@ import { useParams, useRouter } from 'next/navigation'
 import { Suspense, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useProgress } from '@/hooks/use-progress'
 import { useUserChecklists } from '@/hooks/use-user-checklists'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 import { ChecklistHeader } from './checklist-header'
 import { ChecklistRulesSection } from './checklist-rules-section'
 import { ChecklistBreadcrumbs, ChecklistNotFoundState, PageSkeleton } from './page-states'
@@ -179,12 +181,51 @@ function UserChecklistDetailContent() {
     if (!shareUrl) return
     try {
       await navigator.clipboard.writeText(shareUrl)
+      trackInteraction(TELEMETRY_EVENTS.copyActionCompleted, {
+        checklistId,
+        label: 'copy_checklist_share_link',
+        location: 'checklist_detail',
+        target: shareUrl
+      })
       setShareCopied(true)
       setTimeout(() => setShareCopied(false), 2000)
     } catch {
       // ignore
     }
-  }, [shareUrl])
+  }, [checklistId, shareUrl])
+
+  /** Track and export the current checklist JSON. */
+  const handleExportChecklist = useCallback(() => {
+    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+      checklistId,
+      label: 'export_checklist',
+      location: 'checklist_detail',
+      target: 'json'
+    })
+    exportChecklist(checklistId)
+  }, [checklistId, exportChecklist])
+
+  /** Track the public sharing intent before the server mutation records success. */
+  const handleEnableShare = useCallback(() => {
+    trackInteraction(TELEMETRY_EVENTS.shareActionClicked, {
+      checklistId,
+      label: 'share_checklist',
+      location: 'checklist_detail',
+      target: 'public_share'
+    })
+    enableShare(checklistId)
+  }, [checklistId, enableShare])
+
+  /** Track the unshare intent before the server mutation records success. */
+  const handleDisableShare = useCallback(() => {
+    trackInteraction(TELEMETRY_EVENTS.shareActionClicked, {
+      checklistId,
+      label: 'unshare_checklist',
+      location: 'checklist_detail',
+      target: 'public_share'
+    })
+    disableShare(checklistId)
+  }, [checklistId, disableShare])
 
   const handleEditFrameworkChange = useCallback((value: ChecklistFramework | '') => {
     setEditFramework(value)
@@ -221,13 +262,13 @@ function UserChecklistDetailContent() {
         onSave={handleSaveEdit}
         onCancel={cancelEditing}
         onStartEditing={startEditing}
-        onExport={() => exportChecklist(checklistId)}
+        onExport={handleExportChecklist}
         onDelete={() => setShowDeleteConfirm(true)}
         onResetProgress={handleResetProgress}
         shareUrl={shareUrl}
         isShareLoading={isShareLoading}
-        onShare={() => enableShare(checklistId)}
-        onUnshare={() => disableShare(checklistId)}
+        onShare={handleEnableShare}
+        onUnshare={handleDisableShare}
         onCopyShareLink={handleCopyShareLink}
         shareCopied={shareCopied}
       />

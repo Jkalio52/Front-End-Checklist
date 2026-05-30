@@ -1,4 +1,4 @@
-import { cn, debounce, formatDate, formatTechTerm } from '../index'
+import { cn, debounce, formatDate, formatTechTerm } from '../public-api'
 
 describe('@repo/utils', () => {
   it('merges class names with tailwind precedence', () => {

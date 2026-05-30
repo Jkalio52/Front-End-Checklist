@@ -33,8 +33,14 @@ jest.mock('@/lib/bot-protection', () => ({
   rejectIfBot: jest.fn()
 }))
 
+jest.mock('@/lib/telemetry-server', () => ({
+  captureServerException: jest.fn(),
+  trackServerEvent: jest.fn()
+}))
+
 const { headers } = require('next/headers')
 const { rejectIfBot } = require('@/lib/bot-protection')
+const { trackServerEvent } = require('@/lib/telemetry-server')
 const { PATCH } = require('../route')
 
 describe('checklist detail route', () => {
@@ -75,6 +81,12 @@ describe('checklist detail route', () => {
     await expect(response.json()).resolves.toMatchObject({
       id: 'checklist-1',
       framework: 'sveltekit'
+    })
+    expect(trackServerEvent).toHaveBeenCalledTimes(1)
+    expect(trackServerEvent).toHaveBeenCalledWith('checklist_updated', {
+      checklistId: 'checklist-1',
+      updatedFields: ['framework'],
+      userId: 'user-1'
     })
   })
 })

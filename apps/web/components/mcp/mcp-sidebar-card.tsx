@@ -5,6 +5,8 @@ import { Bot, Check, Copy, ExternalLink } from '@repo/design-system/icons'
 import { cn } from '@repo/utils'
 import Link from 'next/link'
 import { useState } from 'react'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 interface McpSidebarCardProps {
   slug: string
@@ -31,6 +33,12 @@ function CommandRow({ command, slug }: CommandRowProps) {
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(fullCommand)
+      trackInteraction(TELEMETRY_EVENTS.copyActionCompleted, {
+        label: 'copy_mcp_rule_command',
+        location: 'rule_detail_sidebar',
+        target: command,
+        ruleId: slug
+      })
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
@@ -84,6 +92,14 @@ export function McpSidebarCard({ slug, className }: McpSidebarCardProps) {
 
       <Link
         href={routeMcp()}
+        onClick={() =>
+          trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+            label: 'learn_about_mcp',
+            location: 'rule_detail_sidebar',
+            target: routeMcp(),
+            ruleId: slug
+          })
+        }
         className={cn(
           'mt-3 flex items-center gap-1.5 text-accent text-xs',
           'transition-colors hover:text-accent-hover',

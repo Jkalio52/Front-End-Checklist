@@ -5,6 +5,8 @@ import { cn } from '@repo/utils'
 import { parseAsStringEnum, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 import { getChecklistCuration } from '@/components/checklists/checklist-curation'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 import { ChecklistCard, ChecklistCardSkeleton } from './checklist-card'
 
 interface Checklist {
@@ -41,6 +43,26 @@ export function ChecklistBrowser({ checklists, ruleRefToId }: ChecklistBrowserPr
     'sort',
     parseAsStringEnum(['featured', 'alphabetical', 'rules']).withDefault('featured')
   )
+
+  /** Track and update the selected checklist difficulty filter. */
+  const handleDifficultyChange = (difficulty: (typeof difficultyOptions)[number]) => {
+    trackInteraction(TELEMETRY_EVENTS.filterChanged, {
+      label: 'checklist_difficulty_filter',
+      location: 'checklist_browser',
+      target: difficulty
+    })
+    setDifficultyFilter(difficulty)
+  }
+
+  /** Track and update the checklist sort order. */
+  const handleSortChange = (value: string) => {
+    trackInteraction(TELEMETRY_EVENTS.filterChanged, {
+      label: 'checklist_sort',
+      location: 'checklist_browser',
+      target: value
+    })
+    setSortBy(value === 'alphabetical' || value === 'rules' ? value : 'featured')
+  }
 
   // Filter and sort checklists
   const filteredChecklists = useMemo(() => {
@@ -87,7 +109,7 @@ export function ChecklistBrowser({ checklists, ruleRefToId }: ChecklistBrowserPr
             <button
               key={difficulty}
               type="button"
-              onClick={() => setDifficultyFilter(difficulty)}
+              onClick={() => handleDifficultyChange(difficulty)}
               aria-pressed={difficultyFilter === difficulty}
               className={cn(
                 'rounded-md px-3 py-1.5 font-medium text-[13px] transition-all duration-150',
@@ -114,7 +136,7 @@ export function ChecklistBrowser({ checklists, ruleRefToId }: ChecklistBrowserPr
           <select
             id="sort-checklists"
             value={sortBy}
-            onChange={e => setSortBy(e.target.value as typeof sortBy)}
+            onChange={e => handleSortChange(e.target.value)}
             className={cn(
               'h-9 appearance-none rounded-lg pr-8 pl-3',
               'border border-border bg-background',
@@ -174,7 +196,7 @@ export function ChecklistBrowser({ checklists, ruleRefToId }: ChecklistBrowserPr
           <p className="text-foreground-muted">No checklists match your filters.</p>
           <button
             type="button"
-            onClick={() => setDifficultyFilter('all')}
+            onClick={() => handleDifficultyChange('all')}
             className="mt-2 text-accent text-sm hover:underline"
           >
             Clear filters

@@ -1,5 +1,7 @@
 import { cn } from '@repo/utils'
 import { SelectFilter } from '@/components/rules/browser/rules-browser-toolbar-components'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 interface RulesBrowserFiltersProps {
   priorityOptions: readonly string[]
@@ -17,6 +19,15 @@ interface RulesBrowserFiltersProps {
   hasActiveFilters: boolean
   clearFilters: () => void
   showFilters: boolean
+}
+
+/** Track a rules browser filter or sort value change. */
+function trackFilterChange(label: string, target: string) {
+  trackInteraction(TELEMETRY_EVENTS.filterChanged, {
+    label,
+    location: 'rules_browser_filters',
+    target
+  })
 }
 
 /** Render the expandable filter row for the rules browser toolbar. */
@@ -50,7 +61,10 @@ export function RulesBrowserFilters({
           <button
             key={priority}
             type="button"
-            onClick={() => setPriorityFilter(priority)}
+            onClick={() => {
+              trackFilterChange('priority_filter', priority)
+              setPriorityFilter(priority)
+            }}
             aria-pressed={priorityFilter === priority}
             className={cn(
               'rounded-md px-3 py-1.5 text-sm transition-colors duration-150',
@@ -68,7 +82,10 @@ export function RulesBrowserFilters({
         <SelectFilter
           id="tag-filter"
           value={tagFilter}
-          onChange={value => setTagFilter(value)}
+          onChange={value => {
+            trackFilterChange('tag_filter', value)
+            setTagFilter(value)
+          }}
           active={tagFilter !== 'all'}
           defaultLabel="All tags"
           options={allTags
@@ -84,7 +101,10 @@ export function RulesBrowserFilters({
         <SelectFilter
           id="subcategory-filter"
           value={subcategoryFilter}
-          onChange={value => setSubcategoryFilter(value)}
+          onChange={value => {
+            trackFilterChange('subcategory_filter', value)
+            setSubcategoryFilter(value)
+          }}
           active={subcategoryFilter !== 'all'}
           defaultLabel="All subcategories"
           options={allSubcategories
@@ -102,7 +122,10 @@ export function RulesBrowserFilters({
       <SelectFilter
         id="sort-by"
         value={sortBy}
-        onChange={setSortBy}
+        onChange={value => {
+          trackFilterChange('sort_rules', value)
+          setSortBy(value)
+        }}
         active={false}
         defaultLabel=""
         options={sortOptions.map(option => ({
@@ -114,7 +137,10 @@ export function RulesBrowserFilters({
       {hasActiveFilters ? (
         <button
           type="button"
-          onClick={clearFilters}
+          onClick={() => {
+            trackFilterChange('clear_all_filters', 'all')
+            clearFilters()
+          }}
           className="text-accent text-sm transition-colors hover:text-accent/80"
         >
           Clear all

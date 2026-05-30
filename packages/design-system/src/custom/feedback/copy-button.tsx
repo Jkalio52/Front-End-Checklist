@@ -3,13 +3,14 @@
 import { Check, Copy } from '@repo/design-system/icons'
 import { Button, type ButtonProps } from '@repo/design-system/ui/button'
 import { cn } from '@repo/utils'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 export interface CopyButtonProps extends Omit<ButtonProps, 'children'> {
   text: string
   copiedLabel?: string
   defaultLabel?: string
   iconClassName?: string
+  onCopySuccess?: () => void
 }
 
 /** Render a button that copies text to the clipboard and exposes copied feedback. */
@@ -21,23 +22,17 @@ export function CopyButton({
   copiedLabel = 'Copied!',
   defaultLabel = 'Copy to clipboard',
   iconClassName,
+  onCopySuccess,
   ...props
 }: CopyButtonProps) {
   const [copied, setCopied] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current)
-      }
-    }
-  }, [])
-
   const handleCopy = useCallback(async () => {
     try {
       await navigator.clipboard.writeText(text)
       setCopied(true)
+      onCopySuccess?.()
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
@@ -45,7 +40,7 @@ export function CopyButton({
     } catch {
       setCopied(false)
     }
-  }, [text])
+  }, [text, onCopySuccess])
 
   const label = copied ? copiedLabel : defaultLabel
 

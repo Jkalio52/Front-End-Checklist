@@ -15,6 +15,7 @@ interface CodeSurfaceProps extends ComponentPropsWithoutRef<'pre'> {
   codeClassName?: string
   copyText?: string
   density?: 'default' | 'compact'
+  onCopySuccess?: () => void
   prompt?: string
   showCopyButton?: boolean
   wrapperClassName?: string
@@ -74,6 +75,7 @@ export function CodeSurface({
   codeClassName,
   copyText,
   density = 'default',
+  onCopySuccess,
   prompt,
   showCopyButton,
   wrapperClassName,
@@ -92,7 +94,9 @@ export function CodeSurface({
         wrapperClassName
       )}
     >
-      {shouldShowCopyButton ? <CopyButton text={resolvedCopyText} /> : null}
+      {shouldShowCopyButton ? (
+        <CopyButton text={resolvedCopyText} onCopySuccess={onCopySuccess} />
+      ) : null}
       <pre data-slot="code-surface" className={className} {...preProps}>
         {children ?? (
           <code className={codeClassName}>

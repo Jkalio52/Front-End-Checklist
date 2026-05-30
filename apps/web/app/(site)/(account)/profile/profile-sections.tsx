@@ -1,9 +1,7 @@
 'use client'
 
-import { routePublicProfile, SITE_URL } from '@repo/config'
 import { Checkbox } from '@repo/design-system/ui/checkbox'
 import { Input } from '@repo/design-system/ui/input'
-import Link from 'next/link'
 
 interface SocialLinksSectionProps {
   githubUrl: string
@@ -115,37 +113,6 @@ export function VisibilitySection({
           <span className="text-foreground text-sm">Show shared checklists</span>
         </label>
       </div>
-    </section>
-  )
-}
-
-interface PublicProfileLinkSectionProps {
-  resolvedUsername?: string
-  isProfilePublic: boolean
-}
-
-/** Render the current public profile URL when the profile is public. */
-export function PublicProfileLinkSection({
-  resolvedUsername,
-  isProfilePublic
-}: PublicProfileLinkSectionProps) {
-  if (!isProfilePublic || !resolvedUsername) {
-    return null
-  }
-
-  const publicProfileUrl = `${SITE_URL}${routePublicProfile(resolvedUsername)}`
-
-  return (
-    <section className="rounded-lg border border-accent/30 bg-accent/5 p-4">
-      <p className="font-medium text-foreground text-sm">Your public profile</p>
-      <Link
-        href={routePublicProfile(resolvedUsername)}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="mt-1 block break-all text-accent text-sm underline hover:no-underline"
-      >
-        {publicProfileUrl}
-      </Link>
     </section>
   )
 }

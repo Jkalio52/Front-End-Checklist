@@ -2,7 +2,7 @@
 
 import { authClient } from '@repo/auth/auth-client'
 import { routeProfile, routeSettings } from '@repo/config'
-import { Loader2, LogOut, Settings, User as UserIcon } from '@repo/design-system/icons'
+import { ExternalLink, Loader2, LogOut, Settings, User } from '@repo/design-system/icons'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +14,10 @@ import { cn } from '@repo/utils'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { signOutCurrentUser, startGitHubSignIn } from '@/lib/auth-actions'
+import { fetchPublicProfileHref, type PublicProfileShortcutState } from './auth-button-profile'
 
 interface AuthButtonProps {
   mobile?: boolean
@@ -31,11 +32,41 @@ interface AuthButtonProps {
 export function AuthButton({ mobile = false, className }: AuthButtonProps) {
   const pathname = usePathname()
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [publicProfileShortcut, setPublicProfileShortcut] = useState<PublicProfileShortcutState>({
+    href: null
+  })
   const { data: session, isPending } = authClient.useSession()
   const hasHydrated = useHydrated()
   const user = session?.user
+  const userId = user?.id
 
   const nextPath = pathname || '/'
+
+  /**
+   * Load the latest public profile route for account-menu shortcuts.
+   */
+  const loadPublicProfileHref = async () => {
+    const href = await fetchPublicProfileHref()
+    setPublicProfileShortcut({ href, userId })
+  }
+
+  useEffect(() => {
+    if (!(mobile && userId)) {
+      return
+    }
+
+    let isCurrent = true
+
+    void fetchPublicProfileHref().then(href => {
+      if (isCurrent) {
+        setPublicProfileShortcut({ href, userId })
+      }
+    })
+
+    return () => {
+      isCurrent = false
+    }
+  }, [mobile, userId])
 
   /**
    * Sign out the current user and surface failures inline.
@@ -67,6 +98,23 @@ export function AuthButton({ mobile = false, className }: AuthButtonProps) {
     }
   }
 
+  /**
+   * Refresh profile shortcut availability when the desktop account menu opens.
+   * @param open - Whether the dropdown menu is opening.
+   */
+  const handleAccountMenuOpenChange = (open: boolean) => {
+    if (open) {
+      void loadPublicProfileHref()
+    }
+  }
+
+  /**
+   * Start loading account shortcut data as soon as the menu trigger is activated.
+   */
+  const handleAccountMenuTrigger = () => {
+    void loadPublicProfileHref()
+  }
+
   if (!(hasHydrated && !isPending)) {
     return (
       <span
@@ -87,10 +135,26 @@ export function AuthButton({ mobile = false, className }: AuthButtonProps) {
   if (user) {
     const avatarUrl = user.image
     const displayName = user.name ?? user.email ?? 'Account'
+    const publicProfileHref =
+      publicProfileShortcut.userId === userId ? publicProfileShortcut.href : null
 
     if (mobile) {
       return (
         <div className={cn('flex w-full flex-col gap-1', className)}>
+          {publicProfileHref && (
+            <Link
+              href={publicProfileHref}
+              className={cn(
+                'flex min-h-[44px] w-full items-center gap-2 rounded-md px-3 py-2.5',
+                'font-medium text-foreground-muted text-sm',
+                'transition-colors hover:bg-background-subtle hover:text-foreground',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
+              )}
+            >
+              <ExternalLink className="size-5" aria-hidden="true" />
+              <span>View public profile</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={handleSignOut}
@@ -104,7 +168,7 @@ export function AuthButton({ mobile = false, className }: AuthButtonProps) {
             {avatarUrl ? (
               <Image src={avatarUrl} alt="" width={24} height={24} className="rounded-full" />
             ) : (
-              <UserIcon className="size-5" aria-hidden="true" />
+              <User className="size-5" aria-hidden="true" />
             )}
             <span>Sign out</span>
           </button>
@@ -115,7 +179,7 @@ export function AuthButton({ mobile = false, className }: AuthButtonProps) {
 
     return (
       <div className={cn('hidden items-center md:flex', className)}>
-        <DropdownMenu>
+        <DropdownMenu onOpenChange={handleAccountMenuOpenChange}>
           <DropdownMenuTrigger asChild>
             <button
               type="button"
@@ -125,12 +189,18 @@ export function AuthButton({ mobile = false, className }: AuthButtonProps) {
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2'
               )}
               aria-label="Account menu"
+              onPointerDown={handleAccountMenuTrigger}
+              onKeyDown={event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  handleAccountMenuTrigger()
+                }
+              }}
             >
               {avatarUrl ? (
                 <Image src={avatarUrl} alt="" width={32} height={32} className="rounded-full" />
               ) : (
                 <span className="flex size-8 items-center justify-center rounded-full bg-background-muted">
-                  <UserIcon className="size-4 text-foreground-muted" aria-hidden="true" />
+                  <User className="size-4 text-foreground-muted" aria-hidden="true" />
                 </span>
               )}
             </button>
@@ -143,9 +213,17 @@ export function AuthButton({ mobile = false, className }: AuthButtonProps) {
               )}
             </div>
             <DropdownMenuSeparator />
+            {publicProfileHref && (
+              <DropdownMenuItem asChild>
+                <Link href={publicProfileHref} className="flex cursor-pointer items-center gap-2">
+                  <ExternalLink className="size-4" aria-hidden="true" />
+                  <span>View public profile</span>
+                </Link>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem asChild>
               <Link href={routeProfile()} className="flex cursor-pointer items-center gap-2">
-                <UserIcon className="size-4" aria-hidden="true" />
+                <User className="size-4" aria-hidden="true" />
                 <span>Profile</span>
               </Link>
             </DropdownMenuItem>

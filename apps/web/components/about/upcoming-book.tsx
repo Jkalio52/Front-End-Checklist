@@ -1,6 +1,8 @@
 import { BookOpen, ChevronRight } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
 import Image from 'next/image'
+import { TrackedLink } from '@/components/analytics/tracked-link'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 import bookCover from '@/public/projects/start-and-ship/practical-guides-junior-devs-start-and-ship.png'
 
 const BOOK_DATA = {
@@ -59,10 +61,17 @@ export function UpcomingBook() {
               </p>
               <div>
                 <Button asChild size="lg" className="gap-2">
-                  <a href={BOOK_DATA.ctaUrl} target="_blank" rel="noopener noreferrer">
+                  <TrackedLink
+                    href={BOOK_DATA.ctaUrl}
+                    telemetryEvent={TELEMETRY_EVENTS.externalCtaClicked}
+                    telemetryProperties={{
+                      label: 'notify_book_available',
+                      location: 'about_upcoming_book'
+                    }}
+                  >
                     {BOOK_DATA.ctaText}
                     <ChevronRight className="h-4 w-4" />
-                  </a>
+                  </TrackedLink>
                 </Button>
               </div>
             </div>

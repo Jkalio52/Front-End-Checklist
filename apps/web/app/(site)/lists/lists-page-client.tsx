@@ -12,6 +12,7 @@ import { useProgress } from '@/hooks/use-progress'
 import { useUserChecklists } from '@/hooks/use-user-checklists'
 import { startGitHubSignIn } from '@/lib/auth-actions'
 import { getChecklistFrameworkLabel } from '@/lib/framework-preferences'
+import { TELEMETRY_EVENTS, trackInteraction } from '@/lib/telemetry-interactions'
 import { CreateChecklistForm } from './create-checklist-form'
 import { UserChecklistCard } from './user-checklist-card'
 
@@ -48,6 +49,11 @@ export function ListsPageClient() {
       e.preventDefault()
       if (!newName.trim()) return
 
+      trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+        label: 'submit_new_checklist',
+        location: 'lists_page',
+        target: newFramework || 'none'
+      })
       await createChecklist(
         newName.trim(),
         newDescription.trim() || undefined,
@@ -125,7 +131,14 @@ export function ListsPageClient() {
               !showCreateForm ? (
                 <button
                   type="button"
-                  onClick={() => setShowCreateForm(true)}
+                  onClick={() => {
+                    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+                      label: 'open_new_checklist_form',
+                      location: 'lists_page',
+                      target: 'page_hero'
+                    })
+                    setShowCreateForm(true)
+                  }}
                   className={cn(
                     'flex items-center gap-2 rounded-lg px-4 py-2',
                     'bg-accent text-accent-foreground',
@@ -185,7 +198,14 @@ export function ListsPageClient() {
               {!showCreateForm && (
                 <button
                   type="button"
-                  onClick={() => setShowCreateForm(true)}
+                  onClick={() => {
+                    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+                      label: 'open_new_checklist_form',
+                      location: 'lists_page',
+                      target: 'empty_state'
+                    })
+                    setShowCreateForm(true)
+                  }}
                   className={cn(
                     'inline-flex items-center gap-2 rounded-lg px-4 py-2',
                     'bg-accent text-accent-foreground',

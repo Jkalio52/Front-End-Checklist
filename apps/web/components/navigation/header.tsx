@@ -9,6 +9,8 @@ import { AuthButton } from '@/components/auth/auth-button'
 import { GitHubLink } from '@/components/links/github-link'
 import { XLink } from '@/components/links/x-link'
 import { useScrollDirection } from '@/hooks/use-scroll-direction'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 interface HeaderProps {
   onOpenSearch: () => void
@@ -56,6 +58,26 @@ export function Header({ onOpenSearch, githubStars }: HeaderProps) {
   /** Close the mobile navigation menu after a navigation action. */
   const closeMobileMenu = () => setMobileMenuOpen(false)
 
+  /** Open search and record the surface used to trigger it. */
+  const handleOpenSearch = (label: string) => {
+    trackInteraction(TELEMETRY_EVENTS.searchOpened, {
+      label,
+      location: 'header'
+    })
+    onOpenSearch()
+  }
+
+  /** Toggle the mobile menu and record the explicit menu button action. */
+  const handleMobileMenuToggle = () => {
+    const nextOpen = !mobileMenuOpen
+    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+      label: nextOpen ? 'open_mobile_menu' : 'close_mobile_menu',
+      location: 'header',
+      target: 'mobile_menu'
+    })
+    setMobileMenuOpen(nextOpen)
+  }
+
   return (
     <header
       className={cn(
@@ -99,7 +121,7 @@ export function Header({ onOpenSearch, githubStars }: HeaderProps) {
           {/* Search Button - Desktop */}
           <button
             type="button"
-            onClick={onOpenSearch}
+            onClick={() => handleOpenSearch('desktop_search')}
             className={cn(
               'hidden h-9 items-center gap-2 rounded-md px-3 sm:flex',
               'border border-border bg-background-subtle',
@@ -119,7 +141,7 @@ export function Header({ onOpenSearch, githubStars }: HeaderProps) {
           {/* Search Button - Mobile (44px touch target) */}
           <button
             type="button"
-            onClick={onOpenSearch}
+            onClick={() => handleOpenSearch('mobile_search')}
             className={cn(
               'flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md sm:hidden',
               'transition-colors hover:bg-background-subtle',
@@ -133,6 +155,13 @@ export function Header({ onOpenSearch, githubStars }: HeaderProps) {
           {/* Lists */}
           <Link
             href={routeLists()}
+            onClick={() =>
+              trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+                label: 'header_lists',
+                location: 'header',
+                target: routeLists()
+              })
+            }
             className={cn(
               'hidden h-9 items-center gap-1.5 rounded-md px-3 md:flex',
               'font-medium text-foreground-muted text-sm',
@@ -158,7 +187,7 @@ export function Header({ onOpenSearch, githubStars }: HeaderProps) {
               'transition-colors hover:bg-background-subtle',
               'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
             )}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={handleMobileMenuToggle}
             aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={mobileMenuOpen}
             aria-controls="mobile-menu"

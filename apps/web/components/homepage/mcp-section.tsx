@@ -3,7 +3,8 @@ import { InlineCode } from '@repo/design-system/custom/content/code-surface'
 import { Bot, ChevronRight, Code2, Search, Terminal } from '@repo/design-system/icons'
 import { Badge } from '@repo/design-system/ui/badge'
 import { Button } from '@repo/design-system/ui/button'
-import Link from 'next/link'
+import { TrackedLink } from '@/components/analytics/tracked-link'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 
 const MCP_FEATURES = [
   {
@@ -80,10 +81,17 @@ export function McpSection() {
             {/* CTA */}
             <div className="mt-6 flex items-center gap-4">
               <Button asChild>
-                <Link href={routeMcp()}>
+                <TrackedLink
+                  href={routeMcp()}
+                  telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                  telemetryProperties={{
+                    label: 'setup_instructions',
+                    location: 'homepage_mcp_section'
+                  }}
+                >
                   Setup Instructions
                   <ChevronRight className="ml-1 h-4 w-4" />
-                </Link>
+                </TrackedLink>
               </Button>
               <span className="text-foreground-muted text-sm">
                 Works with Claude, Cursor, and more

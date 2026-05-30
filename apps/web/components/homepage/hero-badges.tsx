@@ -4,8 +4,10 @@ import { SiGithub, SiVercel } from '@icons-pack/react-simple-icons'
 import { GITHUB_REPO_URL, routeMcp, SKILLS_SH_URL } from '@repo/config'
 import { Server } from '@repo/design-system/icons'
 import { cn } from '@repo/utils'
-import Link from 'next/link'
+import { TrackedLink } from '@/components/analytics/tracked-link'
 import { formatGitHubStars } from '@/lib/github'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 const badgeBase = cn(
   'inline-flex items-center gap-2 rounded-full',
@@ -33,6 +35,13 @@ export function HeroBadges({ githubStars, className }: HeroBadgesProps) {
         rel="noopener noreferrer"
         className={badgeBase}
         aria-label={`GitHub repository with ${formatGitHubStars(githubStars, '')} stars`}
+        onClick={() =>
+          trackInteraction(TELEMETRY_EVENTS.externalCtaClicked, {
+            label: 'github_badge',
+            location: 'homepage_hero',
+            target: GITHUB_REPO_URL
+          })
+        }
       >
         <SiGithub size={16} aria-hidden="true" />
         <span>GitHub</span>
@@ -50,15 +59,30 @@ export function HeroBadges({ githubStars, className }: HeroBadgesProps) {
         rel="noopener noreferrer"
         className={badgeBase}
         aria-label="View on Skills.sh"
+        onClick={() =>
+          trackInteraction(TELEMETRY_EVENTS.externalCtaClicked, {
+            label: 'skills_sh_badge',
+            location: 'homepage_hero',
+            target: SKILLS_SH_URL
+          })
+        }
       >
         <SiVercel size={16} aria-hidden="true" />
         <span>Skills.sh</span>
       </a>
 
-      <Link href={routeMcp()} className={badgeBase}>
+      <TrackedLink
+        href={routeMcp()}
+        telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+        telemetryProperties={{
+          label: 'mcp_badge',
+          location: 'homepage_hero'
+        }}
+        className={badgeBase}
+      >
         <Server className="h-4 w-4" aria-hidden="true" />
         <span>MCP Server</span>
-      </Link>
+      </TrackedLink>
     </div>
   )
 }

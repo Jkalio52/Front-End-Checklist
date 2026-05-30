@@ -1,6 +1,5 @@
 import { GITHUB_REPO_URL, routeRules } from '@repo/config'
 import { CodeSurface, InlineCode } from '@repo/design-system/custom/content/code-surface'
-import { CopyButton } from '@repo/design-system/custom/feedback/copy-button'
 import {
   Bot,
   ChevronRight,
@@ -11,7 +10,6 @@ import {
   Terminal,
   Workflow
 } from '@repo/design-system/icons'
-import Link from 'next/link'
 import {
   ExternalLinkCard,
   SectionHeading,
@@ -26,11 +24,14 @@ import {
   MCP_TOOLS,
   TROUBLESHOOTING_ITEMS
 } from '@/app/(site)/mcp/page-data'
+import { TrackedCopyButton } from '@/components/analytics/tracked-copy-button'
+import { TrackedLink } from '@/components/analytics/tracked-link'
 import { FaqAccordion } from '@/components/content/disclosures/faq-accordion'
 import { PageHero } from '@/components/content/page/page-hero'
 import { CliNotifyForm } from '@/components/mcp/cli-notify-form'
 import { SetupTabs } from '@/components/mcp/setup-tabs'
 import { ToolCard } from '@/components/mcp/tool-card'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 
 interface McpPageContentProps {
   cursorInstallUrl: string
@@ -147,7 +148,17 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
                   <p className="mt-1 text-foreground-muted text-xs">{item.description}</p>
                 )}
               </div>
-              <CopyButton text={item.prompt} className="shrink-0" iconClassName="h-3.5 w-3.5" />
+              <TrackedCopyButton
+                text={item.prompt}
+                className="shrink-0"
+                iconClassName="h-3.5 w-3.5"
+                telemetryEvent={TELEMETRY_EVENTS.copyActionCompleted}
+                telemetryProperties={{
+                  label: 'copy_mcp_example_prompt',
+                  location: 'mcp_example_prompts',
+                  target: item.prompt
+                }}
+              />
             </li>
           ))}
         </ul>
@@ -242,15 +253,22 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
 
       <section className="border-border border-t pt-8">
         <div className="flex flex-wrap gap-3">
-          <Link
+          <TrackedLink
             href={routeRules()}
+            telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+            telemetryProperties={{
+              label: 'browse_all_rules',
+              location: 'mcp_footer'
+            }}
             className="inline-flex items-center gap-2 rounded-md bg-accent px-4 py-2 font-medium text-accent-foreground text-sm transition-colors hover:bg-accent-hover"
           >
             Browse All Rules
             <ChevronRight className="h-4 w-4" />
-          </Link>
-          <ExternalLinkCard href={GITHUB_REPO_URL}>View on GitHub</ExternalLinkCard>
-          <ExternalLinkCard href="https://spec.modelcontextprotocol.io/">
+          </TrackedLink>
+          <ExternalLinkCard href={GITHUB_REPO_URL} label="view_on_github">
+            View on GitHub
+          </ExternalLinkCard>
+          <ExternalLinkCard href="https://spec.modelcontextprotocol.io/" label="mcp_specification">
             MCP Specification
           </ExternalLinkCard>
         </div>

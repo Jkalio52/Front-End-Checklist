@@ -1,6 +1,5 @@
 'use client'
 
-import { ConfirmDialog } from '@repo/design-system/custom/feedback/confirm-dialog'
 import {
   CheckSquare,
   ChevronsDownUp,
@@ -18,7 +17,10 @@ import {
   TooltipTrigger
 } from '@repo/design-system/ui/tooltip'
 import { cn } from '@repo/utils'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 import { RulesBrowserFilters } from './rules-browser-filters'
+import { RulesBrowserResetDialog } from './rules-browser-reset-dialog'
 import { ToolbarButton } from './rules-browser-toolbar-components'
 
 export interface RulesBrowserToolbarProps {
@@ -86,6 +88,63 @@ export function RulesBrowserToolbar({
   setSortBy,
   clearFilters
 }: RulesBrowserToolbarProps) {
+  /** Track and clear the current search query. */
+  const handleClearSearch = () => {
+    trackInteraction(TELEMETRY_EVENTS.filterChanged, {
+      label: 'clear_rules_search',
+      location: 'rules_browser_toolbar',
+      target: 'search'
+    })
+    setSearch('')
+  }
+
+  /** Toggle filter visibility and record the explicit toolbar action. */
+  const handleToggleFilters = () => {
+    const nextVisible = !showFilters
+    trackInteraction(TELEMETRY_EVENTS.filterChanged, {
+      label: nextVisible ? 'show_filters' : 'hide_filters',
+      location: 'rules_browser_toolbar',
+      target: 'filters'
+    })
+    setShowFilters(nextVisible)
+  }
+  /** Track and run the bulk expand/collapse command. */
+  const handleExpandCollapseClick = () => {
+    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+      label: hasAnyExpanded ? 'collapse_all_rules' : 'expand_all_rules',
+      location: 'rules_browser_toolbar',
+      target: 'rules_browser'
+    })
+    if (hasAnyExpanded) {
+      handleCollapseAll()
+    } else {
+      handleExpandAll()
+    }
+  }
+
+  /** Track and run the bulk complete/incomplete command. */
+  const handleCheckToggleClick = () => {
+    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+      label: allRulesChecked ? 'uncheck_all_rules' : 'check_all_rules',
+      location: 'rules_browser_toolbar',
+      target: 'rules_browser'
+    })
+    if (allRulesChecked) {
+      handleUncheckAll()
+    } else {
+      handleCheckAll()
+    }
+  }
+
+  /** Track the reset-progress intent before the confirmation dialog opens. */
+  const handleTrackedResetClick = () => {
+    trackInteraction(TELEMETRY_EVENTS.ctaClicked, {
+      label: 'reset_progress',
+      location: 'rules_browser_toolbar',
+      target: 'rules_browser'
+    })
+    handleResetClick()
+  }
   return (
     <>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
@@ -114,7 +173,7 @@ export function RulesBrowserToolbar({
           {search ? (
             <button
               type="button"
-              onClick={() => setSearch('')}
+              onClick={handleClearSearch}
               className="absolute top-1/2 right-3 -translate-y-1/2 rounded p-1 transition-colors hover:bg-foreground/10"
               aria-label="Clear search"
             >
@@ -129,7 +188,7 @@ export function RulesBrowserToolbar({
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  onClick={() => setShowFilters(!showFilters)}
+                  onClick={handleToggleFilters}
                   className={cn(
                     'flex h-9 items-center gap-2 rounded-md px-3',
                     'text-foreground-muted text-sm',
@@ -155,7 +214,7 @@ export function RulesBrowserToolbar({
 
             <ToolbarButton
               label={hasAnyExpanded ? 'Collapse all rules' : 'Expand all rules'}
-              onClick={hasAnyExpanded ? handleCollapseAll : handleExpandAll}
+              onClick={handleExpandCollapseClick}
             >
               {hasAnyExpanded ? (
                 <>
@@ -172,7 +231,7 @@ export function RulesBrowserToolbar({
 
             <ToolbarButton
               label={allRulesChecked ? 'Uncheck all rules' : 'Check all rules'}
-              onClick={allRulesChecked ? handleUncheckAll : handleCheckAll}
+              onClick={handleCheckToggleClick}
             >
               {allRulesChecked ? (
                 <>
@@ -191,7 +250,7 @@ export function RulesBrowserToolbar({
               <TooltipTrigger asChild>
                 <button
                   type="button"
-                  onClick={handleResetClick}
+                  onClick={handleTrackedResetClick}
                   className={cn(
                     'flex h-9 w-9 items-center justify-center rounded-md',
                     'text-foreground-muted hover:text-foreground',
@@ -207,19 +266,11 @@ export function RulesBrowserToolbar({
               <TooltipContent side="bottom">Reset progress</TooltipContent>
             </Tooltip>
 
-            <ConfirmDialog
+            <RulesBrowserResetDialog
               isOpen={showResetConfirm}
+              completedCount={completionStats.completed}
               onConfirm={handleConfirmReset}
               onCancel={handleCancelReset}
-              title="Reset progress for these rules?"
-              description={
-                completionStats.completed === 0
-                  ? "You haven't checked any of these rules yet. There's nothing to reset."
-                  : `This will uncheck ${completionStats.completed} ${completionStats.completed === 1 ? 'rule' : 'rules'} in the current view. This action cannot be undone.`
-              }
-              confirmLabel={completionStats.completed === 0 ? 'OK' : 'Reset Progress'}
-              cancelLabel={completionStats.completed === 0 ? 'Close' : 'Cancel'}
-              variant={completionStats.completed === 0 ? 'default' : 'danger'}
             />
           </div>
         </TooltipProvider>

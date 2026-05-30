@@ -1,7 +1,8 @@
 import { routeGuides, routeRules } from '@repo/config'
 import { BookOpen, ChevronRight, Rocket } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
-import Link from 'next/link'
+import { TrackedLink } from '@/components/analytics/tracked-link'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 
 /**
  * BottomCTA function.
@@ -51,17 +52,31 @@ export function BottomCTA() {
               size="lg"
               className="gap-2 shadow-accent/25 shadow-lg transition-shadow hover:shadow-accent/30 hover:shadow-xl"
             >
-              <Link href={`${routeRules()}?priority=critical`}>
+              <TrackedLink
+                href={`${routeRules()}?priority=critical`}
+                telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                telemetryProperties={{
+                  label: 'start_critical_rules',
+                  location: 'homepage_bottom_cta'
+                }}
+              >
                 <Rocket className="h-4 w-4" />
                 Start with Critical Rules
                 <ChevronRight className="h-4 w-4" />
-              </Link>
+              </TrackedLink>
             </Button>
             <Button asChild variant="outline" size="lg" className="gap-2">
-              <Link href={routeGuides()}>
+              <TrackedLink
+                href={routeGuides()}
+                telemetryEvent={TELEMETRY_EVENTS.ctaClicked}
+                telemetryProperties={{
+                  label: 'browse_guides',
+                  location: 'homepage_bottom_cta'
+                }}
+              >
                 <BookOpen className="h-4 w-4" />
                 Browse Guides
-              </Link>
+              </TrackedLink>
             </Button>
           </div>
         </div>

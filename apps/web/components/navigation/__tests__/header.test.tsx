@@ -12,8 +12,12 @@ jest.mock('@/components/links/github-link', () => ({
 jest.mock('@/components/links/x-link', () => ({
   XLink: () => <a href="https://x.com">X</a>
 }))
+jest.mock('@/lib/telemetry-interactions', () => ({
+  trackInteraction: jest.fn()
+}))
 
 const mockUseScrollDirection = useScrollDirection as jest.MockedFunction<typeof useScrollDirection>
+const { trackInteraction } = require('@/lib/telemetry-interactions')
 
 const defaultProps = {
   onOpenSearch: jest.fn(),
@@ -21,6 +25,7 @@ const defaultProps = {
 }
 
 beforeEach(() => {
+  defaultProps.onOpenSearch.mockClear()
   mockUseScrollDirection.mockReturnValue('up')
 })
 
@@ -80,6 +85,10 @@ describe('Header', () => {
     fireEvent.click(searchButtons[0])
 
     expect(defaultProps.onOpenSearch).toHaveBeenCalledTimes(1)
+    expect(trackInteraction).toHaveBeenCalledWith('search_opened', {
+      label: 'desktop_search',
+      location: 'header'
+    })
   })
 
   it('closes mobile menu on Escape key', () => {

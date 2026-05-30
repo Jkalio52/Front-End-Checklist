@@ -14,8 +14,6 @@ import {
   updateChecklistAction
 } from '@/actions/checklist-actions'
 import { getSafeActionErrorMessage } from '@/lib/safe-action-result'
-import { trackClientEvent } from '@/lib/telemetry-client'
-import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
 import { useProgress } from './use-progress'
 
 /**
@@ -143,11 +141,6 @@ export function useUserChecklists() {
 
       await invalidate()
       const checklist = parseUserChecklist(result.data)
-      trackClientEvent(TELEMETRY_EVENTS.checklistCreated, {
-        checklistId: checklist.id,
-        framework: checklist.framework ?? 'none',
-        ruleCount: checklist.ruleIds.length
-      })
       return checklist
     },
     [executeCreateChecklist, invalidate]
@@ -166,10 +159,6 @@ export function useUserChecklists() {
       }
 
       await invalidate()
-      trackClientEvent(TELEMETRY_EVENTS.checklistUpdated, {
-        checklistId: id,
-        updatedFields: Object.keys(updates).join(',')
-      })
 
       return parseUserChecklist(result.data)
     },
@@ -195,7 +184,6 @@ export function useUserChecklists() {
         }
 
         await invalidate()
-        trackClientEvent(TELEMETRY_EVENTS.checklistDeleted, { checklistId: id })
       })().catch(() => {})
     },
     [executeDeleteChecklist, invalidate]
@@ -207,15 +195,7 @@ export function useUserChecklists() {
       if (!checklist || checklist.ruleIds.includes(ruleId)) return
       const ruleIds = [...checklist.ruleIds, ruleId]
       if (!isSignedIn) return
-      void runUpdateChecklist(checklistId, { ruleIds })
-        .then(() => {
-          trackClientEvent(TELEMETRY_EVENTS.checklistUpdated, {
-            action: 'add_rule',
-            checklistId,
-            ruleId
-          })
-        })
-        .catch(() => {})
+      void runUpdateChecklist(checklistId, { ruleIds }).catch(() => {})
     },
     [checklists, isSignedIn, runUpdateChecklist]
   )
@@ -226,15 +206,7 @@ export function useUserChecklists() {
       if (!checklist) return
       const ruleIds = checklist.ruleIds.filter(id => id !== ruleId)
       if (!isSignedIn) return
-      void runUpdateChecklist(checklistId, { ruleIds })
-        .then(() => {
-          trackClientEvent(TELEMETRY_EVENTS.checklistUpdated, {
-            action: 'remove_rule',
-            checklistId,
-            ruleId
-          })
-        })
-        .catch(() => {})
+      void runUpdateChecklist(checklistId, { ruleIds }).catch(() => {})
     },
     [checklists, isSignedIn, runUpdateChecklist]
   )
@@ -336,7 +308,6 @@ export function useUserChecklists() {
         }
 
         await invalidate()
-        trackClientEvent(TELEMETRY_EVENTS.checklistShared, { checklistId: id })
       })().catch(() => {})
     },
     [executeShareChecklist, invalidate, isSignedIn]
@@ -352,7 +323,6 @@ export function useUserChecklists() {
         }
 
         await invalidate()
-        trackClientEvent(TELEMETRY_EVENTS.checklistUnshared, { checklistId: id })
       })().catch(() => {})
     },
     [executeUnshareChecklist, invalidate, isSignedIn]

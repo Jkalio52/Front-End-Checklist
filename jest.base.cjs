@@ -22,7 +22,10 @@ function createPackageJestConfig(options = {}) {
     roots = ['<rootDir>/src'],
     testMatch = ['**/__tests__/**/*.test.ts', '**/__tests__/**/*.test.tsx'],
     transform = { '^.+\\.tsx?$': 'ts-jest' },
-    moduleNameMapper = { '^@repo/(.*)$': '<rootDir>/../$1/src' },
+    moduleNameMapper = {
+      '^@repo/(utils|validators)$': '<rootDir>/../$1/src/public-api.ts',
+      '^@repo/(.*)$': '<rootDir>/../$1/src'
+    },
     collectCoverageFrom = DEFAULT_COLLECT_COVERAGE_FROM,
     coverageDirectory = 'coverage',
     ...rest

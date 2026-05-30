@@ -5,6 +5,8 @@ import { Button } from '@repo/design-system/ui/button'
 import { Card, CardContent } from '@repo/design-system/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@repo/design-system/ui/tabs'
 import { useState } from 'react'
+import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { trackInteraction } from '@/lib/telemetry-interactions'
 
 interface SetupConfig {
   id: string
@@ -28,9 +30,19 @@ interface SetupTabsProps {
 export function SetupTabs({ configs, cursorInstallUrl, vscodeInstallUrl }: SetupTabsProps) {
   const [activeTab, setActiveTab] = useState(configs[0]?.id || '')
 
+  /** Track the setup tab selected by the user. */
+  const handleTabChange = (value: string) => {
+    setActiveTab(value)
+    trackInteraction(TELEMETRY_EVENTS.mcpSetupClicked, {
+      label: 'select_setup_tab',
+      location: 'mcp_setup_tabs',
+      target: value
+    })
+  }
+
   return (
     <Card className="overflow-hidden">
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
+      <Tabs value={activeTab} onValueChange={handleTabChange}>
         <TabsList className="flex h-auto w-full overflow-x-auto rounded-none border-border border-b bg-background-subtle p-0">
           {configs.map(config => (
             <TabsTrigger
@@ -52,7 +64,16 @@ export function SetupTabs({ configs, cursorInstallUrl, vscodeInstallUrl }: Setup
                 <div className="flex shrink-0 items-center gap-2">
                   {config.id === 'cursor' ? (
                     <Button asChild size="sm">
-                      <a href={cursorInstallUrl}>
+                      <a
+                        href={cursorInstallUrl}
+                        onClick={() =>
+                          trackInteraction(TELEMETRY_EVENTS.mcpSetupClicked, {
+                            label: 'add_to_cursor',
+                            location: 'mcp_setup_tabs',
+                            target: 'cursor'
+                          })
+                        }
+                      >
                         <svg
                           className="h-3.5 w-3.5"
                           viewBox="0 0 24 24"
@@ -67,7 +88,18 @@ export function SetupTabs({ configs, cursorInstallUrl, vscodeInstallUrl }: Setup
                   ) : null}
                   {config.id === 'vscode' ? (
                     <Button asChild size="sm">
-                      <a href={vscodeInstallUrl} target="_blank" rel="noopener noreferrer">
+                      <a
+                        href={vscodeInstallUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() =>
+                          trackInteraction(TELEMETRY_EVENTS.mcpSetupClicked, {
+                            label: 'install_in_vscode',
+                            location: 'mcp_setup_tabs',
+                            target: 'vscode'
+                          })
+                        }
+                      >
                         <svg
                           className="h-3.5 w-3.5"
                           viewBox="0 0 24 24"
@@ -83,7 +115,18 @@ export function SetupTabs({ configs, cursorInstallUrl, vscodeInstallUrl }: Setup
                 </div>
               </div>
 
-              <CodeSurface code={config.config} copyText={config.config} wrapperClassName="my-0" />
+              <CodeSurface
+                code={config.config}
+                copyText={config.config}
+                wrapperClassName="my-0"
+                onCopySuccess={() =>
+                  trackInteraction(TELEMETRY_EVENTS.copyActionCompleted, {
+                    label: 'copy_mcp_config',
+                    location: 'mcp_setup_tabs',
+                    target: config.id
+                  })
+                }
+              />
 
               {config.id === 'cursor' ? (
                 <p className="mt-3 text-foreground-muted text-xs">

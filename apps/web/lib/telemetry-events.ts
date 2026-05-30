@@ -7,11 +7,17 @@ export const TELEMETRY_EVENTS = {
   authSignInStarted: 'auth_sign_in_started',
   authSignOutFailed: 'auth_sign_out_failed',
   authSignOutSucceeded: 'auth_sign_out_succeeded',
+  aiPromptCopied: 'ai_prompt_copied',
   checklistCreated: 'checklist_created',
   checklistDeleted: 'checklist_deleted',
   checklistShared: 'checklist_shared',
   checklistUnshared: 'checklist_unshared',
   checklistUpdated: 'checklist_updated',
+  copyActionCompleted: 'copy_action_completed',
+  ctaClicked: 'cta_clicked',
+  externalCtaClicked: 'external_cta_clicked',
+  filterChanged: 'filter_changed',
+  mcpSetupClicked: 'mcp_setup_clicked',
   mcpToolCalled: 'mcp_tool_called',
   profileGithubSynced: 'profile_github_synced',
   profileUpdated: 'profile_updated',
@@ -20,6 +26,8 @@ export const TELEMETRY_EVENTS = {
   ruleFeedbackSubmitted: 'rule_feedback_submitted',
   ruleNotesUpdated: 'rule_notes_updated',
   ruleUncompleted: 'rule_uncompleted',
+  searchOpened: 'search_opened',
+  shareActionClicked: 'share_action_clicked',
   waitlistJoined: 'waitlist_joined'
 } as const
 

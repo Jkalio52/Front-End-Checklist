@@ -39,7 +39,13 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    let body: { ruleId?: string; completed?: boolean; completedAt?: string; notes?: string }
+    let body: {
+      ruleId?: string
+      completed?: boolean
+      completedAt?: string
+      notes?: string
+      eventType?: string
+    }
     try {
       body = await request.json()
     } catch {
@@ -77,13 +83,18 @@ export async function PUT(request: Request) {
       }
     })
 
-    trackServerEvent(
-      completed ? TELEMETRY_EVENTS.ruleCompleted : TELEMETRY_EVENTS.ruleUncompleted,
-      {
-        ruleId,
-        userId: session.user.id
-      }
-    )
+    const eventType = body.eventType === 'notes' ? 'notes' : 'completion'
+    const event =
+      eventType === 'notes'
+        ? TELEMETRY_EVENTS.ruleNotesUpdated
+        : completed
+          ? TELEMETRY_EVENTS.ruleCompleted
+          : TELEMETRY_EVENTS.ruleUncompleted
+
+    trackServerEvent(event, {
+      ruleId,
+      userId: session.user.id
+    })
 
     return NextResponse.json({ success: true })
   } catch (error) {
