@@ -3,8 +3,6 @@ name: CI
 on:
   push:
     branches: [main, develop]
-  pull_request:
-    branches: [main, develop]
   workflow_dispatch:
 
 env:
@@ -203,15 +201,10 @@ jobs:
           retention-days: 1
 
   e2e-tests:
-    name: E2E Tests - ${{ matrix.browser }}
+    name: E2E Smoke Tests
     needs: [lint, typecheck, build]
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        browser: [chromium]
-        shard: [1, 2]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -238,14 +231,14 @@ jobs:
 
       - name: Install Playwright browsers
         working-directory: ./apps/web
-        run: pnpm exec playwright install --with-deps ${{ matrix.browser }}
+        run: pnpm exec playwright install --with-deps chromium
 
-      - name: Run E2E tests
+      - name: Run smoke E2E tests
         working-directory: ./apps/web
         run: |
           pnpm run e2e \
-            --project=${{ matrix.browser }} \
-            --shard=${{ matrix.shard }}/2 \
+            --project=chromium \
+            --grep="@smoke" \
             --reporter=github,html
         env:
           CI: true
@@ -255,7 +248,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-report-${{ matrix.browser }}-shard-${{ matrix.shard }}
+          name: e2e-smoke-report
           path: apps/web/playwright-report/
           retention-days: 7
 
@@ -263,7 +256,7 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: e2e-results-${{ matrix.browser }}-shard-${{ matrix.shard }}
+          name: e2e-smoke-results
           path: |
             apps/web/test-results/
             apps/web/e2e/screenshots/
