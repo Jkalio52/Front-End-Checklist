@@ -208,7 +208,7 @@ jobs:
 
   e2e-tests:
     name: E2E Smoke Tests
-    needs: [lint, typecheck, build]
+    needs: [lint, typecheck, unit-tests, build]
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -270,7 +270,7 @@ jobs:
 
   lighthouse:
     name: Lighthouse Performance
-    needs: build
+    needs: [unit-tests, build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
