@@ -80,4 +80,20 @@ describe('profile route', () => {
     expect(response.status).toBe(400)
     await expect(response.json()).resolves.toEqual({ error: 'Invalid GitHub profile' })
   })
+
+  it('does not accept GitHub-owned metadata in profile updates', async () => {
+    const response = await PATCH(
+      new Request('http://localhost/api/profile', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          githubFollowers: 1_000_000,
+          githubPublicRepos: 500
+        })
+      })
+    )
+
+    expect(mockUpdateProfileForUser).not.toHaveBeenCalled()
+    expect(response.status).toBe(400)
+    await expect(response.json()).resolves.toEqual({ error: 'No valid fields to update' })
+  })
 })

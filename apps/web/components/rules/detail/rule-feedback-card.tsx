@@ -59,7 +59,7 @@ export function RuleFeedbackCard({ ruleId }: RuleFeedbackCardProps) {
   return (
     <section
       aria-labelledby="rule-feedback-heading"
-      className="mt-12 mb-8 rounded-xl border border-border bg-background-subtle/50 px-5 py-4"
+      className="mt-12 mb-8 rounded-xl border border-border bg-background-subtle px-5 py-4"
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="min-w-0">

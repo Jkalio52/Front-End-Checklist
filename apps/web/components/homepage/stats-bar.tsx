@@ -3,6 +3,7 @@
 import { GitHubBrandIcon } from '@repo/design-system/brand-icons'
 import { BookOpen, CheckCircle, FolderOpen, ListChecks } from '@repo/design-system/icons'
 import { useEffect, useRef, useState } from 'react'
+import { PUBLIC_RULE_COUNT_BASE } from '@/components/homepage/rule-count-display'
 import { useHydrated } from '@/hooks/use-hydrated'
 import { useIntersectionInView } from '@/hooks/use-intersection-in-view'
 import { useProgress } from '@/hooks/use-progress'
@@ -177,7 +178,7 @@ export function StatsBar({ ruleCount, categoryCount, checklistCount, githubStars
     >
       <div className="container-content">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 sm:gap-12">
-          <StatItem value={ruleCount} label="Rules" icon={ListChecks} />
+          <StatItem value={PUBLIC_RULE_COUNT_BASE} label="Rules" icon={ListChecks} suffix="+" />
           <StatItem value={categoryCount} label="Categories" icon={FolderOpen} />
           {showProgress ? (
             <ProgressStatItem completed={completedRulesCount} total={ruleCount} />

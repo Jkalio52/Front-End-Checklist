@@ -35,7 +35,7 @@ export function FaqAccordion({ items, className }: FaqAccordionProps) {
           value={item.question}
           className={cn(
             'transition-all duration-300 data-[state=open]:border-accent/20 data-[state=open]:bg-accent/5 data-[state=open]:shadow-accent/5 data-[state=open]:shadow-lg',
-            'hover:border-border-focus hover:bg-background-subtle/30'
+            'hover:border-border-focus hover:bg-background-subtle'
           )}
         >
           <AccordionTrigger>{item.question}</AccordionTrigger>

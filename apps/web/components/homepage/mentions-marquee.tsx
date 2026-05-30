@@ -28,7 +28,7 @@ const MentionCard = memo(function MentionCard({ mention }: { mention: Mention })
 function MentionCardPlaceholder() {
   return (
     <div
-      className="min-h-[140px] shrink-0 rounded-lg border border-border bg-background-subtle/50"
+      className="min-h-[140px] shrink-0 rounded-lg border border-border bg-background-subtle"
       aria-hidden
     />
   )
@@ -82,7 +82,7 @@ function MarqueeColumn({
   return (
     <div
       ref={columnRef}
-      className="relative h-[70vh] max-h-[600px] min-h-[320px] overflow-hidden"
+      className="relative h-[74vh] max-h-[680px] min-h-[320px] overflow-hidden"
       onMouseEnter={onPause}
       onMouseLeave={onResume}
       onFocus={onPause}

@@ -110,7 +110,7 @@ export function AddToChecklistDropdown({ ruleId, className }: AddToChecklistDrop
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
           containingCount > 0
             ? 'border-accent/30 bg-accent/5 text-accent hover:bg-accent/10'
-            : 'text-foreground-muted hover:bg-foreground/5 hover:text-foreground',
+            : 'text-foreground-muted hover:bg-background-subtle hover:text-foreground',
           isSaving && 'cursor-not-allowed opacity-50'
         )}
         aria-label={`Add to checklist (in ${containingCount} checklists)`}

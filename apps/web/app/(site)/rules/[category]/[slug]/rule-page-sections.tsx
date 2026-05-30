@@ -147,7 +147,7 @@ export function RuleSidebar({ contentSelector, relatedRules }: RuleSidebarProps)
         <TableOfContents contentSelector={contentSelector} minLevel={2} maxLevel={3} />
         {relatedRules.length > 0 && (
           <nav
-            className="rounded-xl border border-border bg-background-subtle/50 p-4"
+            className="rounded-xl border border-border bg-background-subtle p-4"
             aria-labelledby="related-rules-heading"
           >
             <h3 id="related-rules-heading" className="mb-3 font-semibold text-foreground text-sm">

@@ -6,7 +6,7 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import * as React from 'react'
 
 const tabsListVariants = cva(
-  'inline-flex h-auto items-center gap-1 rounded-lg border border-border bg-background-subtle/50 p-1 text-foreground-muted'
+  'inline-flex h-auto items-center gap-1 rounded-lg border border-border bg-background-subtle p-1 text-foreground-muted'
 )
 
 const tabsTriggerVariants = cva(

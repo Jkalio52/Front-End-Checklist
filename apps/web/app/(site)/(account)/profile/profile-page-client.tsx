@@ -2,7 +2,8 @@
 
 import { authClient } from '@repo/auth/auth-client'
 import { useQuery } from '@tanstack/react-query'
-import { type ProfileData, ProfileForm } from './profile-form'
+import { ProfileForm } from './profile-form'
+import type { ProfileData } from './profile-types'
 
 const EMPTY_PROFILE: ProfileData = {
   isProfilePublic: true,
@@ -27,6 +28,11 @@ async function fetchProfile(): Promise<ProfileData> {
     githubUrl: data.githubUrl,
     xUrl: data.xUrl,
     linkedinUrl: data.linkedinUrl,
+    githubCompany: data.githubCompany,
+    githubBlog: data.githubBlog,
+    githubLocation: data.githubLocation,
+    githubPublicRepos: data.githubPublicRepos,
+    githubFollowers: data.githubFollowers,
     githubProfileImportedAt: data.githubProfileImportedAt,
     isProfilePublic: data.isProfilePublic ?? true,
     showProgress: data.showProgress ?? true,

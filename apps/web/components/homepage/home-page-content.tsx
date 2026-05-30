@@ -16,6 +16,7 @@ import { McpSection } from '@/components/homepage/mcp-section'
 import { MentionsSection } from '@/components/homepage/mentions-section'
 import { ProTeaser } from '@/components/homepage/pro-teaser'
 import { ResumeBanner } from '@/components/homepage/resume-banner'
+import { PUBLIC_RULE_COUNT_LABEL } from '@/components/homepage/rule-count-display'
 import {
   SponsorsSectionAsync,
   SponsorsSectionFallback
@@ -31,7 +32,6 @@ interface CategorySummary {
 
 interface HomePageContentProps {
   categories: CategorySummary[]
-  rulesCount: number
   githubStars: number | null
   checklistsForPreview: ChecklistPreviewData[]
   mentions: Parameters<typeof MentionsSection>[0]['mentions']
@@ -44,7 +44,6 @@ interface HomePageContentProps {
  */
 export function HomePageContent({
   categories,
-  rulesCount,
   githubStars,
   checklistsForPreview,
   mentions
@@ -52,7 +51,7 @@ export function HomePageContent({
   return (
     <>
       <ErrorBoundary sectionName="Hero">
-        <HeroSection ruleCount={rulesCount} githubStars={githubStars} />
+        <HeroSection ruleCountLabel={PUBLIC_RULE_COUNT_LABEL} githubStars={githubStars} />
       </ErrorBoundary>
 
       <ErrorBoundary sectionName="Categories">
@@ -77,7 +76,8 @@ export function HomePageContent({
                 </h2>
                 <p className="mt-2 text-foreground-muted">
                   Use curated checklists when you want a guided path, or explore {categories.length}{' '}
-                  categories with {rulesCount} rules when you already know the area you need
+                  categories with {PUBLIC_RULE_COUNT_LABEL} rules when you already know the area you
+                  need
                 </p>
               </div>
               <Button variant="outline" size="sm" asChild className="hidden gap-1.5 sm:flex">

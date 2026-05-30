@@ -67,7 +67,7 @@ export function ToolCard({ tool }: ToolCardProps) {
         <button
           type="button"
           onClick={() => setExpanded(!expanded)}
-          className="flex w-full cursor-pointer items-start gap-4 rounded-lg p-5 text-left transition-colors hover:bg-background-subtle/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          className="flex w-full cursor-pointer items-start gap-4 rounded-lg p-5 text-left transition-colors hover:bg-background-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-expanded={expanded}
           aria-label={expanded ? `Collapse ${tool.name} details` : `Expand ${tool.name} details`}
         >

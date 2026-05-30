@@ -57,12 +57,17 @@ async function PublicProfilePageContent({ params }: PageProps) {
 
   const langRules = allRules.filter(r => r.language === lang)
   const ruleIds = langRules.map(r => r.id)
-  const completedSet = new Set(user.ruleProgress.filter(p => p.completed).map(p => p.ruleId))
-  const completed = user.ruleProgress.filter(p => p.completed && ruleIds.includes(p.ruleId)).length
+  const ruleIdSet = new Set(ruleIds)
+  const completedSet = new Set<string>()
+  for (const progress of user.ruleProgress) {
+    if (progress.completed) {
+      completedSet.add(progress.ruleId)
+    }
+  }
+  const completed = Array.from(completedSet).filter(ruleId => ruleIdSet.has(ruleId)).length
   const total = ruleIds.length
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0
 
-  const initialCategoryStats: Record<string, CategoryProgressStats> = {}
   const categoryStats = Object.entries(
     langRules.reduce<Record<string, CategoryProgressStats>>((acc, rule) => {
       const cat = rule.primaryCategory
@@ -70,7 +75,7 @@ async function PublicProfilePageContent({ params }: PageProps) {
       acc[cat].total++
       if (completedSet.has(rule.id)) acc[cat].completed++
       return acc
-    }, initialCategoryStats)
+    }, {})
   ).map(([category, stats]: [string, CategoryProgressStats]) => ({
     category,
     ...stats,
@@ -95,7 +100,12 @@ async function PublicProfilePageContent({ params }: PageProps) {
           bio: user.bio ?? undefined,
           githubUrl: user.githubUrl ?? undefined,
           xUrl: user.xUrl ?? undefined,
-          linkedinUrl: user.linkedinUrl ?? undefined
+          linkedinUrl: user.linkedinUrl ?? undefined,
+          githubCompany: user.githubCompany ?? undefined,
+          githubBlog: user.githubBlog ?? undefined,
+          githubLocation: user.githubLocation ?? undefined,
+          githubPublicRepos: user.githubPublicRepos ?? undefined,
+          githubFollowers: user.githubFollowers ?? undefined
         }}
         showProgress={user.showProgress}
         showChecklists={user.showChecklists}

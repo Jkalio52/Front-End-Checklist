@@ -19,6 +19,11 @@ interface PublicProfileClientProps {
     githubUrl?: string
     xUrl?: string
     linkedinUrl?: string
+    githubCompany?: string
+    githubBlog?: string
+    githubLocation?: string
+    githubPublicRepos?: number
+    githubFollowers?: number
   }
   showProgress: boolean
   showChecklists: boolean
@@ -63,7 +68,7 @@ export function PublicProfileClient({
         {user.image ? (
           <Image src={user.image} alt="" width={80} height={80} className="rounded-full" />
         ) : (
-          <span className="flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-background-muted font-semibold text-2xl text-foreground-muted">
+          <span className="flex size-20 shrink-0 items-center justify-center rounded-full bg-background-muted font-semibold text-2xl text-foreground-muted">
             {user.name[0]?.toUpperCase()}
           </span>
         )}
@@ -107,6 +112,7 @@ export function PublicProfileClient({
               )}
             </div>
           )}
+          <GithubProfileBasics user={user} />
         </div>
       </div>
 
@@ -144,7 +150,7 @@ export function PublicProfileClient({
                       className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3"
                     >
                       <span
-                        className="h-3 w-3 shrink-0 rounded-full"
+                        className="size-3 shrink-0 rounded-full"
                         style={{ backgroundColor: color }}
                         aria-hidden="true"
                       />
@@ -190,4 +196,65 @@ export function PublicProfileClient({
       <p className="mt-12 text-center text-foreground-muted text-sm">frontendchecklist.io</p>
     </>
   )
+}
+
+interface GithubProfileBasicsProps {
+  user: PublicProfileClientProps['user']
+}
+
+/**
+ * Render public read-only basics imported from GitHub.
+ */
+function GithubProfileBasics({ user }: GithubProfileBasicsProps) {
+  const items = [
+    user.githubCompany ? { label: 'Company', value: user.githubCompany } : null,
+    user.githubLocation ? { label: 'Location', value: user.githubLocation } : null,
+    user.githubBlog
+      ? { label: 'Website', value: user.githubBlog, href: getWebsiteHref(user.githubBlog) }
+      : null,
+    typeof user.githubFollowers === 'number'
+      ? { label: 'Followers', value: user.githubFollowers.toLocaleString() }
+      : null,
+    typeof user.githubPublicRepos === 'number'
+      ? { label: 'Public repositories', value: user.githubPublicRepos.toLocaleString() }
+      : null
+  ].filter((item): item is { label: string; value: string; href?: string } => Boolean(item))
+
+  if (items.length === 0) {
+    return null
+  }
+
+  return (
+    <dl className="mt-4 flex flex-wrap gap-x-5 gap-y-2">
+      {items.map(item => (
+        <div key={item.label}>
+          <dt className="text-foreground-muted text-xs">{item.label}</dt>
+          <dd className="font-medium text-foreground text-sm">
+            {item.href ? (
+              <a
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline hover:no-underline"
+              >
+                {item.value}
+              </a>
+            ) : (
+              item.value
+            )}
+          </dd>
+        </div>
+      ))}
+    </dl>
+  )
+}
+
+/**
+ * Convert a GitHub website value into a navigable URL.
+ *
+ * @param value - Website value returned by GitHub.
+ * @returns Absolute URL for external navigation.
+ */
+function getWebsiteHref(value: string): string {
+  return /^https?:\/\//i.test(value) ? value : `https://${value}`
 }

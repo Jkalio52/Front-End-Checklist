@@ -1,11 +1,13 @@
 import 'server-only'
 
 import { prisma } from '@repo/auth/prisma'
+import { normalizeGithubUsername } from '@repo/auth/profile'
+import { applyGithubImportToUser, buildGithubImportUpdate } from './github-import-update'
 import {
-  buildGithubProfileImport,
-  type GithubProfileImport,
-  normalizeGithubUsername
-} from '@repo/auth/profile'
+  fetchAuthenticatedGithubProfileImport,
+  fetchAuthenticatedGithubProfileImportStrict,
+  fetchPublicGithubProfileImport
+} from './github-profile-fetch'
 
 export interface ProfileRecord {
   username?: string
@@ -15,6 +17,11 @@ export interface ProfileRecord {
   githubUrl?: string
   xUrl?: string
   linkedinUrl?: string
+  githubCompany?: string
+  githubBlog?: string
+  githubLocation?: string
+  githubPublicRepos?: number
+  githubFollowers?: number
   githubProfileImportedAt?: string
   isProfilePublic: boolean
   showProgress: boolean
@@ -40,11 +47,43 @@ interface ProfileUserRow {
   githubUrl: string | null
   xUrl: string | null
   linkedinUrl: string | null
+  githubCompany: string | null
+  githubBlog: string | null
+  githubLocation: string | null
+  githubPublicRepos: number | null
+  githubPublicGists: number | null
+  githubFollowers: number | null
+  githubFollowing: number | null
+  githubCreatedAt: Date | null
+  githubUpdatedAt: Date | null
   githubProfileImportedAt: Date | null
   isProfilePublic: boolean
   showProgress: boolean
   showChecklists: boolean
 }
+
+const PROFILE_SELECT = {
+  username: true,
+  githubUsername: true,
+  headline: true,
+  bio: true,
+  githubUrl: true,
+  xUrl: true,
+  linkedinUrl: true,
+  githubCompany: true,
+  githubBlog: true,
+  githubLocation: true,
+  githubPublicRepos: true,
+  githubPublicGists: true,
+  githubFollowers: true,
+  githubFollowing: true,
+  githubCreatedAt: true,
+  githubUpdatedAt: true,
+  githubProfileImportedAt: true,
+  isProfilePublic: true,
+  showProgress: true,
+  showChecklists: true
+} satisfies Record<keyof ProfileUserRow, true>
 
 /**
  * Normalize a raw Prisma user record into the client-facing profile shape.
@@ -65,6 +104,11 @@ function serializeProfile(user: ProfileUserRow): ProfileRecord {
     githubUrl: resolvedGithubUrl,
     xUrl: user.xUrl ?? undefined,
     linkedinUrl: user.linkedinUrl ?? undefined,
+    githubCompany: user.githubCompany ?? undefined,
+    githubBlog: user.githubBlog ?? undefined,
+    githubLocation: user.githubLocation ?? undefined,
+    githubPublicRepos: user.githubPublicRepos ?? undefined,
+    githubFollowers: user.githubFollowers ?? undefined,
     githubProfileImportedAt: user.githubProfileImportedAt?.toISOString(),
     isProfilePublic: user.isProfilePublic,
     showProgress: user.showProgress,
@@ -81,25 +125,26 @@ function serializeProfile(user: ProfileUserRow): ProfileRecord {
 export async function getProfileForUser(userId: string): Promise<ProfileRecord | null> {
   const user = await prisma.user.findUnique({
     where: { id: userId },
-    select: {
-      username: true,
-      githubUsername: true,
-      headline: true,
-      bio: true,
-      githubUrl: true,
-      xUrl: true,
-      linkedinUrl: true,
-      githubProfileImportedAt: true,
-      isProfilePublic: true,
-      showProgress: true,
-      showChecklists: true
-    }
+    select: PROFILE_SELECT
   })
 
   if (!user) {
     return null
   }
 
+  await importGithubProfileOnce(userId, user)
+  await backfillPublicUsername(userId, user)
+
+  return serializeProfile(user)
+}
+
+/**
+ * Backfill the public profile slug from the verified GitHub username when possible.
+ *
+ * @param userId - Signed-in user identifier.
+ * @param user - Mutable profile user row loaded from Prisma.
+ */
+async function backfillPublicUsername(userId: string, user: ProfileUserRow): Promise<void> {
   const updates: { username?: string; isProfilePublic?: true } = {}
 
   if (!user.username && user.githubUsername) {
@@ -144,10 +189,6 @@ export async function getProfileForUser(userId: string): Promise<ProfileRecord |
       }
     }
   }
-
-  await importGithubProfileOnce(userId, user)
-
-  return serializeProfile(user)
 }
 
 /**
@@ -167,17 +208,20 @@ function isUniqueConstraintError(error: unknown): boolean {
  * @param user - Mutable profile user row loaded from Prisma.
  */
 async function importGithubProfileOnce(userId: string, user: ProfileUserRow): Promise<void> {
-  if (!user.githubUsername || user.githubProfileImportedAt) {
+  if (user.githubUsername && user.githubProfileImportedAt) {
     return
   }
 
   try {
-    const imported = await fetchPublicGithubProfileImport(user.githubUsername)
-    if (!imported.githubProfileImportedAt) {
+    const imported = user.githubUsername
+      ? await fetchPublicGithubProfileImport(user.githubUsername)
+      : await fetchAuthenticatedGithubProfileImport(userId)
+
+    if (!imported.githubUsername) {
       return
     }
 
-    const data = buildGithubImportUpdate(user, imported)
+    const data = buildGithubImportUpdate(user, imported, { refreshGithubOwnedFields: false })
     await prisma.user.update({
       where: { id: userId },
       data,
@@ -188,88 +232,6 @@ async function importGithubProfileOnce(userId: string, user: ProfileUserRow): Pr
   } catch {
     // Import is opportunistic; profile loading must not fail when GitHub is unavailable.
   }
-}
-
-/**
- * Fetch public GitHub profile data for a username and normalize it for storage.
- *
- * @param githubUsername - GitHub username associated with the user.
- * @returns Normalized GitHub profile fields, or an empty object on failure.
- */
-async function fetchPublicGithubProfileImport(
-  githubUsername: string
-): Promise<GithubProfileImport> {
-  const username = normalizeGithubUsername(githubUsername)
-  if (!username || typeof fetch !== 'function') {
-    return {}
-  }
-
-  const response = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-      'User-Agent': 'Front-End-Checklist',
-      'X-GitHub-Api-Version': '2022-11-28'
-    }
-  })
-
-  if (!response.ok) {
-    return {}
-  }
-
-  return buildGithubProfileImport(await response.json())
-}
-
-/**
- * Build a Prisma update that fills editable fields only when they are empty.
- *
- * @param user - Existing user row.
- * @param imported - Normalized public GitHub profile fields.
- * @returns Database update for the one-time import.
- */
-function buildGithubImportUpdate(
-  user: ProfileUserRow,
-  imported: GithubProfileImport
-): GithubProfileImport {
-  const data: GithubProfileImport = {}
-
-  if (imported.githubUsername) data.githubUsername = imported.githubUsername
-  if (imported.githubProfileImportedAt) {
-    data.githubProfileImportedAt = imported.githubProfileImportedAt
-  }
-
-  if (!user.bio && imported.bio) data.bio = imported.bio
-  if (!user.githubUrl && imported.githubUrl) data.githubUrl = imported.githubUrl
-  if (!user.xUrl && imported.xUrl) data.xUrl = imported.xUrl
-
-  if (imported.githubCompany) data.githubCompany = imported.githubCompany
-  if (imported.githubBlog) data.githubBlog = imported.githubBlog
-  if (imported.githubLocation) data.githubLocation = imported.githubLocation
-  if (typeof imported.githubPublicRepos === 'number') {
-    data.githubPublicRepos = imported.githubPublicRepos
-  }
-  if (typeof imported.githubPublicGists === 'number') {
-    data.githubPublicGists = imported.githubPublicGists
-  }
-  if (typeof imported.githubFollowers === 'number') data.githubFollowers = imported.githubFollowers
-  if (typeof imported.githubFollowing === 'number') data.githubFollowing = imported.githubFollowing
-  if (imported.githubCreatedAt) data.githubCreatedAt = imported.githubCreatedAt
-  if (imported.githubUpdatedAt) data.githubUpdatedAt = imported.githubUpdatedAt
-
-  return data
-}
-
-/**
- * Reflect imported editable fields in the in-memory row before serialization.
- *
- * @param user - Mutable profile user row.
- * @param data - GitHub import update applied to the database.
- */
-function applyGithubImportToUser(user: ProfileUserRow, data: GithubProfileImport): void {
-  if (data.githubUsername) user.githubUsername = data.githubUsername
-  if (data.bio) user.bio = data.bio
-  if (data.githubUrl) user.githubUrl = data.githubUrl
-  if (data.xUrl) user.xUrl = data.xUrl
-  if (data.githubProfileImportedAt) user.githubProfileImportedAt = data.githubProfileImportedAt
 }
 
 /**
@@ -286,20 +248,42 @@ export async function updateProfileForUser(
   const user = await prisma.user.update({
     where: { id: userId },
     data: updates,
-    select: {
-      username: true,
-      githubUsername: true,
-      headline: true,
-      bio: true,
-      githubUrl: true,
-      xUrl: true,
-      linkedinUrl: true,
-      githubProfileImportedAt: true,
-      isProfilePublic: true,
-      showProgress: true,
-      showChecklists: true
-    }
+    select: PROFILE_SELECT
   })
+
+  await importGithubProfileOnce(userId, user)
+  await backfillPublicUsername(userId, user)
+
+  return serializeProfile(user)
+}
+
+/**
+ * Explicitly refresh the signed-in user's read-only GitHub profile metadata.
+ *
+ * @param userId - Signed-in user identifier.
+ * @returns Updated profile record or null when no user row exists.
+ */
+export async function syncGithubProfileForUser(userId: string): Promise<ProfileRecord | null> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: PROFILE_SELECT
+  })
+
+  if (!user) {
+    return null
+  }
+
+  const imported = await fetchAuthenticatedGithubProfileImportStrict(userId)
+  const data = buildGithubImportUpdate(user, imported, { refreshGithubOwnedFields: true })
+
+  await prisma.user.update({
+    where: { id: userId },
+    data,
+    select: { id: true }
+  })
+
+  applyGithubImportToUser(user, data)
+  await backfillPublicUsername(userId, user)
 
   return serializeProfile(user)
 }

@@ -1,36 +1,20 @@
 'use client'
 
-import { routePublicProfile, SITE_URL } from '@repo/config'
 import { Input } from '@repo/design-system/ui/input'
 import { cn } from '@repo/utils'
 import { useQueryClient } from '@tanstack/react-query'
-import Image from 'next/image'
 import { useAction } from 'next-safe-action/hooks'
 import { useReducer, useState } from 'react'
 import { updateProfileAction } from '@/actions/profile-actions'
 import { getSafeActionErrorMessage } from '@/lib/safe-action-result'
 import { getSocialProfileInputValue } from '@/lib/social-links'
+import { ProfileAccountCard } from './profile-account-card'
+import { ProfileEditorHeader } from './profile-editor-header'
+import { GithubMetadataSection } from './profile-github-metadata-section'
 import { PublicProfileLinkSection, SocialLinksSection, VisibilitySection } from './profile-sections'
-
-export interface ProfileData {
-  username?: string
-  githubUsername?: string
-  headline?: string
-  bio?: string
-  githubUrl?: string
-  xUrl?: string
-  linkedinUrl?: string
-  githubProfileImportedAt?: string
-  isProfilePublic: boolean
-  showProgress: boolean
-  showChecklists: boolean
-}
-
-interface ProfileUser {
-  email?: string | null
-  image?: string | null
-  name?: string | null
-}
+import { getSyncedProfile } from './profile-sync-response'
+import type { ProfileData, ProfileUser } from './profile-types'
+import { ProfileUrlSection } from './profile-url-section'
 
 interface ProfileFormState {
   headline: string
@@ -50,6 +34,7 @@ type ProfileFormAction =
   | { type: 'replace'; state: ProfileFormState }
   | { type: 'setText'; field: TextField; value: string }
   | { type: 'setBoolean'; field: BooleanField; value: boolean }
+type CurrentProfileAction = { type: 'replace'; profile: ProfileData }
 
 interface ProfileFormProps {
   profile: ProfileData
@@ -91,12 +76,26 @@ function profileFormReducer(state: ProfileFormState, action: ProfileFormAction):
 }
 
 /**
+ * Replace the current profile snapshot after a server update.
+ *
+ * @param _state - Existing profile snapshot.
+ * @param action - Profile replacement action.
+ * @returns Updated profile snapshot.
+ */
+function currentProfileReducer(_state: ProfileData, action: CurrentProfileAction): ProfileData {
+  return action.profile
+}
+
+/**
  * Render the editable profile form once profile data has loaded.
  */
 export function ProfileForm({ profile, user }: ProfileFormProps) {
   const queryClient = useQueryClient()
+  const [currentProfile, replaceCurrentProfile] = useReducer(currentProfileReducer, profile)
   const [form, dispatch] = useReducer(profileFormReducer, profile, createProfileFormState)
   const [saveMessage, setSaveMessage] = useState<'saved' | 'error' | null>(null)
+  const [syncMessage, setSyncMessage] = useState<'synced' | 'error' | null>(null)
+  const [isSyncingGithub, setIsSyncingGithub] = useState(false)
   const { executeAsync: executeUpdateProfile, isPending: isSavingProfile } =
     useAction(updateProfileAction)
 
@@ -117,7 +116,7 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
         showChecklists: form.showChecklists
       }
 
-      if (!profile.githubUsername) {
+      if (!currentProfile.githubUsername) {
         payload.githubUrl = form.githubUrl.trim() || undefined
       }
 
@@ -128,6 +127,7 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
       }
 
       dispatch({ type: 'replace', state: createProfileFormState(result.data) })
+      replaceCurrentProfile({ type: 'replace', profile: result.data })
       await queryClient.invalidateQueries({ queryKey: ['profile'] })
       setSaveMessage('saved')
       setTimeout(() => setSaveMessage(null), 3000)
@@ -136,91 +136,69 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
     })
   }
 
-  const resolvedUsername = profile.username ?? profile.githubUsername
+  /**
+   * Refresh read-only GitHub profile metadata from the linked account.
+   */
+  const handleGithubSync = () => {
+    void (async () => {
+      setSyncMessage(null)
+      setIsSyncingGithub(true)
+
+      const response = await fetch('/api/profile/github-sync', { method: 'POST' })
+      const result: unknown = await response.json()
+      const nextProfile = getSyncedProfile(result)
+
+      if (!response.ok || !nextProfile) {
+        setSyncMessage('error')
+        return
+      }
+
+      replaceCurrentProfile({ type: 'replace', profile: nextProfile })
+      dispatch({ type: 'replace', state: createProfileFormState(nextProfile) })
+      await queryClient.invalidateQueries({ queryKey: ['profile'] })
+      setSyncMessage('synced')
+      setTimeout(() => setSyncMessage(null), 3000)
+    })()
+      .catch(() => {
+        setSyncMessage('error')
+      })
+      .finally(() => {
+        setIsSyncingGithub(false)
+      })
+  }
+
+  const resolvedUsername = currentProfile.username ?? currentProfile.githubUsername
 
   return (
     <>
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <h1 className="font-bold text-3xl text-foreground">Profile</h1>
-        <div className="flex items-center gap-3">
-          <label
-            className="flex items-center gap-2 text-foreground-muted text-sm"
-            htmlFor="profile-visibility"
-          >
-            <span>Visibility</span>
-            <select
-              id="profile-visibility"
-              value={form.isProfilePublic ? 'public' : 'private'}
-              onChange={event =>
-                dispatch({
-                  type: 'setBoolean',
-                  field: 'isProfilePublic',
-                  value: event.target.value === 'public'
-                })
-              }
-              className={cn(
-                'rounded-md border border-border bg-background px-3 py-1.5 text-foreground text-sm',
-                'focus:border-transparent focus:outline-none focus:ring-2 focus:ring-ring'
-              )}
-            >
-              <option value="private">Private</option>
-              <option value="public">Public</option>
-            </select>
-          </label>
-          {saveMessage === 'saved' && <span className="text-accent text-sm">Saved</span>}
-          {saveMessage === 'error' && <span className="text-destructive text-sm">Save failed</span>}
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSavingProfile}
-            className={cn(
-              'rounded-md bg-accent px-4 py-2 font-medium text-accent-foreground text-sm',
-              'hover:bg-accent-hover disabled:opacity-50'
-            )}
-          >
-            {isSavingProfile ? 'Saving...' : 'Save'}
-          </button>
-        </div>
-      </div>
+      <ProfileEditorHeader
+        isProfilePublic={form.isProfilePublic}
+        isSavingProfile={isSavingProfile}
+        onSave={handleSave}
+        onVisibilityChange={value =>
+          dispatch({ type: 'setBoolean', field: 'isProfilePublic', value })
+        }
+        saveMessage={saveMessage}
+      />
 
       <div className="mt-8 space-y-8">
-        <section className="rounded-lg border border-border bg-card p-6">
-          <div className="flex items-center gap-4">
-            {user.image ? (
-              <Image src={user.image} alt="" width={64} height={64} className="rounded-full" />
-            ) : (
-              <span className="flex size-16 items-center justify-center rounded-full bg-background-muted font-semibold text-foreground-muted text-xl">
-                {(user.name ?? user.email ?? '?')[0]?.toUpperCase()}
-              </span>
-            )}
-            <div>
-              <p className="font-medium text-foreground">{user.name ?? 'Anonymous'}</p>
-              <p className="text-foreground-muted text-sm">{user.email}</p>
-              <p className="mt-1 text-foreground-muted text-xs">Managed via GitHub</p>
-              {profile.githubProfileImportedAt && (
-                <p className="mt-1 text-foreground-muted text-xs">Imported from GitHub</p>
-              )}
-            </div>
-          </div>
-        </section>
+        <ProfileAccountCard
+          isSyncingGithub={isSyncingGithub}
+          onGithubSync={handleGithubSync}
+          profile={currentProfile}
+          syncMessage={syncMessage}
+          user={user}
+        />
 
-        <section>
-          <p className="mb-2 font-medium text-foreground text-sm">Profile URL</p>
-          <div className="flex flex-wrap items-center gap-1">
-            <span className="text-foreground-muted text-sm">
-              {SITE_URL.replace(/^https?:\/\//, '')}
-              {routePublicProfile('')}
-            </span>
-            {resolvedUsername ? (
-              <span className="font-medium text-foreground text-sm">{resolvedUsername}</span>
-            ) : (
-              <span className="text-foreground-muted text-sm italic">not set</span>
-            )}
-          </div>
-          <p className="mt-1 text-foreground-muted text-xs">
-            Your profile URL is set from your GitHub username.
-          </p>
-        </section>
+        <GithubMetadataSection
+          company={currentProfile.githubCompany}
+          blog={currentProfile.githubBlog}
+          location={currentProfile.githubLocation}
+          publicRepos={currentProfile.githubPublicRepos}
+          followers={currentProfile.githubFollowers}
+        />
+
+        <ProfileUrlSection resolvedUsername={resolvedUsername} />
 
         <section>
           <label
@@ -267,7 +245,7 @@ export function ProfileForm({ profile, user }: ProfileFormProps) {
           githubUrl={form.githubUrl}
           xUrl={form.xUrl}
           linkedinUrl={form.linkedinUrl}
-          githubUsername={profile.githubUsername}
+          githubUsername={currentProfile.githubUsername}
           onGithubUrlChange={value => dispatch({ type: 'setText', field: 'githubUrl', value })}
           onXUrlChange={value => dispatch({ type: 'setText', field: 'xUrl', value })}
           onLinkedinUrlChange={value => dispatch({ type: 'setText', field: 'linkedinUrl', value })}

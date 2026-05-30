@@ -13,6 +13,7 @@ export const TELEMETRY_EVENTS = {
   checklistUnshared: 'checklist_unshared',
   checklistUpdated: 'checklist_updated',
   mcpToolCalled: 'mcp_tool_called',
+  profileGithubSynced: 'profile_github_synced',
   profileUpdated: 'profile_updated',
   progressBulkSynced: 'progress_bulk_synced',
   ruleCompleted: 'rule_completed',

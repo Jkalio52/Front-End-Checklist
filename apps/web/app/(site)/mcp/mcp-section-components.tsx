@@ -25,7 +25,7 @@ export function SectionHeading({ icon: Icon, id, title }: SectionHeadingProps) {
 /** Render a single MCP use-case card. Static content only — not clickable. */
 export function UseCaseCard({ title, description }: { title: string; description: string }) {
   return (
-    <div className="cursor-default rounded-lg border border-border/60 bg-background-subtle/30 p-4">
+    <div className="cursor-default rounded-lg border border-border bg-background-subtle p-4">
       <h3 className="mb-1 font-medium text-foreground text-sm">{title}</h3>
       <p className="text-[13px] text-foreground-muted">{description}</p>
     </div>

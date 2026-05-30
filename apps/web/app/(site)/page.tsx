@@ -149,7 +149,6 @@ export default async function Page() {
     <QueryProvider>
       <HomePageContent
         categories={categories}
-        rulesCount={rules.length}
         githubStars={githubStars}
         checklistsForPreview={checklistsForPreview}
         mentions={mentions}

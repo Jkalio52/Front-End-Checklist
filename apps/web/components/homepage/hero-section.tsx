@@ -5,14 +5,14 @@ import Link from 'next/link'
 import { HeroBadges } from './hero-badges'
 
 interface HeroSectionProps {
-  ruleCount: number
+  ruleCountLabel: string
   githubStars: number | null
 }
 
 /**
  * Homepage hero: headline, CTA buttons, and badge links.
  */
-export function HeroSection({ ruleCount, githubStars }: HeroSectionProps) {
+export function HeroSection({ ruleCountLabel, githubStars }: HeroSectionProps) {
   return (
     <section className="relative">
       <div className="absolute inset-0 -z-10 bg-linear-to-b from-background via-background to-background-subtle opacity-50" />
@@ -24,7 +24,7 @@ export function HeroSection({ ruleCount, githubStars }: HeroSectionProps) {
           </h1>
 
           <p className="mx-auto mt-6 max-w-2xl text-foreground-muted text-xl leading-relaxed">
-            The essential checklist for modern web development, with {ruleCount} rules across
+            The essential checklist for modern web development, with {ruleCountLabel} rules across
             launch, review, accessibility, performance, security, privacy, and SEO workflows. Browse
             the corpus, start with curated checklists, or connect the same standards to AI tools
             with MCP.
@@ -34,7 +34,7 @@ export function HeroSection({ ruleCount, githubStars }: HeroSectionProps) {
             <Button asChild size="lg">
               <Link href={routeChecklists()} className="px-6 py-2">
                 Start a Curated Checklist
-                <ChevronRight className="ml-1 h-4 w-4" />
+                <ChevronRight className="ml-1 size-4" />
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">

@@ -6,7 +6,7 @@ const cardVariants = cva('rounded-lg border text-card-foreground transition-all 
   variants: {
     variant: {
       default: 'border-border bg-card',
-      subtle: 'border-border/70 bg-background-subtle/60',
+      subtle: 'border-border bg-background-subtle',
       elevated: 'border-border bg-card shadow-sm'
     },
     emphasis: {

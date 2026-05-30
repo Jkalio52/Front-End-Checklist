@@ -31,7 +31,7 @@ export function SetupTabs({ configs, cursorInstallUrl, vscodeInstallUrl }: Setup
   return (
     <Card className="overflow-hidden">
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="flex h-auto w-full overflow-x-auto rounded-none border-border border-b bg-background-subtle/50 p-0">
+        <TabsList className="flex h-auto w-full overflow-x-auto rounded-none border-border border-b bg-background-subtle p-0">
           {configs.map(config => (
             <TabsTrigger
               key={config.id}

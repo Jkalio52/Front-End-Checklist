@@ -23,31 +23,31 @@ summary {
 
   /* Backgrounds */
   --background: oklch(1 0 0);
-  --background-subtle: oklch(0.98 0 0);
-  --background-muted: oklch(0.955 0 0);
+  --background-subtle: oklch(0.965 0 0);
+  --background-muted: oklch(0.925 0 0);
 
   /* Foregrounds */
   --foreground: oklch(0.205 0 0);
-  --foreground-muted: oklch(0.556 0 0);
-  --foreground-subtle: oklch(0.64 0 0);
+  --foreground-muted: oklch(0.5 0 0);
+  --foreground-subtle: oklch(0.56 0 0);
 
   /* Borders */
-  --border: oklch(0.82 0 0);
-  --border-subtle: oklch(0.875 0 0);
+  --border: oklch(0.78 0 0);
+  --border-subtle: oklch(0.84 0 0);
   --border-focus: oklch(0.567 0.159 275.208);
-  --border-hover: oklch(0.68 0 0);
+  --border-hover: oklch(0.62 0 0);
 
   /* shadcn standard: primary = accent (Linear purple-blue) */
   --primary: oklch(0.567 0.159 275.208);
   --primary-foreground: oklch(1 0 0);
 
   /* shadcn standard: secondary */
-  --secondary: oklch(0.955 0 0);
+  --secondary: oklch(0.925 0 0);
   --secondary-foreground: oklch(0.205 0 0);
 
   /* shadcn standard: muted */
-  --muted: oklch(0.955 0 0);
-  --muted-foreground: oklch(0.556 0 0);
+  --muted: oklch(0.925 0 0);
+  --muted-foreground: oklch(0.5 0 0);
 
   /* Accent - Linear purple-blue */
   --accent: oklch(0.567 0.159 275.208);
@@ -60,17 +60,17 @@ summary {
   --destructive-foreground: oklch(1 0 0);
 
   /* Card */
-  --card: oklch(0.995 0 0);
+  --card: oklch(1 0 0);
   --card-foreground: oklch(0.205 0 0);
-  --card-hover: oklch(0.975 0 0);
+  --card-hover: oklch(0.965 0 0);
 
   /* Popover */
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.205 0 0);
 
   /* Input */
-  --input: oklch(0.885 0 0);
-  --input-border: oklch(0.82 0 0);
+  --input: oklch(0.84 0 0);
+  --input-border: oklch(0.78 0 0);
   --input-focus: oklch(0.567 0.159 275.208);
 
   /* Ring (focus) */
