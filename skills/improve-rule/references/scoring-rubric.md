@@ -1,6 +1,6 @@
 # Rule Quality Scoring Rubric
 
-Full specification for how `pnpm score:rules` evaluates Frontend Checklist rules.
+Full specification for how `pnpm score:rules` evaluates Front-End Checklist rules.
 
 **Maximum score: 80 points**
 

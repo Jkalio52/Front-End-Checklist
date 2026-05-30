@@ -1,6 +1,6 @@
 # `@frontendchecklist/rules`
 
-Public Frontend Checklist rules package intended for external consumers.
+Public Front-End Checklist rules package intended for external consumers.
 
 ## What it exports
 

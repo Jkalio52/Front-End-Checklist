@@ -29,6 +29,7 @@ These run in CI or on commit; keep them.
 | `pnpm validate:guides` | Enforces guide publish-readiness checks (cover image, links, reading level, metadata). | CI, guide authoring |
 | `pnpm score:rules` | Scores rules (≥50 to pass); fails commit if changed rules are below threshold. | Lefthook (on rule MDX changes) |
 | `pnpm generate:skills` | Regenerates `skills/` from rule MDX. | Lefthook (on rule MDX changes) |
+| `pnpm generate:readme` | Regenerates the README checklist and generated catalog from rule MDX. | Lefthook (on rule MDX changes) |
 | `pnpm validate:evidence` | Validates source quality metadata on rules. | CI, rule authoring |
 
 ---

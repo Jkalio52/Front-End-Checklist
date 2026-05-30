@@ -1,10 +1,10 @@
 name: frontendchecklist
-displayName: Frontend Checklist
+displayName: Front-End Checklist
 description: >
   374 frontend best practice rules for HTML, CSS, JavaScript, Accessibility,
   SEO, Security, Performance, Images, and Testing. Review code, audit live
   sites, browse reusable resources, and use MCP prompts/workflows via the
-  Frontend Checklist MCP server.
+  Front-End Checklist MCP server.
 homepage: https://frontendchecklist.io
 documentationUrl: https://frontendchecklist.io/en/mcp
 license: MIT

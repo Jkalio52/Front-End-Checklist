@@ -1,4 +1,4 @@
-# Frontend Checklist Rules Catalog
+# Front-End Checklist Rules Catalog
 
 <!-- Generated from rule frontmatter. Do not edit manually. Run `pnpm generate:readme`. -->
 
@@ -52,7 +52,7 @@ Semantic markup, metadata, forms, and document structure rules.
 - [ ] [Validate forms accessibly](https://frontendchecklist.io/rules/html/form-validation) ![High][high_img]: Forms provide clear validation feedback with accessible error messages and proper ARIA attributes.
 - [ ] [Validate HTML against W3C standards](https://frontendchecklist.io/rules/html/w3c-compliant) ![High][high_img]: HTML markup is validated against W3C standards for cross-browser compatibility.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### CSS
 
@@ -93,7 +93,7 @@ Layout, typography, responsive design, and styling rules.
 - [ ] [Use the View Transitions API for smooth page and component transitions](https://frontendchecklist.io/rules/css/view-transitions) ![Low][low_img]: The View Transitions API is used to animate between page states or navigations with cross-fade or custom animations, providing a native-app quality transition without JavaScript animation libraries.
 - [ ] [Use transform and opacity for animations](https://frontendchecklist.io/rules/css/animation-performance) ![High][high_img]: Animate with CSS transform and opacity properties to keep animations running on the GPU compositor thread at 60fps, avoiding layout-triggering properties like top, left, width, and height.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### JavaScript
 
@@ -128,7 +128,7 @@ Client-side behavior, async patterns, and runtime quality rules.
 - [ ] [Validate external data at runtime with a schema library](https://frontendchecklist.io/rules/javascript/runtime-validation) ![High][high_img]: Use Zod or Valibot to validate data from API responses, form inputs, localStorage, and environment variables — TypeScript types are erased at runtime and cannot protect against unexpected shapes.
 - [ ] [Write internationalisation-friendly translation strings](https://frontendchecklist.io/rules/javascript/translation-strings) ![Medium][medium_img]: Translation strings use message format patterns (ICU or similar) rather than string concatenation, and correctly handle pluralisation, gender, and variable interpolation.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Performance
 
@@ -180,7 +180,7 @@ Loading speed, rendering, optimization, and Core Web Vitals rules.
 - [ ] [Use the Speculation Rules API to prefetch and prerender navigations](https://frontendchecklist.io/rules/performance/speculation-rules) ![Low][low_img]: The Speculation Rules API is used to declaratively prefetch or prerender likely next pages, making navigation feel near-instant without the overhead of a full client-side router.
 - [ ] [Virtualize long lists and tables](https://frontendchecklist.io/rules/performance/list-virtualization) ![High][high_img]: Render only the visible subset of rows or cards in large collections to reduce DOM size, memory usage, and scroll-time rendering work.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Accessibility
 
@@ -284,7 +284,7 @@ Keyboard, screen reader, ARIA, and inclusive UX rules.
 - [ ] [Wrap definition items in a definition list](https://frontendchecklist.io/rules/accessibility/dlitem) ![Medium][medium_img]: Description terms (&lt;dt&gt;) and details (&lt;dd&gt;) must be contained within a &lt;dl&gt; element.
 - [ ] [Write in plain language](https://frontendchecklist.io/rules/accessibility/plain-language) ![Medium][medium_img]: Content uses clear, simple language that is easy to understand for users with cognitive disabilities and non-native speakers.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### SEO
 
@@ -387,7 +387,7 @@ Crawlability, metadata, structured data, and search visibility rules.
 - [ ] [Write a meta description for each page](https://frontendchecklist.io/rules/seo/meta-description) ![High][high_img]: Validates meta description presence and length
 - [ ] [Write at a clear reading level](https://frontendchecklist.io/rules/seo/reading-level) ![Medium][medium_img]: Analyzes content readability using Flesch-Kincaid
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Security
 
@@ -418,7 +418,7 @@ Headers, transport, safe linking, and frontend security rules.
 - [ ] [Submit forms over HTTPS](https://frontendchecklist.io/rules/security/form-https) ![Critical][critical_img]: All HTML form actions must point to HTTPS URLs to ensure form data is encrypted in transit and cannot be intercepted by network attackers.
 - [ ] [Use COOP, COEP, and CORP for cross-origin isolation when needed](https://frontendchecklist.io/rules/security/cross-origin-isolation) ![Medium][medium_img]: Sensitive or high-capability applications use COOP, COEP, and CORP deliberately, audit third-party embeds, and verify cross-origin isolation in the browser before relying on it.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Images
 
@@ -452,7 +452,7 @@ Formats, responsive delivery, optimization, and media quality rules.
 - [ ] [Use srcset for responsive images](https://frontendchecklist.io/rules/images/srcset) ![High][high_img]: Images wider than 100px use the srcset attribute to offer multiple resolution variants, letting the browser download the optimal size for the user's viewport and device pixel ratio.
 - [ ] [Use WebP format with fallbacks](https://frontendchecklist.io/rules/images/webp-format) ![High][high_img]: Images are served in WebP format with fallbacks for older browsers.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Testing
 
@@ -474,7 +474,7 @@ Unit, integration, E2E, monitoring, and quality assurance rules.
 - [ ] [Write integration tests for key workflows](https://frontendchecklist.io/rules/testing/integration-testing) ![High][high_img]: Test how multiple units of code work together — API routes with their database queries, form submissions with validation, and component trees with their state management.
 - [ ] [Write unit tests](https://frontendchecklist.io/rules/testing/unit-tests) ![High][high_img]: Critical functionality has unit tests with good coverage for reliability.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Privacy
 
@@ -488,7 +488,7 @@ Consent, tracking, retention, and user data rights rules.
 - [ ] [Link to your privacy policy in the footer](https://frontendchecklist.io/rules/privacy/privacy-policy) ![High][high_img]: Websites that collect any personal data must publish a privacy policy and link to it prominently — this is a legal requirement under GDPR, CCPA, and most other privacy regulations.
 - [ ] [Show a cookie consent notice](https://frontendchecklist.io/rules/privacy/cookie-consent) ![High][high_img]: Websites that set non-essential cookies must obtain prior, informed user consent under GDPR, CCPA, and similar privacy regulations before cookies are placed.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 ### Internationalization
 
@@ -502,7 +502,7 @@ Localization, RTL, language handling, and translation workflow rules.
 - [ ] [Use Intl APIs for currency, number, and date formatting](https://frontendchecklist.io/rules/i18n/currency-formatting) ![Medium][medium_img]: Format monetary values, numbers, and dates using the browser's built-in Intl.NumberFormat and Intl.DateTimeFormat APIs instead of manual string manipulation.
 - [ ] [Use locale-neutral images and provide cultural overrides when needed](https://frontendchecklist.io/rules/i18n/locale-images) ![Low][low_img]: Default to abstract, culture-neutral icons and illustrations, and supply locale-specific image variants only when visual content carries meaning that differs across regions.
 
-**[Back to top](#frontend-checklist-rules-catalog)**
+**[Back to top](#front-end-checklist-rules-catalog)**
 
 [critical_img]: ../../apps/web/public/priority/critical.svg
 [high_img]: ../../apps/web/public/priority/high.svg

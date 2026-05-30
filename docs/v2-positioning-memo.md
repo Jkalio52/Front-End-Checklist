@@ -1,8 +1,8 @@
-# Frontend Checklist V2 Positioning Memo
+# Front-End Checklist V2 Positioning Memo
 
 ## Summary
 
-Frontend Checklist V2 should be positioned as a **trusted front-end quality system for humans and AI agents**, not as a generic library of tips.
+Front-End Checklist V2 should be positioned as a **trusted front-end quality system for humans and AI agents**, not as a generic library of tips.
 
 That means the primary story is:
 
@@ -17,7 +17,7 @@ The project is strongest when it feels like shared infrastructure for front-end 
 
 ### Positioning statement
 
-Frontend Checklist is the open-source front-end quality system for teams that want trusted review standards for both humans and AI agents.
+Front-End Checklist is the open-source front-end quality system for teams that want trusted review standards for both humans and AI agents.
 
 ### One-sentence homepage version
 
@@ -59,7 +59,7 @@ The differentiator is:
 - MCP lets the same rules drive real agent workflows
 - skills make the content reusable in agentic tooling
 
-This makes Frontend Checklist more than documentation. It becomes an execution layer for front-end quality.
+This makes Front-End Checklist more than documentation. It becomes an execution layer for front-end quality.
 
 ## Message Architecture
 
@@ -145,22 +145,22 @@ These can be delivered through curated checklists, guide cards, and homepage sec
 
 ### Week 1
 
-- Publish a launch post framing Frontend Checklist as a front-end quality system for humans and AI agents
+- Publish a launch post framing Front-End Checklist as a front-end quality system for humans and AI agents
 - Tighten homepage, README, and MCP page messaging
 - Make one canonical demo video or GIF of MCP finding real issues
 
 ### Week 2
 
 - Publish two example audits:
-  - “Generic AI review vs Frontend Checklist MCP review”
+  - “Generic AI review vs Front-End Checklist MCP review”
   - “Launch-readiness audit of a real page”
 - Share focused clips and screenshots on X and developer communities
 
 ### Week 3
 
 - Ship one or two framework-targeted guides:
-  - using Frontend Checklist with Next.js
-  - using Frontend Checklist for accessibility reviews
+  - using Front-End Checklist with Next.js
+  - using Front-End Checklist for accessibility reviews
 - Ask early users to share real workflows and repo integrations
 
 ### Week 4
@@ -178,7 +178,7 @@ These can be delivered through curated checklists, guide cards, and homepage sec
 
 ## Recommendation
 
-Lean harder into the second identity: **Frontend Checklist as trusted front-end quality infrastructure**.
+Lean harder into the second identity: **Front-End Checklist as trusted front-end quality infrastructure**.
 
 That is the version with the most relevance, the most differentiation, and the highest chance of earning attention beyond the usual “best practices” audience.
 

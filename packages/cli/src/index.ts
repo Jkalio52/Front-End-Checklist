@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /**
- * Frontend Checklist — standalone audit CLI
+ * Front-End Checklist — standalone audit CLI
  *
  * Usage (from repo root):
  *   pnpm exec frontendchecklist audit <url> [options]
@@ -185,7 +185,7 @@ function formatHtml(result: AuditUrlResult): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Frontend Checklist Audit: ${escapeHtml(result.source?.url ?? '')}</title>
+  <title>Front-End Checklist Audit: ${escapeHtml(result.source?.url ?? '')}</title>
   <style>
     body { font-family: system-ui, sans-serif; max-width: 900px; margin: 2rem auto; padding: 0 1rem; }
     table { width: 100%; border-collapse: collapse; }
@@ -196,7 +196,7 @@ function formatHtml(result: AuditUrlResult): string {
   </style>
 </head>
 <body>
-  <h1>Frontend Checklist Audit</h1>
+  <h1>Front-End Checklist Audit</h1>
   <div class="meta">
     <p><strong>URL:</strong> ${escapeHtml(result.source?.url ?? '')}</p>
     <p><strong>Checks:</strong> ${s.totalChecks} &nbsp; <strong>Issues:</strong> ${s.issuesFound} (Critical: ${s.criticalIssues}, High: ${s.highIssues})</p>

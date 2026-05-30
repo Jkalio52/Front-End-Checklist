@@ -345,7 +345,7 @@ function buildGlobalSkillMd(stats: GlobalRuleStat[]): string {
   return [
     '---',
     'name: frontend-checklist-global',
-    'description: "Use when auditing or improving any frontend codebase against the full Frontend Checklist rule corpus through one entry point."',
+    'description: "Use when auditing or improving any frontend codebase against the full Front-End Checklist rule corpus through one entry point."',
     'metadata:',
     '  category: global',
     '  priority: high',
@@ -355,9 +355,9 @@ function buildGlobalSkillMd(stats: GlobalRuleStat[]): string {
     `  url: ${SITE_URL}/en/mcp`,
     '---',
     '',
-    '# Frontend Checklist Global Audit',
+    '# Front-End Checklist Global Audit',
     '',
-    `This skill connects one entry point to all ${totalRules} Frontend Checklist rules.`,
+    `This skill connects one entry point to all ${totalRules} Front-End Checklist rules.`,
     'Use MCP retrieval instead of trying to recall rules from memory.',
     '',
     '## Workflow',
@@ -433,9 +433,9 @@ function buildGlobalReferencesMd(stats: GlobalRuleStat[]): string {
   const highlights = loadGlobalRuleHighlights()
   const safePatterns = loadSafePatterns()
   const lines: string[] = [
-    '# Frontend Checklist Global Skill Reference',
+    '# Front-End Checklist Global Skill Reference',
     '',
-    `This aggregate skill routes to the Frontend Checklist MCP tools across ${totalRules} rules.`,
+    `This aggregate skill routes to the Front-End Checklist MCP tools across ${totalRules} rules.`,
     '',
     '## Tool Routing',
     '',

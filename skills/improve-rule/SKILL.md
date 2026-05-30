@@ -1,15 +1,15 @@
 ---
 name: improve-rule
-description: "Use when reviewing or improving a Frontend Checklist rule MDX file to raise its quality score, fix stub prompts, add missing fields, or enrich content with real code examples."
+description: "Use when reviewing or improving a Front-End Checklist rule MDX file to raise its quality score, fix stub prompts, add missing fields, or enrich content with real code examples."
 metadata:
   category: meta
   source: frontendchecklist.io
   url: https://frontendchecklist.io
 ---
 
-# Improve a Frontend Checklist Rule
+# Improve a Front-End Checklist Rule
 
-This skill helps you review and improve the quality of rule MDX files in the Frontend Checklist project. Use it to fix stub content, write better AI prompts, and enrich rules so they score well against the quality rubric.
+This skill helps you review and improve the quality of rule MDX files in the Front-End Checklist project. Use it to fix stub content, write better AI prompts, and enrich rules so they score well against the quality rubric.
 
 ## Quality Dimensions
 

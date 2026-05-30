@@ -63,7 +63,7 @@ export function getGithubLogin(profile: unknown): string | undefined {
 }
 
 /**
- * Map GitHub's public user profile shape into the fields Frontend Checklist stores.
+ * Map GitHub's public user profile shape into the fields Front-End Checklist stores.
  *
  * @param profile - Public GitHub profile object from OAuth or the REST API.
  * @param importedAt - Timestamp to store for this one-time import.

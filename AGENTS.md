@@ -1,10 +1,10 @@
-# AGENTS.md — Frontend Checklist
+# AGENTS.md — Front-End Checklist
 
 Project rules and conventions for AI coding agents (Claude Code, Cursor, GitHub Copilot, Windsurf).
 
 ## Project Overview
 
-**Frontend Checklist** is an open-source monorepo providing 385 quality-gated frontend best practice rules with an MCP server for AI agent integration.
+**Front-End Checklist** is an open-source monorepo providing 385 quality-gated frontend best practice rules with an MCP server for AI agent integration.
 
 - **MCP Server**: `https://mcp.frontendchecklist.io` (11 tools)
 - **Rules**: `packages/content/rules/en/<category>/<slug>.mdx`

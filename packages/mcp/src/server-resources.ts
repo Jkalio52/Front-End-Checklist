@@ -141,7 +141,7 @@ export function registerResources(
     'rule_resource',
     ruleResourceTemplate,
     {
-      title: 'Frontend Checklist Rule',
+      title: 'Front-End Checklist Rule',
       description: 'Read a single frontend rule as normalized markdown.',
       mimeType: 'text/markdown'
     },
@@ -199,7 +199,7 @@ export function registerResources(
     'checklist_resource',
     checklistResourceTemplate,
     {
-      title: 'Frontend Checklist Workflow',
+      title: 'Front-End Checklist Workflow',
       description: 'Read a curated checklist with ordered rule references.',
       mimeType: 'text/markdown'
     },

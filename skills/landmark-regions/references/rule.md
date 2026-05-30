@@ -28,7 +28,7 @@ Landmark regions provide a way to identify the organization and structure of a w
 </main>
 
 <footer>
-  <p>&copy; 2024 Frontend Checklist</p>
+  <p>&copy; 2024 Front-End Checklist</p>
 </footer>
 ```
 

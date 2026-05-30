@@ -56,7 +56,7 @@ test('buildReadmeCatalogMarkdown renders quick links and grouped checklist entri
     markdown,
     /- \[ \] \[Declare the doctype\]\(https:\/\/frontendchecklist\.io\/rules\/html\/doctype\) !\[Critical\]\[critical_img\]: Use the HTML5 doctype at the top of every document\./
   )
-  assert.match(markdown, /\*\*\[Back to top\]\(#frontend-checklist\)\*\*/)
+  assert.match(markdown, /\*\*\[Back to top\]\(#front-end-checklist\)\*\*/)
   assert.match(markdown, /\[critical_img\]: \.\/apps\/web\/public\/priority\/critical\.svg/)
   assert.match(markdown, /\[high_img\]: \.\/apps\/web\/public\/priority\/high\.svg/)
 })
@@ -64,7 +64,7 @@ test('buildReadmeCatalogMarkdown renders quick links and grouped checklist entri
 test('buildFullCatalogMarkdown renders grouped checkbox entries and quick links', () => {
   const markdown = buildFullCatalogMarkdown(sampleRules)
 
-  assert.match(markdown, /# Frontend Checklist Rules Catalog/)
+  assert.match(markdown, /# Front-End Checklist Rules Catalog/)
   assert.match(markdown, /Generated from 3 English rules across 2 categories\./)
   assert.match(markdown, /## Quick links/)
   assert.match(markdown, /- \[HTML\]\(#html\) \(1\)/)
@@ -86,7 +86,7 @@ test('buildFullCatalogMarkdown renders grouped checkbox entries and quick links'
     markdown.indexOf('### HTML') < markdown.indexOf('### SEO'),
     'categories should follow canonical-url order'
   )
-  assert.match(markdown, /\*\*\[Back to top\]\(#frontend-checklist-rules-catalog\)\*\*/)
+  assert.match(markdown, /\*\*\[Back to top\]\(#front-end-checklist-rules-catalog\)\*\*/)
   assert.match(markdown, /\[critical_img\]: \.\.\/\.\.\/apps\/web\/public\/priority\/critical\.svg/)
   assert.match(markdown, /\[low_img\]: \.\.\/\.\.\/apps\/web\/public\/priority\/low\.svg/)
 })

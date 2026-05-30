@@ -1,5 +1,5 @@
 /**
- * Normalizes Frontend Checklist rule verification sections.
+ * Normalizes Front-End Checklist rule verification sections.
  *
  * Usage:
  *   pnpm tsx scripts/rule-structure/normalize-rule-structure.ts --report

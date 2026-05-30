@@ -361,7 +361,7 @@ const guideSchema = z.object({
 
 const defaultGuideAuthor = {
   name: 'David Dias',
-  role: 'Creator of Frontend Checklist',
+  role: 'Creator of Front-End Checklist',
   bio: 'David writes practical guidance for teams shipping frontend work with higher standards.',
   url: 'https://thedaviddias.com',
   xUrl: 'https://x.com/thedaviddias'

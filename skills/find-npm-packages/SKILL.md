@@ -9,7 +9,7 @@ metadata:
 
 # find-npm-packages
 
-Identify, validate, and add npm package references to a Frontend Checklist rule.
+Identify, validate, and add npm package references to a Front-End Checklist rule.
 
 ## What this skill does
 

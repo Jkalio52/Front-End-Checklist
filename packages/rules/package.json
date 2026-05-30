@@ -2,7 +2,7 @@
   "name": "@frontendchecklist/rules",
   "version": "0.1.0",
   "private": false,
-  "description": "Public Frontend Checklist rules package for external consumers",
+  "description": "Public Front-End Checklist rules package for external consumers",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",

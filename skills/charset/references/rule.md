@@ -32,7 +32,7 @@ The UTF-8 character set must be declared early in the HTML head to ensure proper
 
 ## Framework Examples
 
-  Frontend Checklist</title>
+  Front-End Checklist</title>
   </head>
 </html>
 ```

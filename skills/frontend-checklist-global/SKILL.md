@@ -1,6 +1,6 @@
 ---
 name: frontend-checklist-global
-description: "Use when auditing or improving any frontend codebase against the full Frontend Checklist rule corpus through one entry point."
+description: "Use when auditing or improving any frontend codebase against the full Front-End Checklist rule corpus through one entry point."
 metadata:
   category: global
   priority: high
@@ -10,9 +10,9 @@ metadata:
   url: https://frontendchecklist.io/en/mcp
 ---
 
-# Frontend Checklist Global Audit
+# Front-End Checklist Global Audit
 
-This skill connects one entry point to all 385 Frontend Checklist rules.
+This skill connects one entry point to all 385 Front-End Checklist rules.
 Use MCP retrieval instead of trying to recall rules from memory.
 
 ## Workflow

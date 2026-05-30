@@ -1,15 +1,15 @@
-# Frontend Checklist
+# Front-End Checklist
 
 [![Backers on Open Collective](https://opencollective.com/front-end-checklist/backers/badge.svg)](#backers)
 [![Support via Open Collective](https://opencollective.com/front-end-checklist/sponsors/badge.svg)](https://opencollective.com/front-end-checklist)
 
-Frontend Checklist is the open-source front-end quality system for humans and AI agents. It turns front-end best practices into a practical review workflow you can browse on the web, run through with MCP-compatible tools, or work through directly in this README.
+Front-End Checklist is the open-source front-end quality system for humans and AI agents. It turns front-end best practices into a practical review workflow you can browse on the web, run through with MCP-compatible tools, or work through directly in this README.
 
 - Website: [frontendchecklist.io](https://frontendchecklist.io)
 - Rules: [frontendchecklist.io/rules](https://frontendchecklist.io/rules)
 - MCP server: [mcp.frontendchecklist.io](https://mcp.frontendchecklist.io)
 
-Companion project: [UX Patterns for Devs](https://uxpatterns.dev/) helps developers choose the right UI pattern before using Frontend Checklist to verify implementation quality.
+Companion project: [UX Patterns for Devs](https://uxpatterns.dev/) helps developers choose the right UI pattern before using Front-End Checklist to verify implementation quality.
 
 > [!IMPORTANT]
 > Use the website for browsing and filtering, the MCP server for agent workflows, and this README when you want the checklist in one place.
@@ -44,7 +44,7 @@ Companion project: [UX Patterns for Devs](https://uxpatterns.dev/) helps develop
 
 ### Choose the right pattern first
 
-Frontend Checklist helps you review implementation quality. If you are still deciding what interface to build, use [UX Patterns for Devs](https://uxpatterns.dev/) to compare common UI patterns, understand tradeoffs, and find practical guidance for forms, navigation, data display, feedback states, authentication, and AI interfaces.
+Front-End Checklist helps you review implementation quality. If you are still deciding what interface to build, use [UX Patterns for Devs](https://uxpatterns.dev/) to compare common UI patterns, understand tradeoffs, and find practical guidance for forms, navigation, data display, feedback states, authentication, and AI interfaces.
 
 ### Contribute to the checklist
 
@@ -56,10 +56,10 @@ Frontend Checklist helps you review implementation quality. If you are still dec
 
 ## Use with MCP
 
-Connect an MCP-capable agent to Frontend Checklist for structured rule lookup, audits, and remediation workflows.
+Connect an MCP-capable agent to Front-End Checklist for structured rule lookup, audits, and remediation workflows.
 
 > [!TIP]
-> Best first use: point an MCP-capable agent at a real component, page, or public URL and ask for the highest-confidence Frontend Checklist findings first.
+> Best first use: point an MCP-capable agent at a real component, page, or public URL and ask for the highest-confidence Front-End Checklist findings first.
 
 - Public endpoint: [mcp.frontendchecklist.io](https://mcp.frontendchecklist.io)
 - Public docs: [frontendchecklist.io/mcp](https://frontendchecklist.io/mcp)
@@ -75,13 +75,13 @@ What you can do:
 
 Example prompts:
 
-- `Review this component against the Frontend Checklist and report the highest-confidence findings first.`
+- `Review this component against the Front-End Checklist and report the highest-confidence findings first.`
 - `Audit https://example.com for accessibility, performance, and SEO issues.`
 - `Explain the canonical URL rule and suggest a fix with code examples.`
 
 ## Use with skills
 
-Install Frontend Checklist skills when you want reusable audit workflows or focused rule-specific guidance in tools that support them.
+Install Front-End Checklist skills when you want reusable audit workflows or focused rule-specific guidance in tools that support them.
 
 Install:
 
@@ -97,7 +97,7 @@ Useful entry points:
 
 Example uses:
 
-- Run a broad frontend audit against the full Frontend Checklist corpus
+- Run a broad frontend audit against the full Front-End Checklist corpus
 - Use a focused skill like `https` for security review on one concern
 - Use rule-specific skills to explain why a rule matters and how to fix it
 
@@ -155,7 +155,7 @@ Example uses:
 - [ ] [Validate forms accessibly](https://frontendchecklist.io/rules/html/form-validation) ![High][high_img]: Forms provide clear validation feedback with accessible error messages and proper ARIA attributes.
 - [ ] [Validate HTML against W3C standards](https://frontendchecklist.io/rules/html/w3c-compliant) ![High][high_img]: HTML markup is validated against W3C standards for cross-browser compatibility.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### CSS
 
@@ -196,7 +196,7 @@ Example uses:
 - [ ] [Use the View Transitions API for smooth page and component transitions](https://frontendchecklist.io/rules/css/view-transitions) ![Low][low_img]: The View Transitions API is used to animate between page states or navigations with cross-fade or custom animations, providing a native-app quality transition without JavaScript animation libraries.
 - [ ] [Use transform and opacity for animations](https://frontendchecklist.io/rules/css/animation-performance) ![High][high_img]: Animate with CSS transform and opacity properties to keep animations running on the GPU compositor thread at 60fps, avoiding layout-triggering properties like top, left, width, and height.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### JavaScript
 
@@ -231,7 +231,7 @@ Example uses:
 - [ ] [Validate external data at runtime with a schema library](https://frontendchecklist.io/rules/javascript/runtime-validation) ![High][high_img]: Use Zod or Valibot to validate data from API responses, form inputs, localStorage, and environment variables — TypeScript types are erased at runtime and cannot protect against unexpected shapes.
 - [ ] [Write internationalisation-friendly translation strings](https://frontendchecklist.io/rules/javascript/translation-strings) ![Medium][medium_img]: Translation strings use message format patterns (ICU or similar) rather than string concatenation, and correctly handle pluralisation, gender, and variable interpolation.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Performance
 
@@ -283,7 +283,7 @@ Example uses:
 - [ ] [Use the Speculation Rules API to prefetch and prerender navigations](https://frontendchecklist.io/rules/performance/speculation-rules) ![Low][low_img]: The Speculation Rules API is used to declaratively prefetch or prerender likely next pages, making navigation feel near-instant without the overhead of a full client-side router.
 - [ ] [Virtualize long lists and tables](https://frontendchecklist.io/rules/performance/list-virtualization) ![High][high_img]: Render only the visible subset of rows or cards in large collections to reduce DOM size, memory usage, and scroll-time rendering work.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Accessibility
 
@@ -387,7 +387,7 @@ Example uses:
 - [ ] [Wrap definition items in a definition list](https://frontendchecklist.io/rules/accessibility/dlitem) ![Medium][medium_img]: Description terms (&lt;dt&gt;) and details (&lt;dd&gt;) must be contained within a &lt;dl&gt; element.
 - [ ] [Write in plain language](https://frontendchecklist.io/rules/accessibility/plain-language) ![Medium][medium_img]: Content uses clear, simple language that is easy to understand for users with cognitive disabilities and non-native speakers.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### SEO
 
@@ -490,7 +490,7 @@ Example uses:
 - [ ] [Write a meta description for each page](https://frontendchecklist.io/rules/seo/meta-description) ![High][high_img]: Validates meta description presence and length
 - [ ] [Write at a clear reading level](https://frontendchecklist.io/rules/seo/reading-level) ![Medium][medium_img]: Analyzes content readability using Flesch-Kincaid
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Security
 
@@ -521,7 +521,7 @@ Example uses:
 - [ ] [Submit forms over HTTPS](https://frontendchecklist.io/rules/security/form-https) ![Critical][critical_img]: All HTML form actions must point to HTTPS URLs to ensure form data is encrypted in transit and cannot be intercepted by network attackers.
 - [ ] [Use COOP, COEP, and CORP for cross-origin isolation when needed](https://frontendchecklist.io/rules/security/cross-origin-isolation) ![Medium][medium_img]: Sensitive or high-capability applications use COOP, COEP, and CORP deliberately, audit third-party embeds, and verify cross-origin isolation in the browser before relying on it.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Images
 
@@ -555,7 +555,7 @@ Example uses:
 - [ ] [Use srcset for responsive images](https://frontendchecklist.io/rules/images/srcset) ![High][high_img]: Images wider than 100px use the srcset attribute to offer multiple resolution variants, letting the browser download the optimal size for the user's viewport and device pixel ratio.
 - [ ] [Use WebP format with fallbacks](https://frontendchecklist.io/rules/images/webp-format) ![High][high_img]: Images are served in WebP format with fallbacks for older browsers.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Testing
 
@@ -577,7 +577,7 @@ Example uses:
 - [ ] [Write integration tests for key workflows](https://frontendchecklist.io/rules/testing/integration-testing) ![High][high_img]: Test how multiple units of code work together — API routes with their database queries, form submissions with validation, and component trees with their state management.
 - [ ] [Write unit tests](https://frontendchecklist.io/rules/testing/unit-tests) ![High][high_img]: Critical functionality has unit tests with good coverage for reliability.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Privacy
 
@@ -591,7 +591,7 @@ Example uses:
 - [ ] [Link to your privacy policy in the footer](https://frontendchecklist.io/rules/privacy/privacy-policy) ![High][high_img]: Websites that collect any personal data must publish a privacy policy and link to it prominently — this is a legal requirement under GDPR, CCPA, and most other privacy regulations.
 - [ ] [Show a cookie consent notice](https://frontendchecklist.io/rules/privacy/cookie-consent) ![High][high_img]: Websites that set non-essential cookies must obtain prior, informed user consent under GDPR, CCPA, and similar privacy regulations before cookies are placed.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 ### Internationalization
 
@@ -605,7 +605,7 @@ Example uses:
 - [ ] [Use Intl APIs for currency, number, and date formatting](https://frontendchecklist.io/rules/i18n/currency-formatting) ![Medium][medium_img]: Format monetary values, numbers, and dates using the browser's built-in Intl.NumberFormat and Intl.DateTimeFormat APIs instead of manual string manipulation.
 - [ ] [Use locale-neutral images and provide cultural overrides when needed](https://frontendchecklist.io/rules/i18n/locale-images) ![Low][low_img]: Default to abstract, culture-neutral icons and illustrations, and supply locale-specific image variants only when visual content carries meaning that differs across regions.
 
-**[Back to top](#frontend-checklist)**
+**[Back to top](#front-end-checklist)**
 
 [critical_img]: ./apps/web/public/priority/critical.svg
 [high_img]: ./apps/web/public/priority/high.svg

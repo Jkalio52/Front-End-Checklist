@@ -8,7 +8,7 @@ describe('TransactionalStarterEmail', () => {
         actionLabel="Open dashboard"
         actionUrl="https://frontendchecklist.io/dashboard"
         headline="Action required"
-        message="Finish setting up your account to start using Frontend Checklist."
+        message="Finish setting up your account to start using Front-End Checklist."
         previewText="Complete your setup."
         supportEmail="hello@mail.frontendchecklist.io"
       />

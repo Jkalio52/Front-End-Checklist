@@ -1,4 +1,4 @@
-# Comparative Audit: Frontend Checklist vs squirrelscan
+# Comparative Audit: Front-End Checklist vs squirrelscan
 
 This folder holds results and instructions for comparing our `audit_url` tool against [squirrelscan](https://squirrelscan.com/) (and other audit tools) on the same set of URLs. The goal is to document **gaps**: where our 377-rule corpus finds issues that others miss, and vice versa.
 
@@ -17,7 +17,7 @@ This folder holds results and instructions for comparing our `audit_url` tool ag
 | 9 | https://github.com |
 | 10 | https://stackoverflow.com |
 
-## 1. Run our audit (Frontend Checklist)
+## 1. Run our audit (Front-End Checklist)
 
 **Prerequisites:** Dev server running (`pnpm dev` from repo root).
 

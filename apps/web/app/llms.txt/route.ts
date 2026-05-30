@@ -47,7 +47,7 @@ function generateLlmsTxt(): string {
 
   const sortedCategories = Object.keys(rulesByCategory).sort()
 
-  let content = `# Frontend Checklist
+  let content = `# Front-End Checklist
 
 > ${englishRules.length} frontend best practice rules across HTML, CSS, JavaScript, Accessibility, SEO, Security, Performance, Images, and Testing. Free, open-source.
 

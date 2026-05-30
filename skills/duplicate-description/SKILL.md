@@ -31,7 +31,7 @@ Scan the HTML of every page for `<meta name="description" content="...">`. Ident
 3. In Next.js/React, pass a dynamic `description` prop through your SEO component instead of a static string.
 4. In WordPress/CMS, disable site-wide description fallback in your SEO plugin (Yoast, RankMath) and set per-post descriptions.
 Example of a unique description per page:
-- Homepage: "Frontend Checklist helps developers build faster, more accessible, and better-ranked websites."
+- Homepage: "Front-End Checklist helps developers build faster, more accessible, and better-ranked websites."
 - Blog post: "Learn how canonical tags prevent duplicate-content penalties and consolidate PageRank across URL variants."
 
 

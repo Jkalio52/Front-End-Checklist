@@ -220,7 +220,7 @@ export const pageMetadata = {
   report: generateSEOMetadata({
     title: 'Audit report',
     description:
-      'Frontend Checklist audit report. View issues, suggestions, and fix guidance for a frontend audit.',
+      'Front-End Checklist audit report. View issues, suggestions, and fix guidance for a frontend audit.',
     path: ROUTES.report,
     noIndex: true
   }),

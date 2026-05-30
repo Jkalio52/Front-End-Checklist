@@ -199,7 +199,7 @@ export async function POST(request: Request) {
       403,
       -32600,
       'Origin not allowed',
-      'Cross-origin browser requests must originate from a trusted Frontend Checklist origin.'
+      'Cross-origin browser requests must originate from a trusted Front-End Checklist origin.'
     )
   }
 
@@ -338,7 +338,7 @@ export async function GET(request: Request) {
       403,
       -32600,
       'Origin not allowed',
-      'Cross-origin browser requests must originate from a trusted Frontend Checklist origin.'
+      'Cross-origin browser requests must originate from a trusted Front-End Checklist origin.'
     )
   }
 

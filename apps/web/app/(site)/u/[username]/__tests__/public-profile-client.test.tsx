@@ -7,7 +7,7 @@ describe('PublicProfileClient', () => {
       <PublicProfileClient
         user={{
           name: 'David Dias',
-          githubCompany: 'Frontend Checklist',
+          githubCompany: 'Front-End Checklist',
           githubBlog: 'frontendchecklist.io',
           githubLocation: 'Montreal',
           githubFollowers: 1000,
@@ -22,7 +22,7 @@ describe('PublicProfileClient', () => {
       />
     )
 
-    expect(screen.getByText('Frontend Checklist')).toBeInTheDocument()
+    expect(screen.getByText('Front-End Checklist')).toBeInTheDocument()
     expect(screen.getByText('Montreal')).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'frontendchecklist.io' })).toHaveAttribute(
       'href',

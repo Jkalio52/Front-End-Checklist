@@ -2,7 +2,7 @@
   "name": "@frontendchecklist/crawler",
   "version": "0.1.0",
   "private": true,
-  "description": "Multi-page site crawler for Frontend Checklist audits",
+  "description": "Multi-page site crawler for Front-End Checklist audits",
   "type": "module",
   "main": "./src/index.ts",
   "scripts": {

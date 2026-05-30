@@ -1,6 +1,6 @@
 # Rule Structure Guide
 
-Frontend Checklist rules now use one machine-detectable core body contract:
+Front-End Checklist rules now use one machine-detectable core body contract:
 
 1. Intro paragraph before any H2
 2. `## Code Example` or `## Code Examples`

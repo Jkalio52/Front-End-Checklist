@@ -411,7 +411,7 @@ Use logical properties and bidi isolation so RTL support reaches layout, icons, 
 
 ```html
 <p dir="rtl">
-  مرحبا من <bdi>Frontend Checklist</bdi>
+  مرحبا من <bdi>Front-End Checklist</bdi>
 </p>
 ```
 

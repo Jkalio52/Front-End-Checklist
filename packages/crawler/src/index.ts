@@ -1,5 +1,5 @@
 /**
- * Multi-page crawler for Frontend Checklist audits.
+ * Multi-page crawler for Front-End Checklist audits.
  * Fetches a base URL, discovers same-origin links up to a depth and page limit,
  * runs audit_url on each page, and aggregates results.
  */

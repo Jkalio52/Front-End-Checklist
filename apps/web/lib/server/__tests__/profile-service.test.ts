@@ -216,7 +216,7 @@ describe('getProfileForUser', () => {
         login: 'TheDavidDias',
         bio: 'Frontend engineer',
         twitter_username: 'thedaviddias',
-        company: 'Frontend Checklist',
+        company: 'Front-End Checklist',
         blog: 'https://frontendchecklist.io',
         location: 'Montreal',
         public_repos: 42,
@@ -245,7 +245,7 @@ describe('getProfileForUser', () => {
         githubUrl: 'https://github.com/TheDavidDias',
         bio: 'Frontend engineer',
         xUrl: 'https://x.com/thedaviddias',
-        githubCompany: 'Frontend Checklist',
+        githubCompany: 'Front-End Checklist',
         githubPublicRepos: 42,
         githubPublicGists: 7,
         githubFollowers: 1000,
@@ -279,7 +279,7 @@ describe('getProfileForUser', () => {
         login: 'TheDavidDias',
         bio: 'GitHub bio',
         twitter_username: 'github',
-        company: 'Frontend Checklist'
+        company: 'Front-End Checklist'
       })
     })
     mockUpdate.mockResolvedValue({})
@@ -406,7 +406,7 @@ describe('syncGithubProfileForUser', () => {
       ok: true,
       json: async () => ({
         login: 'TheDavidDias',
-        company: 'Frontend Checklist',
+        company: 'Front-End Checklist',
         blog: 'https://frontendchecklist.io',
         location: 'Montreal',
         public_repos: 42,
@@ -426,7 +426,7 @@ describe('syncGithubProfileForUser', () => {
       data: expect.objectContaining({
         githubUsername: 'TheDavidDias',
         githubUrl: 'https://github.com/TheDavidDias',
-        githubCompany: 'Frontend Checklist',
+        githubCompany: 'Front-End Checklist',
         githubBlog: 'https://frontendchecklist.io',
         githubLocation: 'Montreal',
         githubPublicRepos: 42,
@@ -446,7 +446,7 @@ describe('syncGithubProfileForUser', () => {
       username: 'thedaviddias',
       githubUsername: 'TheDavidDias',
       githubUrl: 'https://github.com/TheDavidDias',
-      githubCompany: 'Frontend Checklist',
+      githubCompany: 'Front-End Checklist',
       githubPublicRepos: 42,
       githubFollowers: 1000
     })

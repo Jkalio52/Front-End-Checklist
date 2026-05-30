@@ -1,5 +1,5 @@
 /**
- * Quality scorer for Frontend Checklist rules.
+ * Quality scorer for Front-End Checklist rules.
  *
  * Scores each rule MDX file across multiple dimensions and outputs a ranked report.
  * Rules scoring below the minimum threshold are flagged for improvement.

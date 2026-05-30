@@ -370,7 +370,7 @@ export function buildReadmeCatalogMarkdown(rules: RuleEntry[]): string {
       )
     }
 
-    lines.push('', '**[Back to top](#frontend-checklist)**', '')
+    lines.push('', '**[Back to top](#front-end-checklist)**', '')
   }
 
   lines.push(...buildPriorityImageReferences(README_PRIORITY_IMAGE_PATHS), '')
@@ -397,7 +397,7 @@ export function buildFullCatalogMarkdown(rules: RuleEntry[]): string {
   }
 
   const lines = [
-    '# Frontend Checklist Rules Catalog',
+    '# Front-End Checklist Rules Catalog',
     '',
     '<!-- Generated from rule frontmatter. Do not edit manually. Run `pnpm generate:readme`. -->',
     '',
@@ -441,7 +441,7 @@ export function buildFullCatalogMarkdown(rules: RuleEntry[]): string {
       )
     }
 
-    lines.push('', '**[Back to top](#frontend-checklist-rules-catalog)**', '')
+    lines.push('', '**[Back to top](#front-end-checklist-rules-catalog)**', '')
   }
 
   lines.push(...buildPriorityImageReferences(FULL_CATALOG_PRIORITY_IMAGE_PATHS), '')

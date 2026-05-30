@@ -2,7 +2,7 @@
 
 ## Goal
 
-Benchmark one aggregate Frontend Checklist skill against popular `skills.sh` audit and review skills using real findings, not just prompt quality.
+Benchmark one aggregate Front-End Checklist skill against popular `skills.sh` audit and review skills using real findings, not just prompt quality.
 
 ## Source Of Truth
 
@@ -23,7 +23,7 @@ The aggregate skill is generated at:
 
 - `skills/frontend-checklist-global/SKILL.md`
 
-It is intentionally a router, not a 374-rule prompt dump. It points agents to the Frontend Checklist MCP tools:
+It is intentionally a router, not a 374-rule prompt dump. It points agents to the Front-End Checklist MCP tools:
 
 - `review_code` for file or snippet review
 - `audit_url` for public-page audits
@@ -75,13 +75,13 @@ These are strong comparison targets because they are either popular or close to 
 
 ## Expected Positioning
 
-Frontend Checklist should win on:
+Front-End Checklist should win on:
 
 - Local repo audits with no extra vendor login
 - Rule-grounded remediation tied to a named corpus
 - Breadth across accessibility, performance, SEO, security, images, and general frontend quality
 
-Frontend Checklist should not claim to beat specialized tools at everything:
+Front-End Checklist should not claim to beat specialized tools at everything:
 
 - `web-perf` should remain better for runtime trace-based performance analysis on a live page
 - `audit-website` should remain stronger for multi-page live-site crawling
@@ -93,7 +93,7 @@ If the aggregate skill starts underperforming on local repo findings, that is a 
 
 The benchmark work established a few durable conclusions:
 
-- A single global Frontend Checklist skill is viable, but only when it is strongly derived from the rule corpus.
+- A single global Front-End Checklist skill is viable, but only when it is strongly derived from the rule corpus.
 - Pairwise judging is more useful than coarse heuristic scoring for ranking competing skills.
 - Safe-pattern fixtures are essential because many competing skills over-report decorative images, fragment-only components, and framework-managed metadata.
 - Repo-derived compound fixtures are the best discriminator for frontend breadth, prioritization, and remediation quality.

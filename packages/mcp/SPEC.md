@@ -7,7 +7,7 @@
 
 ## Overview
 
-An MCP (Model Context Protocol) server that exposes the Frontend Checklist rule corpus to AI agents. The server runs through the official TypeScript SDK, serves a remote HTTP endpoint from the web app, supports local stdio transport, and exposes tools, prompts, and read-only resources for rules and curated checklists.
+An MCP (Model Context Protocol) server that exposes the Front-End Checklist rule corpus to AI agents. The server runs through the official TypeScript SDK, serves a remote HTTP endpoint from the web app, supports local stdio transport, and exposes tools, prompts, and read-only resources for rules and curated checklists.
 
 ### Design Principles
 

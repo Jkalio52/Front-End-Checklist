@@ -1,5 +1,5 @@
 /**
- * Validates Frontend Checklist rule body structure.
+ * Validates Front-End Checklist rule body structure.
  *
  * Usage:
  *   pnpm validate:rule-structure

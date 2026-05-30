@@ -46,6 +46,11 @@ pre-commit:
       glob: "packages/content/rules/en/**/*.mdx"
       run: pnpm tsx scripts/generate/generate-skills.ts {staged_files} && git add skills/
 
+    # Regenerate README catalog when rule MDX files change
+    generate-readme:
+      glob: "packages/content/rules/en/**/*.mdx"
+      run: pnpm generate:readme && git add README.md docs/generated/rules-catalog.md
+
     # Enforce canonical rule section structure on changed rules
     validate-rule-structure:
       glob: "packages/content/rules/en/**/*.mdx"

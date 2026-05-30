@@ -73,7 +73,7 @@ const footerTextStyle = {
 }
 
 /**
- * Generic transactional baseline for Frontend Checklist emails.
+ * Generic transactional baseline for Front-End Checklist emails.
  */
 export function TransactionalStarterEmail({
   actionLabel,
@@ -100,7 +100,7 @@ export function TransactionalStarterEmail({
                 textTransform: 'uppercase'
               }}
             >
-              Frontend Checklist
+              Front-End Checklist
             </Text>
             <Heading as="h1" style={headingStyle}>
               {headline}
@@ -133,7 +133,7 @@ TransactionalStarterEmail.PreviewProps = {
   actionUrl: 'https://frontendchecklist.io/checklists',
   headline: 'Your checklist is ready to review',
   message:
-    'Use this starter template as the baseline for account, notification, and product emails sent by Frontend Checklist.',
+    'Use this starter template as the baseline for account, notification, and product emails sent by Front-End Checklist.',
   previewText: 'Use this starter email to preview and ship new transactional templates faster.',
   supportEmail: 'hello@mail.frontendchecklist.io'
 } satisfies TransactionalStarterEmailProps

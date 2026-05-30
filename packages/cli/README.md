@@ -1,6 +1,6 @@
 # @frontendchecklist/cli
 
-Standalone CLI to audit a URL against Frontend Checklist rules (single-page).
+Standalone CLI to audit a URL against Front-End Checklist rules (single-page).
 
 ## Usage (from repo root)
 
