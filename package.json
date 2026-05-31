@@ -51,6 +51,7 @@
     "validate:packages": "tsx scripts/validate/validate-packages.ts",
     "mcp:audit": "tsx scripts/audit/mcp-audit.ts",
     "mcp:audit:security": "pnpm dlx mcp-security-auditor@latest scan packages/mcp/src --fail-on critical",
+    "mcp:evaluate": "pnpm --filter @repo/mcp evaluate",
     "audit:url": "tsx packages/cli/src/index.ts",
     "crawl:site": "tsx packages/crawler/src/run.ts",
     "ci:check": "pnpm run lint && pnpm run typecheck && pnpm run validate:rule-structure && pnpm run validate:guide-structure && pnpm run validate:guides && pnpm run validate:evidence && pnpm run test:ci",

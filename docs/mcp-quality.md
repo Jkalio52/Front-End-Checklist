@@ -22,6 +22,31 @@ This runs:
 
 Exit code is non-zero if tests fail or the security scan reports critical issues. Safe to use in CI.
 
+## Quality evaluation
+
+Run the golden MCP quality evaluation from the repo root:
+
+```bash
+pnpm mcp:evaluate
+```
+
+This runs `packages/mcp/tests/quality/mcp-quality.test.ts` against the real rule corpus and prints a compact quality report. It currently measures:
+
+1. **Retrieval quality** with golden discovery queries using `Recall@5` and mean reciprocal rank.
+2. **`review_code` accuracy** with labeled true-positive and true-negative fixtures, reported as precision, recall, and false-positive rate.
+3. **Tool contract quality** across the full 11-tool surface, including naming, schemas, read-only annotations, and agent-facing descriptions.
+
+The command fails when quality drops below the current thresholds:
+
+- Retrieval `Recall@5 >= 80%`
+- Retrieval `MRR >= 0.50`
+- `review_code` precision `>= 90%`
+- `review_code` recall `>= 85%`
+- `review_code` false-positive rate `<= 10%`
+- All 11 expected tools remain exposed when checklist data exists
+
+Use this when changing search scoring, rule metadata, detector heuristics, tool definitions, or checklist-backed MCP behavior.
+
 **Security-only (no tests):**
 
 ```bash
@@ -76,7 +101,19 @@ pnpm test --filter=@repo/mcp
 
 Coverage: tools/list, get_rule, search_rules, check_rule, fix_rule, explain_rule, list_categories, review_code, get_workflow, get_quick_reference, telemetry, error handling.
 
-### 5. Tool performance benchmarks
+### 5. Golden quality evals
+
+**What**: Labeled quality checks in `packages/mcp/tests/quality/` that answer “is the MCP useful to agents?” rather than only “does it execute?”
+
+**How**:
+
+```bash
+pnpm mcp:evaluate
+```
+
+Add a retrieval case whenever a real agent query should reliably find a rule. Add a review fixture whenever `review_code` gains a new heuristic or previously noisy behavior is fixed.
+
+### 6. Tool performance benchmarks
 
 **What**: In-process latency benchmarks for the main tools; asserts p95 stays within budget and that `review_code` scales sub-linearly as the rule set grows.
 
