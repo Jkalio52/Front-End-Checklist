@@ -71,6 +71,43 @@ function isRuleSubcategory(value: string): value is FrontendChecklistSubcategory
 }
 
 /**
+ * Normalize a YAML array item or inline scalar into a clean value.
+ *
+ * @param value - Raw YAML value.
+ * @returns Trimmed value without wrapping quotes.
+ */
+function normalizeYamlListValue(value: string): string {
+  return value
+    .trim()
+    .replace(/^['"]|['"]$/g, '')
+    .toLowerCase()
+}
+
+/**
+ * Parse a categories field from inline or block-style YAML.
+ *
+ * @param frontmatter - Raw YAML frontmatter text.
+ * @returns Supported categories in declared order.
+ */
+function parseCategories(frontmatter: string): FrontendChecklistCategory[] {
+  const inlineMatch = frontmatter.match(/categories:\s*\[(.*?)\]/s)
+  if (inlineMatch) {
+    return inlineMatch[1].split(',').map(normalizeYamlListValue).filter(isRuleCategory)
+  }
+
+  const blockMatch = frontmatter.match(/^categories:\s*\n((?:\s+- .+\n?)+)/m)
+  if (!blockMatch) {
+    return []
+  }
+
+  return blockMatch[1]
+    .split('\n')
+    .map(line => line.replace(/^\s+-\s*/, ''))
+    .map(normalizeYamlListValue)
+    .filter(isRuleCategory)
+}
+
+/**
  * Resolve the default rule directory for the current execution environment.
  *
  * @returns Filesystem path containing the MDX rules.
@@ -149,11 +186,7 @@ export function loadRules(rulesDir: string = resolveDefaultRulesDir()): Frontend
       const subcategoryField = extractYamlField(frontmatter, 'subcategory')
       const subcategory =
         subcategoryField && isRuleSubcategory(subcategoryField) ? subcategoryField : undefined
-      const categoriesStr = frontmatter.match(/categories:\s*\[(.*?)\]/s)?.[1] || ''
-      const categoriesArray = categoriesStr
-        .split(',')
-        .map(value => value.trim().replace(/['"]/g, '').toLowerCase())
-        .filter(isRuleCategory)
+      const categoriesArray = parseCategories(frontmatter)
       const prompts = parsePrompts(frontmatter)
       const categoryFallback = category.toLowerCase()
       const primaryCategory = isRuleCategory(categoryFallback)

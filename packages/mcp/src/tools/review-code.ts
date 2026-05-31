@@ -1152,15 +1152,28 @@ function checkRule(code: string, rule: Rule): CheckResult {
 
   // button-name — buttons need accessible names (text content or aria-label)
   if (slug.includes('button-name') || slug === 'button-accessible-name') {
-    const emptyButtons = code.match(/<button[^>]*>\s*<\/button>/gi) || []
-    const noLabel = emptyButtons.filter(
-      btn =>
-        !btn.includes('aria-label') && !btn.includes('aria-labelledby') && !btn.includes('title=')
-    )
-    if (noLabel.length > 0) {
+    const buttonMatches = code.match(/<button\b[^>]*>[\s\S]*?<\/button>/gi) || []
+    const unnamedButtons = buttonMatches.filter(button => {
+      if (
+        button.includes('aria-label') ||
+        button.includes('aria-labelledby') ||
+        button.includes('title=')
+      ) {
+        return false
+      }
+
+      const textWithoutDecorativeSvg = button
+        .replace(/<svg\b[\s\S]*?<\/svg>/gi, '')
+        .replace(/<[^>]+>/g, '')
+        .trim()
+
+      return textWithoutDecorativeSvg.length === 0
+    })
+
+    if (unnamedButtons.length > 0) {
       return {
         hasIssue: true,
-        issue: `Found ${noLabel.length} <button> element(s) with no accessible name — add text content or aria-label`
+        issue: `Found ${unnamedButtons.length} <button> element(s) with no accessible name — add text content or aria-label`
       }
     }
   }

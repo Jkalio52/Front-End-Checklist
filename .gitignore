@@ -68,6 +68,7 @@ next-env.d.ts
 .skills-lock.json
 .agents/skills/
 .cursor/
+.mcp-impact/
 
 docs
 !docs/

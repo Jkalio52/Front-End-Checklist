@@ -100,6 +100,11 @@ Regenerate derived content. Run after changing rules or when updating hints/supp
 |---------|----------------|
 | `pnpm mcp:audit` | MCP quality pipeline (unit tests + optional security scan). See [docs/mcp-quality.md](../docs/mcp-quality.md). |
 | `pnpm mcp:audit:security` | Run `mcp-security-auditor` on `packages/mcp/src`. |
+| `pnpm mcp:evaluate` | Run deterministic MCP quality evals for retrieval, review accuracy, tool contracts, and improvement impact. |
+| `pnpm mcp:impact -- --init <dir>` | Create an A/B benchmark workspace for testing whether MCP access improves agent code fixes. |
+| `pnpm mcp:impact -- --score <dir>` | Score no-MCP vs MCP benchmark outputs. |
+| `pnpm mcp:impact -- --self-test` | Verify the impact benchmark scorer with built-in fixed fixtures. |
+| `pnpm skills:audit` | Score generated skills against agent-skill patterns and report high-value missing rule candidates. |
 
 ---
 

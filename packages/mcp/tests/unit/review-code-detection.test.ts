@@ -383,6 +383,12 @@ describe('review_code — true positives (issues detected)', () => {
     expect(rules).toContain('button-name')
   })
 
+  it('detects icon-only button with no accessible name', () => {
+    const html = '<button type="button"><svg aria-hidden="true"></svg></button>'
+    const rules = rulesDetectedIn(html, ['accessibility'])
+    expect(rules).toContain('button-name')
+  })
+
   it('detects empty heading elements', () => {
     const html = '<html><body><h1></h1><p>Content</p></body></html>'
     const rules = rulesDetectedIn(html, ['accessibility'])
@@ -846,6 +852,11 @@ describe('review_code — true negatives (no false positives)', () => {
   it('does not flag aria-labels when aria-label appears before role=img', () => {
     const html = '<span aria-label="love" role="img">❤️</span>'
     expect(noIssuesIn(html, 'aria-labels', ['accessibility'])).toBe(true)
+  })
+
+  it('does not flag icon-only button with aria-label', () => {
+    const html = '<button type="button" aria-label="Close"><svg aria-hidden="true"></svg></button>'
+    expect(noIssuesIn(html, 'button-name', ['accessibility'])).toBe(true)
   })
 
   it('does not flag javascript-inline for external scripts with src', () => {

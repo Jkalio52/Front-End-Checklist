@@ -1,10 +1,7 @@
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import type { Category, CuratedChecklist, Rule } from '@repo/types'
+import type { CuratedChecklist, Rule } from '@repo/types'
 import { getToolDefinitions } from '../../src/server-tools'
 import { executeReviewCode, executeSearchRules, type ReviewCodeInput } from '../../src/tools'
-
-type RulePriority = Rule['priority']
+import { ACCESSIBILITY, HTML, IMAGES, JAVASCRIPT, loadRulesFromMdx, SECURITY } from './rule-loader'
 
 interface RetrievalCase {
   query: string
@@ -16,6 +13,13 @@ interface ReviewEvalCase {
   input: ReviewCodeInput
   expectPresent?: string[]
   expectAbsent?: string[]
+}
+
+interface ImprovementScenario {
+  name: string
+  before: ReviewCodeInput
+  after: ReviewCodeInput
+  expectedFixedRules: string[]
 }
 
 interface QualityReport {
@@ -33,123 +37,16 @@ interface QualityReport {
     recall: number
     falsePositiveRate: number
   }
+  improvementImpact: {
+    scenarios: number
+    defectDetectionRate: number
+    verificationClearRate: number
+    guidanceRate: number
+    missedRules: string[]
+  }
   toolContracts: {
     toolsChecked: number
   }
-}
-
-const ACCESSIBILITY: Category[] = ['accessibility']
-const IMAGES: Category[] = ['images']
-const JAVASCRIPT: Category[] = ['javascript']
-const SECURITY: Category[] = ['security']
-const HTML: Category[] = ['html']
-
-const CATEGORY_VALUES = [
-  'html',
-  'css',
-  'javascript',
-  'performance',
-  'accessibility',
-  'seo',
-  'security',
-  'images',
-  'testing',
-  'privacy',
-  'pwa',
-  'i18n'
-]
-
-const PRIORITY_VALUES = ['critical', 'high', 'medium', 'low']
-
-function isCategory(value: string): value is Category {
-  return CATEGORY_VALUES.includes(value)
-}
-
-function isPriority(value: string): value is RulePriority {
-  return PRIORITY_VALUES.includes(value)
-}
-
-function readFrontmatterValue(frontmatter: string, key: string): string | undefined {
-  const match = frontmatter.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))
-  return match?.[1]?.trim().replace(/^['"]|['"]$/g, '')
-}
-
-function parseCategoryList(rawValue: string): Category[] {
-  return rawValue
-    .replace(/^\[/, '')
-    .replace(/\]$/, '')
-    .split(',')
-    .map(value => value.trim().replace(/^['"]|['"]$/g, ''))
-    .filter(isCategory)
-}
-
-function readFrontmatterCategories(frontmatter: string, fallbackCategory: string): Category[] {
-  const rawValue = readFrontmatterValue(frontmatter, 'categories') ?? ''
-  const inlineValues = parseCategoryList(rawValue)
-
-  if (inlineValues.length > 0) {
-    return inlineValues
-  }
-
-  const blockMatch = frontmatter.match(/^categories:\s*\n((?:\s+- .+\n?)+)/m)
-  const blockValues =
-    blockMatch?.[1]
-      ?.split('\n')
-      .map(line => line.replace(/^\s+-\s*/, '').trim())
-      .filter(Boolean)
-      .filter(isCategory) ?? []
-
-  if (blockValues.length > 0) {
-    return blockValues
-  }
-
-  return isCategory(fallbackCategory) ? [fallbackCategory] : ['general']
-}
-
-function loadRulesFromMdx(): Rule[] {
-  const rulesDir = path.resolve(__dirname, '..', '..', '..', 'content', 'rules', 'en')
-  const rules: Rule[] = []
-
-  for (const category of fs.readdirSync(rulesDir).sort()) {
-    const categoryDir = path.join(rulesDir, category)
-    if (!fs.statSync(categoryDir).isDirectory()) {
-      continue
-    }
-
-    for (const filename of fs.readdirSync(categoryDir).sort()) {
-      if (!filename.endsWith('.mdx')) {
-        continue
-      }
-
-      const slug = filename.replace(/\.mdx$/, '')
-      const filePath = path.join(categoryDir, filename)
-      const source = fs.readFileSync(filePath, 'utf8')
-      const frontmatterMatch = source.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/)
-      const frontmatter = frontmatterMatch?.[1] ?? ''
-      const content = frontmatterMatch?.[2] ?? source
-      const categories = readFrontmatterCategories(frontmatter, category)
-      const primaryCategory = categories[0]
-      const rawPriority = readFrontmatterValue(frontmatter, 'priority') ?? 'medium'
-      const priority = isPriority(rawPriority) ? rawPriority : 'medium'
-
-      rules.push({
-        title: readFrontmatterValue(frontmatter, 'title') ?? slug,
-        slug,
-        categories,
-        priority,
-        primaryCategory,
-        content,
-        url: `/rules/${primaryCategory}/${slug}`,
-        prompts: {
-          check: readFrontmatterValue(frontmatter, 'check') ?? `Check ${slug}.`,
-          fix: readFrontmatterValue(frontmatter, 'fix') ?? `Fix ${slug}.`,
-          explain: readFrontmatterValue(frontmatter, 'explain') ?? `Explain ${slug}.`
-        }
-      })
-    }
-  }
-
-  return rules
 }
 
 const CHECKLIST: CuratedChecklist = {
@@ -247,7 +144,7 @@ const REVIEW_EVAL_CASES: ReviewEvalCase[] = [
   {
     name: 'empty button accessible name',
     input: {
-      code: '<button type="button"></button>',
+      code: '<button type="button"><svg aria-hidden="true"></svg></button>',
       focus: ACCESSIBILITY,
       minPriority: 'low'
     },
@@ -318,6 +215,79 @@ const REVIEW_EVAL_CASES: ReviewEvalCase[] = [
   }
 ]
 
+const IMPROVEMENT_SCENARIOS: ImprovementScenario[] = [
+  {
+    name: 'image markup improvement',
+    before: {
+      code: '<img src="/hero.jpg">',
+      focus: IMAGES,
+      minPriority: 'low'
+    },
+    after: {
+      code: '<img src="/hero.jpg" alt="Dashboard preview" width="1200" height="630">',
+      focus: IMAGES,
+      minPriority: 'low'
+    },
+    expectedFixedRules: ['alt-text', 'dimensions']
+  },
+  {
+    name: 'icon button accessibility improvement',
+    before: {
+      code: '<button type="button"><svg aria-hidden="true"></svg></button>',
+      focus: ACCESSIBILITY,
+      minPriority: 'low'
+    },
+    after: {
+      code: '<button type="button" aria-label="Close"><svg aria-hidden="true"></svg></button>',
+      focus: ACCESSIBILITY,
+      minPriority: 'low'
+    },
+    expectedFixedRules: ['button-name']
+  },
+  {
+    name: 'unsafe JavaScript improvement',
+    before: {
+      code: 'const result = eval(userInput)',
+      focus: JAVASCRIPT,
+      minPriority: 'low'
+    },
+    after: {
+      code: 'const result = parseAllowedExpression(userInput)',
+      focus: JAVASCRIPT,
+      minPriority: 'low'
+    },
+    expectedFixedRules: ['avoid-eval']
+  },
+  {
+    name: 'new-tab link hardening improvement',
+    before: {
+      code: '<a href="https://example.com" target="_blank">Documentation</a>',
+      focus: SECURITY,
+      minPriority: 'low'
+    },
+    after: {
+      code: '<a href="https://example.com" target="_blank" rel="noopener noreferrer">Documentation</a>',
+      focus: SECURITY,
+      minPriority: 'low'
+    },
+    expectedFixedRules: ['new-tab']
+  },
+  {
+    name: 'viewport zoom accessibility improvement',
+    before: {
+      code: '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">',
+      focus: ACCESSIBILITY,
+      minPriority: 'low'
+    },
+    after: {
+      code: '<meta name="viewport" content="width=device-width, initial-scale=1">',
+      focus: ACCESSIBILITY,
+      minPriority: 'low'
+    },
+    expectedFixedRules: ['viewport-zoom']
+  }
+]
+
 function reciprocalRank(results: string[], expectedSlugs: string[]): number {
   const rank = results.findIndex(slug => expectedSlugs.includes(slug))
   return rank === -1 ? 0 : 1 / (rank + 1)
@@ -384,6 +354,48 @@ function calculateReviewMetrics(rules: Rule[]): QualityReport['reviewCode'] {
   }
 }
 
+function calculateImprovementImpact(rules: Rule[]): QualityReport['improvementImpact'] {
+  let expectedDefects = 0
+  let detectedDefects = 0
+  let clearedDefects = 0
+  let guidedDefects = 0
+  const missedRules: string[] = []
+
+  for (const scenario of IMPROVEMENT_SCENARIOS) {
+    const beforeIssues = executeReviewCode(scenario.before, rules).issues
+    const afterIssues = executeReviewCode(scenario.after, rules).issues
+    const beforeIssueMap = new Map(beforeIssues.map(issue => [issue.rule, issue]))
+    const afterIssueSlugs = new Set(afterIssues.map(issue => issue.rule))
+
+    for (const expectedRule of scenario.expectedFixedRules) {
+      expectedDefects += 1
+
+      const beforeIssue = beforeIssueMap.get(expectedRule)
+      if (beforeIssue) {
+        detectedDefects += 1
+
+        if ((beforeIssue.issue.length >= 20 || beforeIssue.fixPrompt) && beforeIssue.title) {
+          guidedDefects += 1
+        }
+      } else {
+        missedRules.push(`${scenario.name}: ${expectedRule}`)
+      }
+
+      if (!afterIssueSlugs.has(expectedRule)) {
+        clearedDefects += 1
+      }
+    }
+  }
+
+  return {
+    scenarios: IMPROVEMENT_SCENARIOS.length,
+    defectDetectionRate: detectedDefects / Math.max(expectedDefects, 1),
+    verificationClearRate: clearedDefects / Math.max(expectedDefects, 1),
+    guidanceRate: guidedDefects / Math.max(expectedDefects, 1),
+    missedRules
+  }
+}
+
 function formatPercent(value: number): string {
   return `${Math.round(value * 100)}%`
 }
@@ -392,6 +404,7 @@ function buildQualityReport(rules: Rule[]): QualityReport {
   return {
     retrieval: calculateRetrievalMetrics(rules),
     reviewCode: calculateReviewMetrics(rules),
+    improvementImpact: calculateImprovementImpact(rules),
     toolContracts: {
       toolsChecked: getToolDefinitions([CHECKLIST]).length
     }
@@ -414,6 +427,14 @@ describe('MCP quality evaluation', () => {
     expect(metrics.precision).toBeGreaterThanOrEqual(0.9)
     expect(metrics.recall).toBeGreaterThanOrEqual(0.85)
     expect(metrics.falsePositiveRate).toBeLessThanOrEqual(0.1)
+  })
+
+  it('shows MCP guidance can identify and verify code improvements', () => {
+    const metrics = calculateImprovementImpact(rules)
+
+    expect(metrics.defectDetectionRate).toBeGreaterThanOrEqual(0.9)
+    expect(metrics.verificationClearRate).toBeGreaterThanOrEqual(0.95)
+    expect(metrics.guidanceRate).toBeGreaterThanOrEqual(0.9)
   })
 
   it('keeps exposed tool contracts agent-friendly', () => {
@@ -459,6 +480,12 @@ describe('MCP quality evaluation', () => {
     console.log(
       `  review_code: precision ${formatPercent(report.reviewCode.precision)}, recall ${formatPercent(report.reviewCode.recall)}, false-positive rate ${formatPercent(report.reviewCode.falsePositiveRate)}`
     )
+    console.log(
+      `  improvement impact: detects ${formatPercent(report.improvementImpact.defectDetectionRate)}, verifies fixes ${formatPercent(report.improvementImpact.verificationClearRate)}, guides ${formatPercent(report.improvementImpact.guidanceRate)} across ${report.improvementImpact.scenarios} scenarios`
+    )
+    if (report.improvementImpact.missedRules.length > 0) {
+      console.log(`  missed improvement checks: ${report.improvementImpact.missedRules.join(', ')}`)
+    }
 
     expect(report.toolContracts.toolsChecked).toBe(11)
   })

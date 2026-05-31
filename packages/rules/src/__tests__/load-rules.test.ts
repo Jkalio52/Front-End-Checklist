@@ -27,6 +27,15 @@ test('loadRules parses normalized rule records from MDX files', () => {
       content: '# Rule body',
       primaryCategory: 'html',
       url: '/rules/html/language-attribute'
+    },
+    {
+      title: 'Use block categories',
+      slug: 'multi-category-rule',
+      categories: ['html', 'accessibility'],
+      priority: 'medium',
+      content: '# Multi category body',
+      primaryCategory: 'html',
+      url: '/rules/html/multi-category-rule'
     }
   ])
 })
