@@ -47,8 +47,8 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
   return (
     <>
       <PageHero
-        title="MCP Server"
-        description="Connect your AI assistant to the Front-End Checklist rule corpus using the Model Context Protocol (MCP). Get structured code reviews, fix guidance, and workflow-aware frontend audits."
+        title="Frontend Code Review MCP"
+        description="Connect AI agents to 385 Front-End Checklist rules for React, Next.js, HTML, CSS, JavaScript, accessibility, performance, SEO, security, images, privacy, i18n, and launch audits."
         maxWidth="narrow"
         eyebrow={
           <div className="flex items-center gap-3">
@@ -75,14 +75,14 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
       <section aria-labelledby="quick-start-heading" className="mb-16">
         <SectionHeading icon={Terminal} id="quick-start-heading" title="Quick start" />
         <p className="mb-4 max-w-2xl text-foreground-muted">
-          The fastest way to add the Front-End Checklist MCP server is with one command. It
-          auto-detects your editor (Cursor, VS Code, Claude Code, etc.) and writes the correct
-          config.
+          The fastest way to add the Front-End Checklist MCP server is with one command. After
+          installing, ask your agent to use the Front-End Checklist MCP for frontend work so lazy
+          tool-loading clients surface it when it matters.
         </p>
         <div className="max-w-2xl">
           <CodeSurface
-            code={`npx add-mcp ${MCP_SERVER_URL}`}
-            copyText={`npx add-mcp ${MCP_SERVER_URL}`}
+            code={`pnpm dlx add-mcp ${MCP_SERVER_URL}`}
+            copyText={`pnpm dlx add-mcp ${MCP_SERVER_URL}`}
             density="compact"
             wrapperClassName="my-0"
           />
@@ -98,7 +98,8 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
         <p className="mb-6 max-w-2xl text-foreground-muted">
           Choose your AI tool below and follow the setup instructions. The server exposes{' '}
           {MCP_TOOLS.length} tools plus reusable prompts and read-only resources for searching,
-          checking, and learning the same frontend standards available on the website.
+          checking, and learning the same frontend standards available on the website. Existing tool
+          names stay stable for client compatibility.
         </p>
         <SetupTabs
           configs={CLIENT_CONFIGS}
@@ -114,10 +115,10 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
       <section aria-labelledby="tools-heading" className="mb-16">
         <SectionHeading icon={Code2} id="tools-heading" title="Available Tools" />
         <p className="mb-8 max-w-2xl text-foreground-muted">
-          The MCP server provides {MCP_TOOLS.length} tools for different use cases. Start with{' '}
-          <InlineCode>review_code</InlineCode> for comprehensive code analysis, or use specific
-          tools for targeted checks. Clients can also browse rule/checklist resources and invoke
-          built-in prompts for common workflows.
+          The MCP server provides {MCP_TOOLS.length} tools for frontend review workflows. Start with{' '}
+          <InlineCode>review_code</InlineCode> for pasted HTML, CSS, JavaScript, React, or Next.js
+          code, then use rule-specific tools for targeted checks and remediation. Clients can also
+          browse rule/checklist resources and invoke built-in prompts for common workflows.
         </p>
         <div className="space-y-4">
           {MCP_TOOLS.map(tool => (
@@ -133,8 +134,8 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
           title="Try these prompts"
         />
         <p className="mb-6 max-w-2xl text-foreground-muted">
-          After connecting, ask your AI assistant any of the following to see the MCP server in
-          action:
+          After connecting, use direct prompts that name the MCP server. This helps agents choose it
+          over generic review habits, especially in clients that lazy-load installed tools.
         </p>
         <ul className="max-w-2xl space-y-0 divide-y divide-border overflow-hidden rounded-lg border border-border">
           {EXAMPLE_PROMPTS.map(item => (
@@ -169,7 +170,7 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <UseCaseCard
             title="Code Reviews"
-            description="Use review_code to automatically check PR code against best practices. Get prioritized issues with fix guidance."
+            description="Use review_code to check HTML, CSS, JavaScript, React, and Next.js changes against best practices with prioritized fix guidance."
           />
           <UseCaseCard
             title="Learning"
@@ -185,7 +186,7 @@ export function McpPageContent({ cursorInstallUrl, vscodeInstallUrl }: McpPageCo
           />
           <UseCaseCard
             title="Accessibility Audits"
-            description="Use search_rules with categories=['accessibility'] to get all a11y rules, then check_rule for specific issues."
+            description="Use search_rules with categories=['accessibility'] to find a11y rules, then check_rule for specific markup and component issues."
           />
           <UseCaseCard
             title="Performance Optimization"

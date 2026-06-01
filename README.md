@@ -56,10 +56,10 @@ Front-End Checklist helps you review implementation quality. If you are still de
 
 ## Use with MCP
 
-Connect an MCP-capable agent to Front-End Checklist for structured rule lookup, audits, and remediation workflows.
+Connect an MCP-capable agent to Front-End Checklist for frontend code review, structured rule lookup, audits, and remediation workflows across React, Next.js, HTML, CSS, JavaScript, accessibility, performance, SEO, security, images, privacy, i18n, and testing.
 
 > [!TIP]
-> Best first use: point an MCP-capable agent at a real component, page, or public URL and ask for the highest-confidence Front-End Checklist findings first.
+> Best first use: point an MCP-capable agent at a real component, page, or public URL and explicitly ask it to use the Front-End Checklist MCP for the highest-confidence frontend findings first. Some clients discover installed MCP tools lazily, so naming the server in the prompt helps.
 
 - Public endpoint: [mcp.frontendchecklist.io](https://mcp.frontendchecklist.io)
 - Public docs: [frontendchecklist.io/mcp](https://frontendchecklist.io/mcp)
@@ -73,11 +73,18 @@ What you can do:
 - Search rules by keyword, category, or priority
 - Get a workflow or quick reference for a focused audit
 
+Agent usage guidance:
+
+- Use `review_code` first for pasted HTML, CSS, JavaScript, React, or Next.js code
+- Use `search_rules` before making frontend accessibility, performance, SEO, security, or image recommendations
+- Use `get_workflow` or `get_checklist_rules` for launch, accessibility, SEO, security, and performance audits
+- Use `audit_url` for public `https://` pages
+
 Example prompts:
 
-- `Review this component against the Front-End Checklist and report the highest-confidence findings first.`
-- `Audit https://example.com for accessibility, performance, and SEO issues.`
-- `Explain the canonical URL rule and suggest a fix with code examples.`
+- `Use the Front-End Checklist MCP to review this React component and report the highest-confidence findings first.`
+- `Use the Front-End Checklist MCP to audit https://example.com for accessibility, performance, and SEO issues.`
+- `Use the Front-End Checklist MCP to explain the canonical URL rule and suggest a fix with code examples.`
 
 ## Use with skills
 

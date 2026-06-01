@@ -6,6 +6,7 @@ import {
   BookOpen,
   ChevronRight,
   ClipboardCheck,
+  ClipboardList,
   FileText,
   Globe,
   List,
@@ -25,6 +26,7 @@ const ICON_MAP: Record<string, LucideIcon> = {
   Sparkles,
   FileText,
   Search,
+  ClipboardList,
   ClipboardCheck,
   Wrench,
   BookOpen,
@@ -42,6 +44,7 @@ interface ToolParameter {
 
 interface McpTool {
   name: string
+  title: string
   icon: string
   description: string
   useCase: string
@@ -69,14 +72,15 @@ export function ToolCard({ tool }: ToolCardProps) {
           onClick={() => setExpanded(!expanded)}
           className="flex w-full cursor-pointer items-start gap-4 rounded-lg p-5 text-left transition-colors hover:bg-background-subtle focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           aria-expanded={expanded}
-          aria-label={expanded ? `Collapse ${tool.name} details` : `Expand ${tool.name} details`}
+          aria-label={expanded ? `Collapse ${tool.title} details` : `Expand ${tool.title} details`}
         >
           <div className="shrink-0 rounded-md bg-accent/10 p-2">
             <Icon className="h-4 w-4 text-accent" aria-hidden="true" />
           </div>
           <div className="min-w-0 grow">
-            <div className="flex items-center gap-2">
-              <h3 className="font-medium font-mono text-foreground text-sm">{tool.name}</h3>
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-medium text-foreground text-sm">{tool.title}</h3>
+              <InlineCode>{tool.name}</InlineCode>
               {tool.name === 'review_code' && (
                 <span className="rounded bg-accent/10 px-1.5 py-0.5 font-medium text-[10px] text-accent">
                   RECOMMENDED

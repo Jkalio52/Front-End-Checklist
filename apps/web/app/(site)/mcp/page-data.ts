@@ -1,13 +1,5 @@
 import { MCP_SERVER_URL } from '@repo/config'
 
-export type {
-  ExamplePrompt,
-  FaqItem,
-  McpToolConfig,
-  SetupConfig,
-  ToolParameter,
-  TroubleshootingItem
-} from './page-data-types'
 export { MCP_SERVER_URL }
 
 import type {
@@ -21,10 +13,11 @@ import type {
 export const MCP_TOOLS: McpToolConfig[] = [
   {
     name: 'audit_url',
+    title: 'Audit Live URL',
     icon: 'Globe',
     description:
-      'Fetches a public URL and audits its HTML against frontend best practice rules — no copy-pasting required.',
-    useCase: 'Audit any live website by URL instead of pasting HTML.',
+      'Fetches a public https:// URL and audits its HTML against frontend best practice rules.',
+    useCase: 'Use when you want an agent to review a live page without pasting source HTML.',
     parameters: [
       {
         name: 'url',
@@ -55,6 +48,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'get_checklist_rules',
+    title: 'Get Checklist Rules',
     icon: 'ClipboardList',
     description:
       'Returns full rule details for every rule in a curated checklist in one call — more efficient than calling get_rule N times.',
@@ -82,10 +76,11 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'review_code',
+    title: 'Review Frontend Code',
     icon: 'Sparkles',
     description:
-      'Proactively analyzes HTML/CSS/JS code against multiple frontend best practice rules simultaneously.',
-    useCase: 'Use as the FIRST step for any code review.',
+      'Analyzes pasted HTML, CSS, JavaScript, React, or Next.js code against relevant frontend rules.',
+    useCase: 'Tell agents to use this first for frontend implementation, debugging, and PR review.',
     parameters: [
       {
         name: 'code',
@@ -116,6 +111,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'get_rule',
+    title: 'Get Rule Guidance',
     icon: 'FileText',
     description:
       'Retrieves a single frontend development rule by its unique slug with complete details.',
@@ -125,7 +121,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
         name: 'slug',
         type: 'string',
         required: true,
-        description: "The rule's unique slug (e.g., 'alt-tags')"
+        description: "The rule's unique slug (e.g., 'alt-text')"
       },
       {
         name: 'includeUrl',
@@ -137,15 +133,18 @@ export const MCP_TOOLS: McpToolConfig[] = [
     example: `{
   "name": "get_rule",
   "arguments": {
-    "slug": "alt-tags"
+    "slug": "alt-text"
   }
 }`
   },
   {
     name: 'search_rules',
+    title: 'Search Frontend Rules',
     icon: 'Search',
-    description: 'Searches and filters frontend development rules by query, category, or priority.',
-    useCase: 'Find relevant rules for specific topics or categories.',
+    description:
+      'Searches frontend rules by technology, concern, category, priority, or implementation pattern.',
+    useCase:
+      'Use before recommending frontend architecture, accessibility, SEO, security, or performance fixes.',
     parameters: [
       { name: 'query', type: 'string', required: false, description: 'Free-text search query' },
       {
@@ -179,6 +178,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'check_rule',
+    title: 'Check Rule Compliance',
     icon: 'ClipboardCheck',
     description:
       'Checks code against a specific frontend rule and returns analysis with fix guidance.',
@@ -190,13 +190,14 @@ export const MCP_TOOLS: McpToolConfig[] = [
     example: `{
   "name": "check_rule",
   "arguments": {
-    "slug": "alt-tags",
+    "slug": "alt-text",
     "code": "<img src='hero.jpg'>"
   }
 }`
   },
   {
     name: 'fix_rule',
+    title: 'Get Rule Fix',
     icon: 'Wrench',
     description: 'Returns the fix/implementation prompt for a specific rule with priority context.',
     useCase: 'Get detailed guidance on how to fix a rule violation.',
@@ -210,6 +211,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'explain_rule',
+    title: 'Explain Frontend Rule',
     icon: 'BookOpen',
     description: 'Returns the educational explanation for a rule - why it matters and its impact.',
     useCase: 'Learn the reasoning behind a best practice.',
@@ -223,6 +225,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'list_categories',
+    title: 'List Rule Categories',
     icon: 'List',
     description:
       'Returns all available categories with metadata including rule counts and descriptions.',
@@ -235,6 +238,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'get_workflow',
+    title: 'Get Audit Workflow',
     icon: 'Workflow',
     description: 'Returns a curated, ordered sequence of rules for a specific checklist workflow.',
     useCase: 'Get structured audit workflows for launches, SEO, etc.',
@@ -250,6 +254,7 @@ export const MCP_TOOLS: McpToolConfig[] = [
   },
   {
     name: 'get_quick_reference',
+    title: 'Get Quick Reference',
     icon: 'Terminal',
     description:
       'Returns a compact, actionable checklist of rules for a category with priority filtering.',
@@ -316,12 +321,12 @@ export const CLIENT_CONFIGS: SetupConfig[] = [
   {
     id: 'claude_desktop',
     title: 'Claude Desktop',
-    description: 'Add to claude_desktop_config.json (requires Node.js for mcp-remote)',
+    description: 'Add to claude_desktop_config.json (requires Node.js and pnpm for mcp-remote)',
     config: `{
   "mcpServers": {
     "frontend-checklist": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "${MCP_SERVER_URL}"]
+      "command": "pnpm",
+      "args": ["dlx", "mcp-remote", "${MCP_SERVER_URL}"]
     }
   }
 }`
@@ -351,18 +356,20 @@ Settings → Profile → Integrations → Add More → enter the URL above. No a
   {
     id: 'codex',
     title: 'Codex',
-    description: 'Run this command in your terminal',
-    config: `codex mcp add frontend-checklist --url ${MCP_SERVER_URL}`
+    description: 'Run this command in your terminal, then name the MCP in frontend prompts',
+    config: `codex mcp add frontend-checklist --url ${MCP_SERVER_URL}
+
+Tip: installed MCP servers may be discovered lazily. Ask Codex to "use the Front-End Checklist MCP" for frontend implementation, review, debugging, and audits.`
   },
   {
     id: 'windsurf',
     title: 'Windsurf',
-    description: 'Add to Cascade → MCP servers (requires Node.js for mcp-remote)',
+    description: 'Add to Cascade → MCP servers (requires Node.js and pnpm for mcp-remote)',
     config: `{
   "mcpServers": {
     "frontend-checklist": {
-      "command": "npx",
-      "args": ["-y", "mcp-remote", "${MCP_SERVER_URL}"]
+      "command": "pnpm",
+      "args": ["dlx", "mcp-remote", "${MCP_SERVER_URL}"]
     }
   }
 }`
@@ -399,27 +406,29 @@ No authentication required. Check your client's documentation for how to add HTT
 
 export const EXAMPLE_PROMPTS: ExamplePrompt[] = [
   {
-    prompt: 'Audit https://example.com for frontend best practices',
+    prompt:
+      'Use the Front-End Checklist MCP to audit https://example.com for frontend best practices',
     description: 'Uses audit_url to check a live site'
   },
   {
-    prompt: 'Review this HTML for accessibility issues',
-    description: 'Uses review_code with focus on accessibility'
+    prompt:
+      'Use the Front-End Checklist MCP to review this React component for accessibility issues',
+    description: 'Uses review_code with focus on accessibility and component markup'
   },
   {
-    prompt: 'What are the critical rules I should check before launching?',
+    prompt: 'Use the Front-End Checklist MCP launch workflow and show me the critical checks',
     description: 'Uses get_workflow or get_quick_reference'
   },
   {
-    prompt: 'Explain why semantic HTML matters',
+    prompt: 'Use the Front-End Checklist MCP to explain why semantic HTML matters',
     description: 'Uses explain_rule'
   },
   {
-    prompt: 'Give me a performance checklist in markdown format',
+    prompt: 'Use the Front-End Checklist MCP to give me a performance checklist in markdown format',
     description: 'Uses get_quick_reference with format: markdown'
   },
   {
-    prompt: 'Check this code against the alt-tags rule',
+    prompt: 'Use the Front-End Checklist MCP to check this code against the alt-text rule',
     description: 'Uses check_rule with a specific slug'
   }
 ]
@@ -438,9 +447,14 @@ export const TROUBLESHOOTING_ITEMS: TroubleshootingItem[] = [
       'Check that your config JSON is valid (no trailing commas, correct quotes). Ensure you added the config to the right file: .cursor/mcp.json for Cursor, User Settings or .vscode/mcp.json for VS Code, claude_desktop_config.json for Claude Desktop.'
   },
   {
+    title: 'Agent does not use the MCP automatically',
+    content:
+      'Some clients only load MCP tools after a relevant prompt. Name the server directly: "Use the Front-End Checklist MCP to review this frontend code." For Codex, this explicit wording helps lazy discovery surface the frontend_checklist tools.'
+  },
+  {
     title: 'Claude Desktop or Windsurf',
     content:
-      'These clients use the mcp-remote bridge, which requires Node.js 18+ installed. Run npx -y mcp-remote ' +
+      'These clients use the mcp-remote bridge, which requires Node.js 18+ installed. Run pnpm dlx mcp-remote ' +
       MCP_SERVER_URL +
       ' in a terminal to confirm it runs. If it fails, install Node.js from nodejs.org.'
   }
@@ -460,7 +474,7 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     question: 'Which AI tools are supported?',
     answer:
-      'Any MCP-compatible client works, including Claude Desktop, Cursor, VS Code with Copilot, Windsurf, Zed, and more. The server exposes tools, reusable prompts, and read-only resources over the same public MCP URL.'
+      'Any MCP-compatible client works, including Codex, Claude Desktop, Cursor, VS Code with Copilot, Windsurf, Zed, and more. The server exposes tools, reusable prompts, and read-only resources over the same public MCP URL.'
   },
   {
     question: 'What data does the MCP server access?',

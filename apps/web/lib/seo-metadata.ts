@@ -203,15 +203,19 @@ export const pageMetadata = {
     keywords: ['frontend checklist mentions', 'community', 'articles', 'reviews', 'social proof']
   }),
   mcp: generateSEOMetadata({
-    title: 'MCP Integration - AI-Powered Code Review',
+    title: 'Frontend Code Review MCP Server',
     description:
-      'Connect your AI assistant to the Front-End Checklist rule corpus using the Model Context Protocol (MCP). Get structured code reviews, fix guidance, and workflow-aware frontend audits.',
+      'Connect AI agents to 385 Front-End Checklist rules for React, Next.js, HTML, CSS, JavaScript, accessibility, performance, SEO, security, and launch audits.',
     path: ROUTES.mcp,
     keywords: [
       'MCP',
       'model context protocol',
+      'frontend MCP',
+      'React code review',
+      'Next.js code review',
       'AI code review',
       'Claude',
+      'Codex',
       'Cursor',
       'AI integration',
       'frontend rules API'

@@ -5,6 +5,7 @@ import {
   MCP_PROMPTS,
   MCP_PROTOCOL_VERSION,
   MCP_RESOURCE_TEMPLATES,
+  MCP_SERVER_INSTRUCTIONS,
   resetTelemetry
 } from '../../src/server'
 
@@ -115,6 +116,7 @@ describe('SDK-backed MCP server', () => {
           name: 'frontend-checklist-mcp',
           version: '1.0.0'
         },
+        instructions: MCP_SERVER_INSTRUCTIONS,
         capabilities: {
           tools: {},
           prompts: {},
@@ -132,11 +134,14 @@ describe('SDK-backed MCP server', () => {
     })
 
     const withChecklistTools = (
-      withChecklists.json.result as { tools: Array<{ name: string }> }
-    ).tools.map(tool => tool.name)
+      withChecklists.json.result as { tools: Array<{ name: string; title?: string }> }
+    ).tools
 
-    expect(withChecklistTools).toContain('get_workflow')
-    expect(withChecklistTools).toContain('get_checklist_rules')
+    expect(withChecklistTools.map(tool => tool.name)).toContain('get_workflow')
+    expect(withChecklistTools.map(tool => tool.name)).toContain('get_checklist_rules')
+    expect(withChecklistTools.find(tool => tool.name === 'review_code')).toMatchObject({
+      title: 'Review Frontend Code'
+    })
 
     const withoutChecklists = await callMcp(
       {

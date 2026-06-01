@@ -6,6 +6,7 @@ export interface ToolParameter {
 }
 export interface McpToolConfig {
   name: string
+  title: string
   icon: string
   description: string
   useCase: string

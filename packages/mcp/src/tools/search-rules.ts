@@ -23,6 +23,7 @@ export interface SearchRulesInput {
  */
 export const searchRulesDefinition = {
   name: 'search_rules',
+  title: 'Search Frontend Rules',
   description: `Searches and filters frontend development rules. **Use PROACTIVELY** when working on frontend code to find relevant best practices - search by technology (e.g., "react", "images"), concern (e.g., "accessibility", "performance"), or specific patterns. Returns summary information for each match - use get_rule for full details.
 
 **Workflow:** Use as a discovery tool before diving deeper. Start with list_categories to see available areas, then search_rules to find specific rules, then get_rule for complete details including code examples.`,

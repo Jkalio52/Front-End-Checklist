@@ -11,6 +11,7 @@ export {
   MCP_PROTOCOL_VERSION,
   MCP_RESOURCE_TEMPLATES,
   MCP_SERVER_INFO,
+  MCP_SERVER_INSTRUCTIONS,
   resetTelemetry
 } from './server'
 export { getToolDefinitions } from './server-tools'

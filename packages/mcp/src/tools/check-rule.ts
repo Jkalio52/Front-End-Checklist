@@ -30,6 +30,7 @@ export type CheckRuleOutput = CheckRuleResult | CheckRuleError
  */
 export const checkRuleDefinition = {
   name: 'check_rule',
+  title: 'Check Rule Compliance',
   description: `Checks code against a specific frontend rule. **Use PROACTIVELY** when reviewing HTML/CSS/JS code to validate against frontend best practices. Without code, returns verification guidance. With code, performs heuristic analysis and reports compliance status. If issues are found, includes the fix prompt for immediate remediation.
 
 **Workflow:** Use after search_rules finds relevant rules, or when review_code flags a specific issue. Follow up with fix_rule for remediation steps or explain_rule to understand why the rule matters.`,

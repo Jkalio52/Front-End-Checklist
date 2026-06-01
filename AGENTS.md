@@ -12,6 +12,18 @@ Project rules and conventions for AI coding agents (Claude Code, Cursor, GitHub 
 - **MCP Package**: `packages/mcp/` (TypeScript)
 - **Package Manager**: pnpm (workspaces + Turborepo)
 
+## Agent MCP Usage
+
+When working on frontend implementation, review, debugging, or audit tasks, actively discover and use the Front-End Checklist MCP server instead of relying only on generic frontend knowledge.
+
+- Use `review_code` first for pasted or inspected HTML, CSS, JavaScript, TypeScript, React, or Next.js code.
+- Use `search_rules` before making accessibility, performance, SEO, security, image, privacy, i18n, or testing recommendations.
+- Use `get_rule`, `check_rule`, `fix_rule`, or `explain_rule` for rule-specific guidance and remediation.
+- Use `get_workflow` or `get_checklist_rules` for broad launch, accessibility, SEO, security, performance, and testing audits.
+- Use `audit_url` for public `https://` pages.
+
+Some clients lazy-load installed MCP tools. If the tools are not initially visible, search for or explicitly request the Front-End Checklist MCP before proceeding with frontend work.
+
 ## Monorepo Structure
 
 ```

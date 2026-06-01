@@ -92,8 +92,13 @@ describe('mcp route', () => {
     expect(response.status).toBe(200)
     await expect(response.json()).resolves.toMatchObject({
       name: 'frontend-checklist-mcp',
+      instructions: expect.stringContaining('Use Front-End Checklist'),
       protocolVersion: '2025-06-18',
-      tools: expect.arrayContaining(['get_workflow', 'get_checklist_rules', 'get_rule'])
+      tools: expect.arrayContaining(['get_workflow', 'get_checklist_rules', 'get_rule']),
+      recommendedUsage: {
+        frontendCodeReview: expect.stringContaining('review_code'),
+        ruleLookup: expect.stringContaining('search_rules')
+      }
     })
   })
 
@@ -126,7 +131,8 @@ describe('mcp route', () => {
         protocolVersion: '2025-06-18',
         serverInfo: {
           name: 'frontend-checklist-mcp'
-        }
+        },
+        instructions: expect.stringContaining('review_code')
       }
     })
   })
@@ -152,6 +158,7 @@ describe('mcp route', () => {
       result: {
         tools: Array<{
           name: string
+          title?: string
           outputSchema?: unknown
           annotations?: Record<string, unknown>
         }>
@@ -159,6 +166,9 @@ describe('mcp route', () => {
     }
 
     expect(payload.result.tools).toHaveLength(11)
+    expect(payload.result.tools.find(tool => tool.name === 'review_code')).toMatchObject({
+      title: 'Review Frontend Code'
+    })
     expect(payload.result.tools.find(tool => tool.name === 'get_workflow')).toMatchObject({
       outputSchema: expect.any(Object),
       annotations: {

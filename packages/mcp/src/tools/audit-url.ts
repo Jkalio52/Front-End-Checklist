@@ -25,6 +25,7 @@ export interface AuditUrlResult extends ReviewCodeResult {
 
 export const auditUrlDefinition = {
   name: 'audit_url',
+  title: 'Audit Live URL',
   description: `Fetches a public URL and audits its HTML against frontend best practice rules. **Use this tool** when you want to check a live website without manually pasting HTML. Automatically fetches the page source and runs the same heuristic checks as review_code.
 
 **Workflow:** Call audit_url with a public https:// URL → get back a prioritized issue list → use fix_rule for remediation guidance on each issue.`,

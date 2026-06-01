@@ -1,10 +1,11 @@
 name: frontendchecklist
 displayName: Front-End Checklist
 description: >
-  374 frontend best practice rules for HTML, CSS, JavaScript, Accessibility,
-  SEO, Security, Performance, Images, and Testing. Review code, audit live
-  sites, browse reusable resources, and use MCP prompts/workflows via the
-  Front-End Checklist MCP server.
+  Frontend code review MCP server with 385 quality-gated rules for React,
+  Next.js, HTML, CSS, JavaScript, accessibility, performance, SEO, security,
+  images, privacy, i18n, and testing. Review pasted code, audit live sites,
+  search rule guidance, and run launch-ready MCP workflows from the
+  Front-End Checklist corpus.
 homepage: https://frontendchecklist.io
 documentationUrl: https://frontendchecklist.io/en/mcp
 license: MIT
@@ -21,11 +22,11 @@ startCommand:
 
 tools:
   - name: review_code
-    description: Audit HTML/CSS/JS code against all rules at once
+    description: Review frontend HTML/CSS/JS/React/Next.js code against relevant rules
   - name: audit_url
-    description: Fetch a public URL and audit its HTML automatically
+    description: Fetch a public URL and audit its frontend HTML automatically
   - name: get_workflow
-    description: Get an ordered checklist for a specific workflow
+    description: Get an ordered accessibility, SEO, security, performance, or launch workflow
   - name: get_checklist_rules
     description: Get full rule details for all rules in a checklist
   - name: get_rule
@@ -77,5 +78,7 @@ tags:
   - security
   - performance
   - web-development
+  - react
+  - nextjs
   - best-practices
   - code-review

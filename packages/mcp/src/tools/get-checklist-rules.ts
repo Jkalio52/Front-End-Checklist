@@ -56,6 +56,7 @@ export function buildGetChecklistRulesDefinition(checklists: CuratedChecklist[])
 
   return {
     name: 'get_checklist_rules',
+    title: 'Get Checklist Rules',
     description: `Returns full rule details for every rule in a curated checklist in a single call. **More efficient than calling get_rule N times** after get_workflow. Use when you need the complete rule content for an entire checklist to perform a comprehensive audit or code review. Available checklists: ${availableSlugs.join(', ')}.`,
     annotations: READ_ONLY_TOOL_ANNOTATIONS,
     inputSchema: {
@@ -119,6 +120,7 @@ export function buildGetChecklistRulesDefinition(checklists: CuratedChecklist[])
 
 export const getChecklistRulesDefinition = {
   name: 'get_checklist_rules',
+  title: 'Get Checklist Rules',
   description: `Returns full rule details for every rule in a curated checklist in a single call. **More efficient than calling get_rule N times** after get_workflow. Use when you need the complete rule content for an entire checklist.`,
   annotations: READ_ONLY_TOOL_ANNOTATIONS,
   inputSchema: {

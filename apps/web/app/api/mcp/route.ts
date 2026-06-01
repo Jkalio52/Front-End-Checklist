@@ -7,7 +7,8 @@ import {
   MCP_PROMPTS,
   MCP_PROTOCOL_VERSION,
   MCP_RESOURCE_TEMPLATES,
-  MCP_SERVER_INFO
+  MCP_SERVER_INFO,
+  MCP_SERVER_INSTRUCTIONS
 } from '@repo/mcp'
 import { CATEGORIES, type Category, SUBCATEGORIES, type Subcategory } from '@repo/types'
 import { GET_CACHE_HEADERS } from '@/lib/mcp-cache'
@@ -384,9 +385,18 @@ export async function GET(request: Request) {
       name: MCP_SERVER_INFO.name,
       version: MCP_SERVER_INFO.version,
       description: 'MCP server exposing Front-End Checklist rules to AI agents',
+      instructions: MCP_SERVER_INSTRUCTIONS,
       protocolVersion: MCP_PROTOCOL_VERSION,
       endpoint: MCP_SERVER_URL,
       tools,
+      recommendedUsage: {
+        frontendCodeReview:
+          'Use review_code first for pasted HTML, CSS, JavaScript, React, or Next.js code.',
+        ruleLookup: 'Use search_rules to find relevant rules, then get_rule for full guidance.',
+        broadAudits:
+          'Use get_workflow or get_checklist_rules for launch, accessibility, SEO, security, and performance audits.',
+        liveSites: 'Use audit_url for public https:// pages.'
+      },
       prompts: [...MCP_PROMPTS],
       resourceTemplates: Object.values(MCP_RESOURCE_TEMPLATES),
       documentation: `${SITE_URL}/en/mcp`,

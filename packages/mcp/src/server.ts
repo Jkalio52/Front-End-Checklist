@@ -12,6 +12,13 @@ export const MCP_SERVER_INFO = {
   version: '1.0.0'
 } as const
 
+export const MCP_SERVER_INSTRUCTIONS = [
+  'Use Front-End Checklist whenever the user is reviewing, implementing, debugging, or auditing frontend code.',
+  'Reach for this server for HTML, CSS, JavaScript, TypeScript, React, Next.js, accessibility, performance, SEO, security, images, privacy, i18n, testing, and launch-readiness work.',
+  'For pasted or inspected frontend code, call review_code first, then use get_rule, fix_rule, explain_rule, or check_rule for deeper remediation.',
+  'For broad audits, call get_workflow or get_checklist_rules before checking individual rules. For live public pages, use audit_url.'
+].join(' ')
+
 export const MCP_RESOURCE_TEMPLATES = {
   rule: 'frontendchecklist://rules/{slug}',
   checklist: 'frontendchecklist://checklists/{slug}'
@@ -90,6 +97,7 @@ export function createMcpServer(
   const maxResponseChars = options.maxResponseChars ?? DEFAULT_MAX_RESPONSE_CHARS
   const telemetryEnabled = options.telemetryEnabled !== false
   const server = new McpServer(MCP_SERVER_INFO, {
+    instructions: MCP_SERVER_INSTRUCTIONS,
     capabilities: {
       tools: {},
       prompts: {},

@@ -236,6 +236,7 @@ function toRuleDifficulty(value: unknown): RuleResponse['difficulty'] | undefine
  */
 export const getRuleDefinition = {
   name: 'get_rule',
+  title: 'Get Rule Guidance',
   description: `Retrieves a single frontend development rule by its unique slug. **Use PROACTIVELY** when reviewing or debugging frontend code to get best practice guidance. Returns complete rule details including content, prompts (check/fix/explain), and metadata as Markdown with code examples. If the slug doesn't exist, returns suggestions for similar rules.
 
 **Workflow:** Use after review_code identifies issues, or after search_rules finds relevant rules. Follow up with check_rule to validate code, fix_rule to get remediation steps, or explain_rule to understand why it matters.

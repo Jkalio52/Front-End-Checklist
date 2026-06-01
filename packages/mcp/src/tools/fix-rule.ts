@@ -30,6 +30,7 @@ export type FixRuleOutput = FixRuleResult | FixRuleError
  */
 export const fixRuleDefinition = {
   name: 'fix_rule',
+  title: 'Get Rule Fix',
   description: `Retrieves the fix/implementation prompt for a specific rule. **Use PROACTIVELY** after identifying issues in frontend code to get step-by-step remediation guidance. Returns detailed instructions on how to fix the issue correctly, with priority level to help triage multiple issues.
 
 **Workflow:** Use after review_code or check_rule identifies issues. Pair with get_rule for complete context, or explain_rule to help users understand the importance of the fix.`,

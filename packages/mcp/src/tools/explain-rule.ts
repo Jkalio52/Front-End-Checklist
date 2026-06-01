@@ -29,6 +29,7 @@ export type ExplainRuleOutput = ExplainRuleResult | ExplainRuleError
  */
 export const explainRuleDefinition = {
   name: 'explain_rule',
+  title: 'Explain Frontend Rule',
   description: `Retrieves the educational explanation for a frontend rule. **Use PROACTIVELY** when the user asks "why" about frontend practices, or when explaining code review feedback. Provides context on why the rule matters, its background, and impact on web development. Categories help connect related concepts.
 
 **Workflow:** Use when users question a recommendation, or after fix_rule to provide educational context. Pair with check_rule to validate understanding, or search_rules to find related best practices in the same category.`,

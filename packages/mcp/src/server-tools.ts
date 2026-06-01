@@ -238,6 +238,7 @@ export function registerTools(
     server.registerTool(
       definition.name,
       {
+        title: definition.title,
         description: definition.description,
         inputSchema: jsonSchemaToZod(
           definition.inputSchema as Parameters<typeof jsonSchemaToZod>[0]

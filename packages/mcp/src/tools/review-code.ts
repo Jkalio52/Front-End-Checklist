@@ -39,6 +39,7 @@ export interface ReviewCodeResult {
  */
 export const reviewCodeDefinition = {
   name: 'review_code',
+  title: 'Review Frontend Code',
   description: `**PROACTIVE CODE REVIEW**: Automatically analyzes HTML/CSS/JS code against multiple frontend best practice rules simultaneously. **Use this tool FIRST** when reviewing, debugging, or improving any frontend code - it detects the code type and checks all relevant rules at once. Returns a prioritized list of issues with fix guidance. Much more efficient than checking rules one by one.
 
 **Workflow:** Use as the FIRST step for any code review. For each issue found, use fix_rule for remediation guidance or get_rule for complete context. Use explain_rule to help users understand why issues matter.`,

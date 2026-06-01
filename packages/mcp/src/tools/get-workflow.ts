@@ -49,6 +49,7 @@ export function buildGetWorkflowDefinition(checklists: CuratedChecklist[]) {
 
   return {
     name: 'get_workflow',
+    title: 'Get Audit Workflow',
     description: `Returns a curated, ordered sequence of rules for a specific checklist workflow. **Use PROACTIVELY** when performing comprehensive audits or setting up new projects. Available workflows: ${availableSlugs.join(', ')}.
 
 **Workflow:** Use this tool FIRST to get a structured approach, then use get_rule for each step's details, and check_rule to validate code against each rule.`,
@@ -108,6 +109,7 @@ export function buildGetWorkflowDefinition(checklists: CuratedChecklist[]) {
  */
 export const getWorkflowDefinition = {
   name: 'get_workflow',
+  title: 'Get Audit Workflow',
   description: `Returns a curated, ordered sequence of rules for a specific checklist workflow. **Use PROACTIVELY** when performing comprehensive audits or setting up new projects.
 
 **Workflow:** Use this tool FIRST to get a structured approach, then use get_rule for each step's details, and check_rule to validate code against each rule.`,
