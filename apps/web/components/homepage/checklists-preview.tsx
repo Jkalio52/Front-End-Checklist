@@ -17,6 +17,7 @@ import {
 } from '@repo/design-system/icons'
 import { Button } from '@repo/design-system/ui/button'
 import { cn } from '@repo/utils'
+import type { CSSProperties } from 'react'
 import { TrackedLink } from '@/components/analytics/tracked-link'
 import {
   CHECKLIST_AUDIENCE_LABELS,
@@ -24,6 +25,7 @@ import {
 } from '@/components/checklists/checklist-curation'
 import { ChecklistDifficultyBadge } from '@/components/checklists/checklist-difficulty-badge'
 import { TELEMETRY_EVENTS } from '@/lib/telemetry-events'
+import { getChecklistAccentColor } from './checklist-accent-colors'
 
 // Map icon names from MDX to Lucide components
 const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -36,6 +38,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   shield: Shield,
   'file-check': FileCheck,
   'list-checks': ListChecks
+}
+
+interface ChecklistColorStyle extends CSSProperties {
+  '--checklist-card-color': string
 }
 
 export interface ChecklistPreviewData {
@@ -76,23 +82,28 @@ function ChecklistCard({
 }: ChecklistCardProps) {
   const Icon = iconMap[icon] || FileCheck
   const curation = getChecklistCuration(slug)
+  const checklistStyle: ChecklistColorStyle = {
+    '--checklist-card-color': getChecklistAccentColor(slug, icon)
+  }
 
   return (
     <div
       className={cn(
         'group relative rounded-xl p-6',
         'border border-border bg-card',
-        'hover:border-border-focus hover:shadow-md',
+        'hover:border-[color-mix(in_oklch,var(--checklist-card-color)_45%,var(--border))] hover:shadow-md',
         'transition-all duration-200'
       )}
+      style={checklistStyle}
     >
       <div className="flex items-start gap-4">
         {/* Icon */}
         <div
           className={cn(
             'shrink-0 rounded-xl p-3',
-            'bg-accent/10',
-            'text-accent',
+            'bg-[color-mix(in_oklch,var(--checklist-card-color)_14%,transparent)]',
+            'text-[var(--checklist-card-color)]',
+            'ring-1 ring-[color-mix(in_oklch,var(--checklist-card-color)_24%,transparent)] ring-inset',
             'transition-colors duration-200'
           )}
         >
@@ -106,7 +117,7 @@ function ChecklistCard({
             <h3
               className={cn(
                 'font-medium text-base text-foreground',
-                'transition-colors duration-200 group-hover:text-accent'
+                'transition-colors duration-200 group-hover:text-[var(--checklist-card-color)]'
               )}
             >
               <TrackedLink
@@ -127,7 +138,7 @@ function ChecklistCard({
               </TrackedLink>
             </h3>
             <div className="shrink-0">
-              <span className="inline-flex items-center justify-center rounded-full bg-accent/10 px-3 py-1 font-medium text-accent text-xs ring-1 ring-accent/20 ring-inset transition-all duration-200 group-hover:bg-accent group-hover:text-primary-foreground">
+              <span className="inline-flex items-center justify-center rounded-full bg-[color-mix(in_oklch,var(--checklist-card-color)_12%,transparent)] px-3 py-1 font-medium text-[var(--checklist-card-color)] text-xs ring-1 ring-[color-mix(in_oklch,var(--checklist-card-color)_22%,transparent)] ring-inset transition-all duration-200 group-hover:bg-[var(--checklist-card-color)] group-hover:text-white">
                 Start
                 <ChevronRight className="-mr-1 ml-1 h-3.5 w-3.5" aria-hidden="true" />
               </span>
@@ -146,7 +157,7 @@ function ChecklistCard({
                 {curation.audience.slice(0, 2).map(audience => (
                   <span
                     key={audience}
-                    className="rounded-full bg-accent/10 px-2.5 py-1 text-[11px] text-accent"
+                    className="rounded-full bg-[color-mix(in_oklch,var(--checklist-card-color)_10%,transparent)] px-2.5 py-1 text-[11px] text-[var(--checklist-card-color)]"
                   >
                     {CHECKLIST_AUDIENCE_LABELS[audience]}
                   </span>
@@ -162,12 +173,18 @@ function ChecklistCard({
           {/* Meta info */}
           <div className="flex flex-wrap items-center gap-3 text-foreground-muted text-xs">
             <span className="flex items-center gap-1.5">
-              <ListChecks className="h-3.5 w-3.5 text-accent/70" aria-hidden="true" />
+              <ListChecks
+                className="h-3.5 w-3.5 text-[color-mix(in_oklch,var(--checklist-card-color)_72%,transparent)]"
+                aria-hidden="true"
+              />
               {ruleCount} rules
             </span>
             {estimatedTime && (
               <span className="flex items-center gap-1.5">
-                <Clock className="h-3.5 w-3.5 text-accent/70" aria-hidden="true" />
+                <Clock
+                  className="h-3.5 w-3.5 text-[color-mix(in_oklch,var(--checklist-card-color)_72%,transparent)]"
+                  aria-hidden="true"
+                />
                 {estimatedTime}
               </span>
             )}

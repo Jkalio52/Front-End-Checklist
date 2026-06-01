@@ -1,6 +1,6 @@
 'use client'
 
-import { routeRulesCategory } from '@repo/config'
+import { CATEGORY_COLORS, isValidCategory, routeRulesCategory } from '@repo/config'
 import {
   ChevronRight,
   Code2,
@@ -16,7 +16,7 @@ import {
 } from '@repo/design-system/icons'
 import { cn } from '@repo/utils'
 import Link from 'next/link'
-import { useMemo } from 'react'
+import { type CSSProperties, useMemo } from 'react'
 import { useProgress } from '@/hooks/use-progress'
 
 // Icon name type for type safety
@@ -46,6 +46,10 @@ const iconMap = {
   testTube: TestTube
 } as const
 
+interface CategoryColorStyle extends CSSProperties {
+  '--category-card-color': string
+}
+
 interface CategoryCardProps {
   slug: string
   title: string
@@ -62,6 +66,10 @@ export function CategoryCard({ slug, title, description, ruleIds, iconName }: Ca
   // Get the icon component from the map
   const Icon = iconMap[iconName]
   const { getCompletionStats } = useProgress()
+  const categoryColor = isValidCategory(slug) ? CATEGORY_COLORS[slug] : 'var(--accent)'
+  const categoryStyle: CategoryColorStyle = {
+    '--category-card-color': categoryColor
+  }
 
   // Calculate completion stats for this category's rules
   const stats = useMemo(() => {
@@ -75,18 +83,20 @@ export function CategoryCard({ slug, title, description, ruleIds, iconName }: Ca
       className={cn(
         'group relative rounded-lg p-5',
         'border border-border bg-card',
-        'hover:border-border-focus hover:shadow-md',
+        'hover:border-[color-mix(in_oklch,var(--category-card-color)_45%,var(--border))] hover:shadow-md',
         'transition-all duration-200',
-        isComplete && 'border-l-4 border-l-accent'
+        isComplete && 'border-l-4 border-l-[var(--category-card-color)]'
       )}
+      style={categoryStyle}
     >
       <div className="flex items-start gap-3">
         {/* Icon */}
         <div
           className={cn(
             'shrink-0 rounded-lg p-2.5',
-            'bg-accent/10',
-            'text-accent',
+            'bg-[color-mix(in_oklch,var(--category-card-color)_14%,transparent)]',
+            'text-[var(--category-card-color)]',
+            'ring-1 ring-[color-mix(in_oklch,var(--category-card-color)_24%,transparent)] ring-inset',
             'transition-colors duration-200'
           )}
         >
@@ -100,7 +110,7 @@ export function CategoryCard({ slug, title, description, ruleIds, iconName }: Ca
             <h3
               className={cn(
                 'font-medium text-base text-foreground',
-                'transition-colors duration-200 group-hover:text-accent'
+                'transition-colors duration-200 group-hover:text-[var(--category-card-color)]'
               )}
             >
               <Link
@@ -114,7 +124,7 @@ export function CategoryCard({ slug, title, description, ruleIds, iconName }: Ca
               </Link>
             </h3>
             <ChevronRight
-              className="h-5 w-5 shrink-0 text-foreground-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-accent"
+              className="h-5 w-5 shrink-0 text-foreground-subtle transition-all duration-200 group-hover:translate-x-0.5 group-hover:text-[var(--category-card-color)]"
               aria-hidden="true"
             />
           </div>
@@ -129,7 +139,7 @@ export function CategoryCard({ slug, title, description, ruleIds, iconName }: Ca
               <div
                 className={cn(
                   'h-full rounded-full transition-all duration-500 ease-out',
-                  stats.completed > 0 ? 'bg-accent' : 'bg-transparent'
+                  stats.completed > 0 ? 'bg-[var(--category-card-color)]' : 'bg-transparent'
                 )}
                 style={{ width: `${stats.percentage}%` }}
               />

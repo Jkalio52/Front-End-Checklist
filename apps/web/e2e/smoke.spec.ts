@@ -20,6 +20,8 @@ test.describe('marketing smoke @smoke', () => {
   test('mcp page renders', async ({ page }) => {
     await page.goto('/mcp')
 
-    await expect(page.getByRole('heading', { level: 1, name: 'MCP Server' })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { level: 1, name: 'Frontend Code Review MCP' })
+    ).toBeVisible()
   })
 })
